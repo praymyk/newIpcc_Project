@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Font Awesome JS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- css -->
+    <link rel="stylesheet" th:href="@{/css/manager/manager-header.css}">
+    <link rel="stylesheet" th:href="@{/css/manager/manager-footer.css}">
+    <link rel="stylesheet" th:href="@{/css/manager/manager-menu.css}">
+    <link rel="stylesheet" th:href="@{/css/manager/manager-detailbar.css}">
+
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #F5F5F7;
+            color: #1D1D1F;
+            box-sizing: border-box; /* 전체 요소에 대해 box-sizing 설정 */
+        }
+
+        /* 모든 요소와 그 자식 요소에 box-sizing을 상속 */
+        *, *::before, *::after {
+            box-sizing: inherit;
+        }
+
+        .main-wrapper {
+            height: 100vh;
+            max-height: 100vh;
+            width: 100%;
+            min-width: 750px; /* 최소 너비 설정 */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            width: 100%;
+            height: 60px; /* 헤더 높이 설정 */
+        }
+
+        .content-wrapper {
+            flex: 1; /* 남은 공간을 차지하도록 설정 */
+            width: 100%;
+            display: flex;
+            height: calc(100% - 305px); /* 100% 높이에서 헤더와 푸터의 높이를 뺀 값 */
+        }
+
+        .sidebar-l, .sidebar-r {
+            width: 300px;
+        }
+
+        .sidebar-r{
+            width: 300px;
+            height: 100%;
+            display: flex;
+            flex-direction: column; /* Flex 컨테이너로 설정 */
+            transition: width 0.3s; /* 숨기기와 보이기 애니메이션 효과 추가 */
+        }
+        .sidebar-r.hidden {
+            width: 30px; /* 숨겼을 때의 너비 설정 */
+        }
+
+        .content {
+            flex: 1; /* 남은 공간을 차지하도록 설정 */
+            height: 100%;
+        }
+
+        .footer {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <div class="header">
+        <!--해더 내용은 replace로 대처-->
+        <div th:replace="~{layout/manager-header :: manager-header}"></div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="sidebar-l">
+            <!--사이드바 내용은 replace로 대처-->
+            <div th:replace="~{manager/manager-menu :: manager-menu}"></div>
+        </div>
+
+        <div class="content">
+            <!-- Page Content  -->
+            <div id="content">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="container-fluid">
+                        <button type="button" id="sidebarCollapse" class="btn btn-info">
+                            <i class="fas fa-align-left"></i>
+                            <span>Toggle Sidebar</span>
+                        </button>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+
+        <div class="sidebar-r">
+            <!--manager-detailbar.html 대처-->
+            <div th:replace="~{manager/manager-detailbar :: manager-detailbar}"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <!--푸터 내용은 replace로 대처-->
+        <div th:replace="~{layout/manager-footer :: manager-footer}"></div>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<!-- 사이드메뉴 Toggle Script -->
+<script th:src="@{/js/manager/manager-menu.js}"></script>
+<!-- 상세화면 Toggle Script -->
+<script th:src="@{/js/manager/manager-detailbar.js}"></script>
+<!-- 푸터 Toggle Script -->
+<script th:src="@{/js/manager/manager-footer.js}"></script>
+
+</body>
+</html>

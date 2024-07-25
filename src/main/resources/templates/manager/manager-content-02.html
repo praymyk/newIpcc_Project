@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Agent Control Table</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+     <!-- Font Awesome JS -->
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+     <style>
+
+        .wrapper {
+            width: 100%; /* 원하는 너비로 설정 */
+            height: 100%;
+            display: flex;
+            flex-direction: column
+        }
+
+        /* 검색 바 스타일 */
+        .menu-title {
+            height: 60px;
+            font-size: 1.3em;
+            font-weight: bold;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .menu-search-bar {
+            padding: 10px;
+        }
+
+        .menu-search-bar > span,
+        .menu-search-bar > div,
+        .menu-search-bar > input {
+            margin-right: 15px;
+            font-size: 0.9em;
+        }
+
+        .menu-search-bar > div {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+        }
+
+        .menu-search-bar > div > div {
+            width: 70px;
+            display: flex;
+            line-height: 70px;
+            justify-content: center;
+        }
+
+        .search-items {
+            height: 30px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+            margin: 0px !important; 
+        }
+
+        i {
+            margin-right: 5px;
+        }
+
+        .search-btn, .excel-btn {
+            border: 1px solid darkcyan;
+            border-radius: 5px;
+            background-color: lightseagreen;
+            font-weight: bold;
+            color: white;
+        }
+
+        .search-btn:hover, .excel-btn:hover {
+            background-color: darkcyan;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="menu-title">
+            <div>
+                <i class="fa-solid fa-person"></i><span>사용자 관리</span> 
+            </div>
+        </div>
+        <div class="menu-search-bar">
+            <div>
+                <span class="search-items">내선번호 : </span>
+                <input class="search-items" type="text">
+                <div class="search-items search-btn">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>조회</span>
+                </div>
+                <div class="search-items excel-btn">
+                    <i class="fa-regular fa-file-excel"></i>
+                    <span>엑셀</span>
+                </div>
+            </div>
+        </div>
+        <div class="container mt-5">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>NO</th>
+                        <th>ID</th>
+                        <th>내선번호</th>
+                        <th>상담원명</th>
+                        <th>상담그룹</th>
+                        <th>상담팀명</th>
+                        <th>권한</th>
+                        <th>CID</th>
+                        <th>발신통신</th>
+                        <th>판빌-공인IP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>1000</td>
+                        <td>1000</td>
+                        <td>김차차</td>
+                        <td>newIPCC</td>
+                        <td>테스트팀</td>
+                        <td>없음</td>
+                        <td>???</td>
+                        <td>??????</td>
+                        <td>000.0.000.0</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>1000</td>
+                        <td>1000</td>
+                        <td>김차차</td>
+                        <td>newIPCC</td>
+                        <td>테스트팀</td>
+                        <td>없음</td>
+                        <td>???</td>
+                        <td>??????</td>
+                        <td>000.0.000.0</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>1000</td>
+                        <td>1000</td>
+                        <td>김차차</td>
+                        <td>newIPCC</td>
+                        <td>테스트팀</td>
+                        <td>없음</td>
+                        <td>???</td>
+                        <td>??????</td>
+                        <td>000.0.000.0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

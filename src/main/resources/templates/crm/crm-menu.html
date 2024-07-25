@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background: #fafafa;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        #sidebar {
+            background: #f8f9fa;
+            color: #333;
+            min-width: 250px;
+            max-width: 250px;
+            min-height: 100vh;
+            transition: all 0.3s;
+        }
+        #sidebar .sidebar-header {
+            padding: 20px;
+            background: #e9ecef;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        #sidebar ul.components {
+            padding: 20px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        #sidebar ul p {
+            color: #666;
+            padding: 10px;
+        }
+        #sidebar ul li a {
+            padding: 10px;
+            font-size: 1.1em;
+            display: block;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        #sidebar ul li a:hover {
+            color: #007bff;
+            background: #e9ecef;
+        }
+        #sidebar ul li.active > a, a[aria-expanded="true"] {
+            color: #007bff;
+            background: #e9ecef;
+        }
+        .wrapper {
+            display: flex;
+            width: 100%;
+            align-items: stretch;
+        }
+        #sidebar.active {
+            margin-left: -250px;
+        }
+        #content {
+            width: 100%;
+            padding: 20px;
+        }
+        @media (max-width: 768px) {
+            #sidebar {
+                margin-left: -250px;
+            }
+            #sidebar.active {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <nav id="sidebar">
+            <div class="sidebar-header">New Ipcc Sidebar</div>
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="#">대쉬보드</a>
+                </li>
+                <li class="active">
+                    <a href="#homeSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">CRM 메인 <i class="bi bi-chevron-right"></i></a>
+                    <ul class="collapse list-unstyled" id="homeSubmenu">
+                        <li><a href="#">아웃바운드</a></li>
+                        <li><a href="#">다이트</a></li>
+                        <li><a href="#">리팅</a></li>
+                        <li><a href="#">플란</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">상담 메인</a></li>
+                <li><a href="#">상담 관리</a></li>
+                <li><a href="#">통화 내역</a></li>
+                <li><a href="#">문자 내역</a></li>
+                <li>
+                    <a href="#pageSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">통계 <i class="bi bi-chevron-right"></i></a>
+                    <ul class="collapse list-unstyled" id="pageSubmenu">
+                        <li><a href="#">상담원별 콜현황</a></li>
+                        <li><a href="#">콜이력 조회</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#settingsSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">설정 <i class="bi bi-chevron-right"></i></a>
+                    <ul class="collapse list-unstyled" id="settingsSubmenu">
+                        <li><a href="#">비밀번호 변경</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <div id="content">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span>Toggle Sidebar</span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+    </script>
+</body>
+</html>

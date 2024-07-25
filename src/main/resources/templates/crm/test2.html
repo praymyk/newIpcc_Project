@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIP.js with WebSocket</title>
+    <script th:src="@{/js/sip-0.21.2.js}"></script>
+</head>
+<body>
+<h1>WebSocket을 사용한 SIP.js</h1>
+<script>
+    // SIP.js를 사용하여 SIP User Agent 생성 및 설정
+    const userAgent = new SIP.UserAgent({
+        uri: 'sip:1002@www.praymyk.co.kr',
+        transportOptions: {
+            server: 'wss://www.praymyk.co.kr:8089/ws'
+        },
+        authorizationUsername: '1002',
+        authorizationPassword: '1002'
+    });
+
+    // User Agent 시작
+    userAgent.start().then(() => {
+        console.log('User Agent started');
+        // 호출을 수신하거나 발신하는 코드 추가 가능
+    }).catch((error) => {
+        console.error('User Agent failed to start', error);
+    });
+</script>
+</body>
+</html>

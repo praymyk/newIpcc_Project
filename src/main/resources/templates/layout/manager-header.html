@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" th:href="@{/css/manager/manager-header.css}}">
+</head>
+<body>
+    <div th:fragment="manager-header">
+        <div class="header-wrapper">
+            <div class="logo">
+                <img th:src="@{/images/logo_meta.png}" alt="Logo">
+            </div>
+            <div class="">
+                <span>
+                    New IPCC - 운영서버
+                </span>
+            </div>
+            <div class="login-account">
+                <span>
+                    접속 계정명
+                </span>
+                <button class="logout">로그아웃</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
