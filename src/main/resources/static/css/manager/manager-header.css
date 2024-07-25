@@ -1,19 +1,35 @@
 
 .header-wrapper {
     width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     background-color: white; /* 스타일 배경색 */
-    padding: 10px 20px; /* 패딩 추가 */
 }
 
-.header-wrapper > div {
+.logo, .login-account, .header-title {
     margin-left: 20px;
 }
 
 .logo img {
     height: 40px; /* 로고 크기 조정 */
-    margin-right: 20px;
+    margin-right: 10px;
+}
+
+.navbar-controller {
+    display: flex;
+    align-items: center;
+    margin: 0px; !important;
+}
+.navbar {
+    background: #fff;
+    border: none;
+}
+
+.navbar-btn {
+    box-shadow: none;
+    outline: none !important;
+    border: none;
 }
 
 .login-account {
@@ -49,4 +65,10 @@
 
 .login-account button:active {
     background-color: #003E7E; /* 클릭 시 색상 변경 */
+}
+
+@media (max-width: 770px)  {
+    .header-title{
+        display: none;
+    }
 }

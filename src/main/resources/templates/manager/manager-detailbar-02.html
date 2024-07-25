@@ -37,11 +37,11 @@
             height: 100%;
             display: flex;
             flex-direction: column; /* Flex 컨테이너로 설정 */
-            transition: width 0.3s; /* 숨기기와 보이기 애니메이션 효과 추가 */
+            transition: width 10s; /* 숨기기와 보이기 애니메이션 효과 추가 */
         }
 
         .main-wrapper.hidden {
-            width: 50px; /* 숨겼을 때의 너비 설정 */
+            width: 35px; /* 숨겼을 때의 너비 설정 */
         }
 
         .detailbar-wrapper {
@@ -50,12 +50,11 @@
             flex: 1; /* 남은 공간을 모두 차지하도록 설정 */
             display: flex;
             flex-direction: column; /* 내부 요소들을 세로로 정렬 */
-            transition: width 0.3s; /* 숨기기와 보이기 애니메이션 효과 추가 */
         }
         .detailbar-wrapper>form{
             display: flex;
             flex-direction: column;
-            height: 100%;"
+            height: 100%;
         }
 
         .detailbar-title {
@@ -180,46 +179,51 @@
     <div class="main-wrapper" id="mainWrapper">
         <div th:fragment="manager-detailbar" class="detailbar-wrapper" id="detailbarWrapper">
             <form th:action="@{/manager/agent/save}" method="post">
-                <div class="detailbar-title">
-                    <i class="fa-regular fa-window-restore"></i>
-                    <span>상세 화면</span>
-                    <i class="fa-solid fa-arrow-right" id="toggleIcon"></i>
-                </div>
-                <div class="detailbar-content">
-                    <!-- 선택한 메뉴의 상세정보를 replace 예정 -->
-                    <table class="detailbar-table">
-                        <tr>
-                            <td class="info-title">내선번호</td>
-                            <td class="info-content">
-                                <input type="text" value="1001">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="info-title">상담원 ID</td>
-                            <td class="info-content">
-                                <input type="text" value="auth1001">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="info-title">비밀번호</td>
-                            <td class="info-content">
-                                <input type="text" value="1001password">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="info-title">상담원 이름</td>
-                            <td class="info-content">
-                                <input type="text" value="1001">
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="detailbar-btn">
-                    <button>신규</button>
-                    <button type="submit">저장</button>
-                    <button>삭제</button>
-                </div>
-            </form>
+                <div>
+                    <div class="detailbar-title">
+                        <i class="fa-regular fa-window-restore"></i>
+                        <span>상세 화면</span>
+                        <i class="fa-solid fa-arrow-right" id="toggleIcon"></i>
+                    </div>
+                    <div class="detailbar-content">
+                        <!-- 선택한 메뉴의 상세정보를 replace 예정 -->
+                        <table class="detailbar-table">
+                            <tr>
+                                <td class="info-title">내선번호</td>
+                                <td class="info-content">
+                                    <input type="text" value="1001">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="info-title">상담원 ID</td>
+                                <td class="info-content">
+                                    <input type="text" value="auth1001">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="info-title">비밀번호</td>
+                                <td class="info-content">
+                                    <input type="text" value="1001password">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="info-title">상담원 이름</td>
+                                <td class="info-content">
+                                    <input type="text" value="1001">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="detailbar-btn">
+                        <button>신규</button>
+                        <button type="submit">저장</button>
+                        <button>삭제</button>
+                    </div>
+                </form>
+            </div>
+            <div class="">
+
+            </div>
         </div>
     </div>
 </div>

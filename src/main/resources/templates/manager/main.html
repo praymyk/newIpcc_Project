@@ -16,11 +16,16 @@
     <link rel="stylesheet" th:href="@{/css/manager/manager-menu.css}">
     <link rel="stylesheet" th:href="@{/css/manager/manager-detailbar.css}">
 
+    <!--content css-->
+    <link rel="stylesheet" th:href="@{/css/manager/manager-content-02.css}">
+
     <style>
         html, body {
-            height: 100%;
+            height: 100vh;
             width: 100%;
+            min-width: 600px;
             margin: 0;
+            padding: 0;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -40,14 +45,12 @@
             height: 100vh;
             max-height: 100vh;
             width: 100%;
-            min-width: 750px; /* 최소 너비 설정 */
             display: flex;
             flex-direction: column;
         }
 
         .header {
             width: 100%;
-            height: 60px; /* 헤더 높이 설정 */
         }
 
         .content-wrapper {
@@ -55,10 +58,6 @@
             width: 100%;
             display: flex;
             height: calc(100% - 305px); /* 100% 높이에서 헤더와 푸터의 높이를 뺀 값 */
-        }
-
-        .sidebar-l, .sidebar-r {
-            width: 300px;
         }
 
         .sidebar-r{
@@ -75,8 +74,8 @@
         .content {
             flex: 1; /* 남은 공간을 차지하도록 설정 */
             height: 100%;
+            display: flex;
         }
-
         .footer {
             width: 100%;
         }
@@ -97,17 +96,8 @@
         </div>
 
         <div class="content">
-            <!-- Page Content  -->
-            <div id="content">
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <div class="container-fluid">
-                        <button type="button" id="sidebarCollapse" class="btn btn-info">
-                            <i class="fas fa-align-left"></i>
-                            <span>Toggle Sidebar</span>
-                        </button>
-                    </div>
-                </nav>
-            </div>
+            <!-- content -->
+            <div th:replace="~{manager/manager-content-02 :: manager-content-02}"></div>
         </div>
 
 

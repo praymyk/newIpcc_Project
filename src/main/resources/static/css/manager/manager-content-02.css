@@ -1,0 +1,77 @@
+.inner-content-wrapper {
+    height: 100%;
+    width: 100%;
+    min-width: 705px;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-title {
+    height: 45px;
+    font-size: 1.3em;
+    font-weight: bold;
+    background: #f5f5f7;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.menu-search-bar {
+    padding: 10px;
+    background-color: #f5f5f7;
+}
+
+.menu-search-bar > span,
+.menu-search-bar > div,
+.menu-search-bar > input {
+    margin-right: 15px;
+    font-size: 0.8em;
+}
+
+.menu-search-bar > div {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.menu-search-bar > div > div {
+    width: 70px;
+    display: flex;
+    line-height: 70px;
+    justify-content: center;
+}
+
+.search-items {
+    height: 30px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.container {
+    width: 100%;
+    min-width: 705px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 5px 5px 5px;
+    margin: 0px !important;
+}
+
+i {
+    margin-right: 5px;
+}
+
+.search-btn, .excel-btn {
+    border: 1px solid white;
+    border-radius: 5px;
+    background-color: #007aff;
+    color: white;
+}
+
+.search-btn:hover, .excel-btn:hover {
+    background-color: darkcyan;
+    cursor: pointer;
+}

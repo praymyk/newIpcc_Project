@@ -12,146 +12,101 @@
      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
      <style>
+.main-wrapper {
+    width: 300px;
+    border: 1px solid red;
+    height: 300px;
+    overflow-x: auto;
+}
 
-        .wrapper {
-            width: 100%; /* 원하는 너비로 설정 */
-            height: 100%;
-            display: flex;
-            flex-direction: column
-        }
 
-        /* 검색 바 스타일 */
-        .menu-title {
-            height: 60px;
-            font-size: 1.3em;
-            font-weight: bold;
-            background: #f8f9fa;
-            display: flex;
-            align-items: center;
-            padding: 10px;
-        }
+.wrapper {/* 이 값을 main-wrapper 보다 크게 설정 */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
 
-        .menu-search-bar {
-            padding: 10px;
-        }
+.menu-title {
+    height: 45px;
+    font-size: 1.3em;
+    font-weight: bold;
+    background: #f5f5f7;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
 
-        .menu-search-bar > span,
-        .menu-search-bar > div,
-        .menu-search-bar > input {
-            margin-right: 15px;
-            font-size: 0.9em;
-        }
+.menu-search-bar {
+    padding: 10px;
+    background-color: #f5f5f7;
+}
 
-        .menu-search-bar > div {
-            height: 50px;
-            display: flex;
-            align-items: center;
-            padding-left: 10px;
-        }
+.menu-search-bar > span,
+.menu-search-bar > div,
+.menu-search-bar > input {
+    margin-right: 15px;
+    font-size: 0.8em;
+}
 
-        .menu-search-bar > div > div {
-            width: 70px;
-            display: flex;
-            line-height: 70px;
-            justify-content: center;
-        }
+.menu-search-bar > div {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+}
 
-        .search-items {
-            height: 30px;
-            margin-right: 10px;
-            display: flex;
-            align-items: center;
-        }
+.menu-search-bar > div > div {
+    width: 70px;
+    display: flex;
+    line-height: 70px;
+    justify-content: center;
+}
 
-        .container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 5px;
-            margin: 0px !important; 
-        }
+.search-items {
+    height: 30px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+}
 
-        i {
-            margin-right: 5px;
-        }
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 5px 5px 5px;
+    margin: 0px !important;
+}
 
-        .search-btn, .excel-btn {
-            border: 1px solid darkcyan;
-            border-radius: 5px;
-            background-color: lightseagreen;
-            font-weight: bold;
-            color: white;
-        }
+i {
+    margin-right: 5px;
+}
 
-        .search-btn:hover, .excel-btn:hover {
-            background-color: darkcyan;
-            cursor: pointer;
-        }
+.search-btn, .excel-btn {
+    border: 1px solid white;
+    border-radius: 5px;
+    background-color: #007aff;
+    color: white;
+}
+
+.search-btn:hover, .excel-btn:hover {
+    background-color: darkcyan;
+    cursor: pointer;
+}
     </style>
 </head>
 
 <body>
-    <div class="wrapper">
-        <div class="menu-title">
-            <div>
-                <i class="fa-regular fa-building"></i>업체 관리
-            </div>
-        </div>
-        <div class="menu-search-bar">
-            <div>
-                <span class="search-items">업체명 :</span>
-                <input class="search-items" type="text">
-                <div class="search-items search-btn">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <span>조회</span>
-                </div>
-                <div class="search-items excel-btn">
-                    <i class="fa-regular fa-file-excel"></i>
-                    <span>엑셀</span>
+    <div class="main-wrapper"> 
+        <div class="wrapper">
+            <div class="menu-title">
+                <div>
+                    <i class="fa-regular fa-building"></i>업체 관리
                 </div>
             </div>
-        </div>
-        <div class="container mt-5">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>NO</th>
-                        <th>업체코드</th>
-                        <th>업체명</th>
-                        <th>대표번호</th>
-                        <th>등록일</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>001</td>
-                        <td>Company A</td>
-                        <td>010-1234-5678</td>
-                        <td>2023-01-15</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>002</td>
-                        <td>Company B</td>
-                        <td>010-2345-6789</td>
-                        <td>2023-02-20</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>003</td>
-                        <td>Company C</td>
-                        <td>010-3456-7890</td>
-                        <td>2023-03-10</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Bootstrap JS, Popper.js, and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+            <div class="menu-search-bar">
+                <div>
+                    <span class="search-items">업체명 :</span>
+                    <input class="search-items" type="text">
+                    <div class="search-items search-btn">
+                        <i cla

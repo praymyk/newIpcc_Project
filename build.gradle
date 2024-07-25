@@ -32,6 +32,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.asteriskjava:asterisk-java:3.39.0' // Asterisk Java 라이브러리
 	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'org.apache.poi:poi-ooxml:5.2.3' // apache poi 라이브러리 (엑셀용)
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
@@ -41,6 +42,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	
 }
 
 tasks.named('test') {
