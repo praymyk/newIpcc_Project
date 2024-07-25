@@ -159,16 +159,17 @@
             background-color: #005bb5;
         }
 
+        .detailbar-b{
+            dispaly: none;
+        }
+
         /* 숨겼을 때의 스타일 */
-        .detailbar-wrapper.hidden .detailbar-content,
-        .detailbar-wrapper.hidden .detailbar-btn,
-        .detailbar-wrapper.hidden .detailbar-title span,
-        .detailbar-wrapper.hidden .detailbar-title .fa-window-restore {
+        .detailbar-a.hidden{
             display: none;
         }
 
-        .detailbar-wrapper.hidden .detailbar-title .fa-arrow-right {
-            margin-right: 0; /* 오른쪽 마진 제거 */
+        .detailbar-b.hidden{
+
         }
 
     </style>
@@ -178,12 +179,12 @@
 <div class="main">
     <div class="main-wrapper" id="mainWrapper">
         <div th:fragment="manager-detailbar" class="detailbar-wrapper" id="detailbarWrapper">
-            <form th:action="@{/manager/agent/save}" method="post">
-                <div>
+            <div class="detailbar-a">
+                <form th:action="@{/manager/agent/save}" method="post">
                     <div class="detailbar-title">
                         <i class="fa-regular fa-window-restore"></i>
                         <span>상세 화면</span>
-                        <i class="fa-solid fa-arrow-right" id="toggleIcon"></i>
+                        <i class="fa-solid fa-arrow-right toggleIcon"></i>
                     </div>
                     <div class="detailbar-content">
                         <!-- 선택한 메뉴의 상세정보를 replace 예정 -->
@@ -221,8 +222,8 @@
                     </div>
                 </form>
             </div>
-            <div class="">
-
+            <div class="detailbar-b">
+                <i class="fa-solid fa-arrow-left toggleIcon"></i>
             </div>
         </div>
     </div>
@@ -230,13 +231,12 @@
 
 <script>
     // 상세 보기 메뉴 토글 스크립트 ( 클릭 시 감추기 기능 + 축소 아이콘 화살표 방향 변경)
-    document.getElementById('toggleIcon').addEventListener('click', function() {
-        var detailbar = document.getElementById('detailbarWrapper');
-        var mainWrapper = document.getElementById('mainWrapper');
-        var arrowicon = document.getElementById('toggleIcon');
-        detailbar.classList.toggle('hidden');
-        mainWrapper.classList.toggle('hidden');
-        arrowicon.classList.toggle(fa-arrow-right)
+
+    document.getElementsByClassName('toggleIcon').addEventListener('click', function() {
+        var detailbarA = document.getElementsByClassName('detailbar-a');
+        var detailbarB = document.getElementsByClassName('detailbar-b');
+        detailbarShow.classList.toggle('hidden');
+        detailbarHide.classList.toggle('hidden');
     });
 </script>
 
