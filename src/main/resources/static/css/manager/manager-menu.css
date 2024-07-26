@@ -41,7 +41,7 @@ span {
 ul.components {
     overflow-y: auto;
     overflow-x: hidden !important;
-    height: calc(100% - 65px); /* 필요에 따라 높이 조정 (부모 높이 - 관리자메뉴 header )*/
+    height: calc(100% - 45px); /* 필요에 따라 높이 조정 (부모 높이 - 관리자메뉴 header )*/
     margin-bottom: 0px !important;
 }
 
@@ -128,7 +128,7 @@ ul.components::-webkit-scrollbar-track {
 }
 
 #sidebar ul.components {
-    border-bottom: 1px solid #47748b;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 #sidebar ul li a {

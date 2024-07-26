@@ -1,4 +1,4 @@
-package com.ipcc.manager.model.dto.agent;
+package com.ipcc.manager.model.Entity.agent;
 
 import lombok.*;
 
@@ -9,6 +9,7 @@ import lombok.*;
 @ToString
 // 상담원 정보를 담는 VO 클래스
 public class Agent {
+
     private String agentId;
     private String transport; // 네트워크 프로토콜과 바인딩 주소를 지정(UDP, TCP, TLS)
     private String aors;
@@ -18,4 +19,5 @@ public class Agent {
     private String direct_media;
     private String agentName;
     private String agentPw;
+
 }

@@ -2,7 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.ipcc.manager.model.dao.AgentMapper">
+<mapper namespace="com.ipcc.manager.mapper.AgentMapper">
+    <!-- 상담원 리스트 조회 -->
+    <select id="selectAgentList" resultType="AgentAuth">
+        SELECT *
+        FROM ps_auths;
+    </select>
+
+    <!-- 상담원 등록 -->
     <insert id="insertAgent" parameterType="AgentAuth">
         INSERT INTO ps_auths(id, auth_type, password, username)
         VALUES (#{agentId}, #{authType}, #{agentPw}, #{agentName});

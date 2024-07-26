@@ -5,248 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-        <!-- Bootstrap CSS CDN -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <!-- Font Awesome JS -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    
-    <style>
-        html, body {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #F5F5F7;
-            color: #1D1D1F;
-            box-sizing: border-box; /* 전체 요소에 대해 box-sizing 설정 */
-        }
-
-        .main {
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            justify-content: flex-end; /* main-wrapper를 오른쪽으로 정렬 */
-        }
-
-        .main-wrapper {
-            width: 300px;
-            height: 100%;
-            display: flex;
-            flex-direction: column; /* Flex 컨테이너로 설정 */
-            transition: width 0.3s; /* 숨기기와 보이기 애니메이션 효과 추가 */
-        }
-
-        .detailbar-wrapper {
-            background-color: #ffffff;
-            width: 100%;
-            flex: 1; /* 남은 공간을 모두 차지하도록 설정 */
-            display: flex;
-            flex-direction: column; /* 내부 요소들을 세로로 정렬 */
-        }
-
-        .detailbar-title {
-            height: 45px;
-            background-color: #f5f5f7;
-            border-bottom: 1px solid #e0e0e0;
-            font-size: 1em;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: space-between; /* 아이템 사이에 공간을 두기 위해 설정 */
-            overflow:hidden;
-        }
-
-        .detailbar-title i {
-            margin-right: 8px;
-            cursor: pointer; /* 클릭 가능하도록 커서 변경 */
-        }
-
-        .detailbar-content {
-            padding: 10px;
-            flex: 1; /* 남은 공간을 차지하도록 설정 */
-            overflow-y: auto; /* 내용이 넘칠 경우 스크롤 */
-        }
-
-        .detailbar-table table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .detailbar-table td {
-            padding: 10px 0px 10px 0px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .info-title {
-            width: 90px;
-            height: 40px;
-            font-weight: 600;
-            font-size: 0.8em;
-            color: #6e6e73;
-        }
-
-        .info-content input[type="text"],
-        .info-content select {
-            width: 100%;
-            padding: 5px;
-            font-size: 0.8em;
-            border: 1px solid #ced4da;
-            border-radius: 6px;
-            box-sizing: border-box; 
-        }
-
-        .info-content input[type="text"]:focus,
-        .info-content select:focus {
-            border-color: #007aff;
-        }
-
-        .info-content .checkbox-wrapper {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px; /* 추가적인 세트 간의 간격 */
-        }
-
-        .info-content .checkbox-wrapper input[type="checkbox"] {
-            margin-right: 8px;
-        }
-
-        .checkbox-wrapper {
-            font-size: 0.8em;
-        }
-
-        .detailbar-btn {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .detailbar-btn button {
-            background-color: #007aff;
-            color: #ffffff;
-            border: none;
-            border-radius: 6px;
-            padding: 10px 15px;
-            font-size: 0.8em;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            flex: 1;
-            margin: 0 5px; /* 버튼 사이의 간격을 위해 좌우 마진 추가 */
-        }
-
-        .detailbar-btn button:first-child {
-            margin-left: 0; /* 첫 번째 버튼의 왼쪽 마진 제거 */
-        }
-
-        .detailbar-btn button:last-child {
-            margin-right: 0; /* 마지막 버튼의 오른쪽 마진 제거 */
-        }
-
-        .detailbar-btn button:hover {
-            background-color: #005bb5;
-        }
-
-        /* 숨겼을 때의 스타일 */
-        .main-wrapper.hidden {
-            height: 45px;
-            width: 45px; /* 숨겼을 때의 너비 설정 */
-        }
-
-        .detailbar-wrapper.hidden .detailbar-content,
-        .detailbar-wrapper.hidden .detailbar-btn,
-        .detailbar-wrapper.hidden .detailbar-title span,
-        .detailbar-wrapper.hidden .detailbar-title .fa-window-restore {
-            display: none;
-        }
-
-        .detailbar-wrapper.hidden .detailbar-title .fa-arrow-right {
-            margin-right: 0; /* 오른쪽 마진 제거 */
-        }
-
-        .detailbar-wrapper.hidden .detailbar-title{
-            justify-content: center;
-        }
-
-    </style>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Font Awesome JS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 
 <div class="main">
     <div class="main-wrapper" id="mainWrapper">
         <div th:fragment="manager-detailbar" class="detailbar-wrapper" id="detailbarWrapper">
-            <form action="" method="post" style="display: flex; flex-direction: column; height: 100%;">
-                <div class="detailbar-title">
+            <div class="detailbar-wrapper-a">
+                <form action="" method="post" style="display: flex; flex-direction: column; height: 100%;">
+                    <div class="detailbar-title">
+                        <i class="fa-regular fa-window-restore"></i>
+                        <span>상세 화면</span>
+                        <i class="fa-solid fa-arrow-right toggleIconBtn" id="toggleIcon"></i>
+                    </div>
+                    <div class="detailbar-content">
+                        <!-- 선택한 메뉴의 상세정보를 replace 예정 -->
+                        <table class="detailbar-table">
+                            <tr>
+                                <td class="info-title">업체코드</td>
+                                <td class="info-content">
+                                    <input type="text" value="테스트">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="info-title">인입분기</td>
+                                <td class="info-content">
+                                    <select name="" id="">
+                                        <option value="">1</option>
+                                        <option value="">2</option>
+                                        <option value="">3</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="">
+                                <td class="info-title">부가서비스</td>
+                                <td class="info-content">
+                                    <div class="checkbox-wrapper">
+                                        <input type="checkbox" id="checkbox1" name="subservice" value="1">
+                                        <label for="checkbox1">지능형 IVR</label>
+                                    </div>
+                                    <div class="checkbox-wrapper">
+                                        <input type="checkbox" id="checkbox2" name="subservice" value="2">
+                                        <label for="checkbox2">대표번호 문자</label>
+                                    </div>
+                                    <div class="checkbox-wrapper">
+                                        <input type="checkbox" id="checkbox3" name="subservice" value="3">
+                                        <label for="checkbox3">부분녹취</label>
+                                    </div>
+                                    <div class="checkbox-wrapper">
+                                        <input type="checkbox" id="checkbox4" name="subservice" value="4">
+                                        <label for="checkbox4">클릭다이얼</label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="detailbar-btn">
+                        <button>신규</button>
+                        <button>저장</button>
+                        <button>삭제</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="detailbar-wrapper-b">
+                <div>
+                    <i class="fa-solid fa-arrow-down toggleIconBtn" id="toggleIcon"></i>
                     <i class="fa-regular fa-window-restore"></i>
                     <span>상세 화면</span>
-                    <i class="fa-solid fa-arrow-right" id="toggleIcon"></i>
                 </div>
-                <div class="detailbar-content">
-                    <!-- 선택한 메뉴의 상세정보를 replace 예정 -->
-                    <table class="detailbar-table">
-                        <tr>
-                            <td class="info-title">업체코드</td>
-                            <td class="info-content">
-                                <input type="text" value="테스트">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="info-title">인입분기</td>
-                            <td class="info-content">
-                                <select name="" id="">
-                                    <option value="">1</option>
-                                    <option value="">2</option>
-                                    <option value="">3</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr class="">
-                            <td class="info-title">부가서비스</td>
-                            <td class="info-content">
-                                <div class="checkbox-wrapper">
-                                    <input type="checkbox" id="checkbox1" name="subservice" value="1">
-                                    <label for="checkbox1">지능형 IVR</label>
-                                </div>
-                                <div class="checkbox-wrapper">
-                                    <input type="checkbox" id="checkbox2" name="subservice" value="2">
-                                    <label for="checkbox2">대표번호 문자</label>
-                                </div>
-                                <div class="checkbox-wrapper">
-                                    <input type="checkbox" id="checkbox3" name="subservice" value="3">
-                                    <label for="checkbox3">부분녹취</label>
-                                </div>
-                                <div class="checkbox-wrapper">
-                                    <input type="checkbox" id="checkbox4" name="subservice" value="4">
-                                    <label for="checkbox4">클릭다이얼</label>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="detailbar-btn">
-                    <button>신규</button>
-                    <button>저장</button>
-                    <button>삭제</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
-
-<script>
-    // 상세 보기 메뉴 토글 스크립트 ( 클릭 시 감추기 기능 + 축소 아이콘 화살표 방향 변경)
-    document.getElementById('toggleIcon').addEventListener('click', function() {
-        var detailbar = document.getElementById('detailbarWrapper');
-        var mainWrapper = document.getElementById('mainWrapper');
-        var arrowicon = document.getElementById('toggleIcon');
-        detailbar.classList.toggle('hidden');
-        mainWrapper.classList.toggle('hidden');
-        arrowicon.classList.toggle(fa-arrow-right)
-    });
-</script>
 
 </body>
 </html>

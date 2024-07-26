@@ -1,9 +1,12 @@
 package com.ipcc.manager.service;
 
-import com.ipcc.manager.model.dao.AgentMapper;
-import com.ipcc.manager.model.dto.agent.AgentAuth;
+import com.ipcc.manager.mapper.AgentMapper;
+import com.ipcc.manager.model.Entity.agent.Agent;
+import com.ipcc.manager.model.Entity.agent.AgentAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AgentService {
@@ -15,8 +18,13 @@ public class AgentService {
         this.agentMapper = agentMapper;
     }
 
-    public void getAgentList() {
+    /**
+     * 상담원 전체 조회
+     * @return List<Agent>
+     */
+    public List<AgentAuth> selectAgentList() {
         // 에이전트 목록 조회
+        return agentMapper.selectAgentList();
     }
 
     public void getAgent() {

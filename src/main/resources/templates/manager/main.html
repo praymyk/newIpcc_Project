@@ -34,6 +34,7 @@
             background-color: #F5F5F7;
             color: #1D1D1F;
             box-sizing: border-box; /* 전체 요소에 대해 box-sizing 설정 */
+            overflow: hidden; /* 스크롤바 숨김 */
         }
 
         /* 모든 요소와 그 자식 요소에 box-sizing을 상속 */
@@ -56,26 +57,39 @@
         .content-wrapper {
             flex: 1; /* 남은 공간을 차지하도록 설정 */
             width: 100%;
+            min-width: 600px;
             display: flex;
             height: calc(100% - 305px); /* 100% 높이에서 헤더와 푸터의 높이를 뺀 값 */
         }
 
         .sidebar-r{
-            width: 300px;
+            width: 300px; !important;
             height: 100%;
             display: flex;
             flex-direction: column; /* Flex 컨테이너로 설정 */
-            transition: width 0.3s; /* 숨기기와 보이기 애니메이션 효과 추가 */
+            transition:all 0.3s; /* 숨기기와 보이기 애니메이션 효과 추가 */
         }
         .sidebar-r.hidden {
-            width: 30px; /* 숨겼을 때의 너비 설정 */
+            margin-right: -270px;
+            transition:all 0.3s;
         }
 
         .content {
             flex: 1; /* 남은 공간을 차지하도록 설정 */
+            min-width: 120px;
             height: 100%;
             display: flex;
+            overflow-x: auto;
         }
+        /* content 영역 스크롤바 디자인 */
+        .content::-webkit-scrollbar {
+            height: 8px; /* 가로 스크롤바 높이 설정 */
+        }
+        .content::-webkit-scrollbar-thumb {
+            background-color: darkgrey; /* 스크롤바 색상 */
+            border-radius: 10px; /* 스크롤바 둥글기 */
+        }
+
         .footer {
             width: 100%;
         }
@@ -123,6 +137,9 @@
 <script th:src="@{/js/manager/manager-detailbar.js}"></script>
 <!-- 푸터 Toggle Script -->
 <script th:src="@{/js/manager/manager-footer.js}"></script>
+
+<!-- content script -->
+<script th:src="@{/js/manager/manager-content-02.js}"></script>
 
 </body>
 </html>
