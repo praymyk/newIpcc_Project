@@ -1,8 +1,7 @@
 package com.ipcc.manager.service;
 
 import com.ipcc.manager.mapper.AgentMapper;
-import com.ipcc.manager.model.Entity.agent.Agent;
-import com.ipcc.manager.model.Entity.agent.AgentAuth;
+import com.ipcc.manager.model.dto.agent.AgentAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

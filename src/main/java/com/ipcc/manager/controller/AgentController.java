@@ -1,6 +1,6 @@
 package com.ipcc.manager.controller;
 
-import com.ipcc.manager.model.Entity.agent.AgentAuth;
+import com.ipcc.manager.model.dto.agent.AgentAuth;
 import com.ipcc.manager.service.AgentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

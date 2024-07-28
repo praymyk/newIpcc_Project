@@ -1,7 +1,6 @@
 package com.ipcc.manager.mapper;
 
-import com.ipcc.manager.model.Entity.agent.Agent;
-import com.ipcc.manager.model.Entity.agent.AgentAuth;
+import com.ipcc.manager.model.dto.agent.AgentAuth;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.ipcc.manager.model.Entity.agent;
+package com.ipcc.manager.model.dto.agent;
 
 import lombok.*;
 

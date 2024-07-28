@@ -1,4 +1,4 @@
-package com.ipcc.manager.model.Entity.agent;
+package com.ipcc.manager.model.dto.agent;
 
 import com.ipcc.common.annotation.ExcelColumn;
 import com.ipcc.common.model.dto.ExcelObject;

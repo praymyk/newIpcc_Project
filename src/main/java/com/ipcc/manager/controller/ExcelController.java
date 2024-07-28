@@ -1,7 +1,8 @@
 package com.ipcc.manager.controller;
 
 import com.ipcc.common.annotation.ExcelColumn;
-import com.ipcc.manager.model.Entity.agent.AgentAuth;
+import com.ipcc.common.excel.ExcelUtils;
+import com.ipcc.manager.model.dto.agent.AgentAuth;
 import com.ipcc.manager.service.AgentService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +23,16 @@ import java.util.List;
 public class ExcelController {
 
     private final AgentService agentService;
-
-    public ExcelController(AgentService agentService) {
+    private final ExcelUtils excelUtils;
+    public ExcelController(AgentService agentService, ExcelUtils excelUtils) {
         this.agentService = agentService;
+        this.excelUtils = excelUtils;
     }
 
-    @GetMapping("/agentList/ExcelDownload")
-    public void downloadCarInfo(HttpServletResponse response) throws IOException {
+
+
+    @GetMapping("/agentList/ExcelDownload2")
+    public void downloadAgentInfo(HttpServletResponse response) throws IOException {
 
         // 엑셀 파일 하나를 만듭니다
         Workbook workbook = new SXSSFWorkbook();
@@ -82,5 +86,14 @@ public class ExcelController {
         // 엑셀 파일을 응답에 씁니다
         workbook.write(response.getOutputStream());
         workbook.close();
+    }
+
+
+    @GetMapping("/agentList/ExcelDownload")
+    public void downloadAgentInfo2(HttpServletResponse response){
+
+        excelUtils.AgentAuthExcelDownload(agentService.selectAgentList(), response);
+
+
     }
 }
