@@ -1,189 +1,187 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JsSIP WebRTC Phone</title>
+    <title>WebRTC 구현 ver.4</title>
     <script th:src="@{/js/jssip-3.10.0.js}"></script>
 </head>
 <body>
-<h1>JsSIP 이용 WEBRTC 만들어보기 ver.1</h1>
-<P>
-    현재 문제 점 <br>
-    1. 웹 > 다른 ip폰 전화 걸기는 가능하지만 반대 방향으로 받기 안됨 - stun 문젠가??;; <br>
-    2. 다른 IP폰 음성정보가 웹으로 받아지지만 웹의 음성정보가 다른 IP폰으로 전달되지 않음(오디오 입력 장치 지정 문제로 의심) (해결)<br>
-</P>
+<h1>WebRTC ver.4</h1>
 
-<!-- 로그인 폼 -->
-<form id="loginForm">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required><br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required><br>
-    <button type="submit">Login</button>
-</form>
-
-<!-- 통화 컨트롤 -->
-<div id="callControls" style="display:none;">
-    <button id="callButton">Call</button>
-    <button id="hangupButton" style="display:none;">Hang Up</button>
+<div id="login-form">
+    <label for="sipUri">내선번호 :</label>
+    <input type="text" id="sipUri" placeholder="내선번호 입력">
+    <br>
+    <label for="sipPassword">비번:</label>
+    <input type="password" id="sipPassword">
+    <br>
+    <button id="loginButton">Login</button>
 </div>
 
-<!-- 마이크 장치 선택 -->
-<label for="audioSource">Microphone:</label>
-<select id="audioSource"></select>
+<div id="phone-controls" style="display:none;">
+    <button id="callButton">전화걸기</button> <!-- 전화 걸기 버튼 -->
+    <button id="hangupButton">끊기</button> <!-- 전화 끊기 버튼 -->
+    <div id="status"></div> <!-- 상태 메시지 표시 -->
+    <div id="callTime">통화 시간: 00:00:00</div> <!-- 통화 시간 표시 -->
+</div>
 
-<!-- 통화 상태 표시 -->
-<div id="callStatus"></div>
-
-<!-- 오디오 출력 -->
-<audio id="remoteAudio" autoplay></audio>
+<audio id="remoteAudio"></audio> <!-- 원격 오디오 재생을 위한 오디오 태그 -->
 
 <script>
-    let ua; // User Agent 객체
-    let session; // 통화 세션 객체
+    document.addEventListener('DOMContentLoaded', function () {
+        var ua; // User Agent 변수 선언
+        var session; // 통화 세션 변수 선언
+        var callStartTime; // 통화 시작 시간 변수 선언
+        var callTimer; // 통화 타이머 변수 선언
+        var domain = 'www.praymyk.co.kr'; // 기본 도메인 설정
 
-    // 모든 오디오 입력 장치 나열
-    navigator.mediaDevices.enumerateDevices().then(devices => {
-        const audioSelect = document.getElementById('audioSource');
-        devices.forEach(device => {
-            if (device.kind === 'audioinput') {
-                const option = document.createElement('option');
-                option.value = device.deviceId;
-                option.text = device.label || `Microphone ${audioSelect.length + 1}`;
-                audioSelect.appendChild(option);
+        // SIP URI를 포맷하여 도메인을 자동으로 추가하는 함수
+        function formatSipUri(username) {
+            if (!username.includes('@')) {
+                return 'sip:' + username + '@' + domain;
             }
-        });
-    });
+            return username;
+        }
 
-    // 로그인 폼 제출 시 이벤트 핸들러
-    document.getElementById('loginForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // 폼 기본 제출 동작 방지
-        const username = document.getElementById('username').value; // 사용자 이름 가져오기
-        const password = document.getElementById('password').value; // 비밀번호 가져오기
+        // 통화 타이머를 시작하는 함수
+        function startCallTimer() {
+            callStartTime = new Date(); // 통화 시작 시간 기록
+            callTimer = setInterval(updateCallTime, 1000); // 1초마다 updateCallTime 함수 호출
+        }
 
-        // WebSocket 인터페이스 생성
-        const socket = new JsSIP.WebSocketInterface('wss://www.praymyk.co.kr:8089/ws');
-        const configuration = {
-            sockets: [socket], // 소켓 설정
-            uri: 'sip:' + username + '@www.praymyk.co.kr', // SIP URI 설정
-            password: password, // 비밀번호 설정
-            realm: 'www.praymyk.co.kr', // Realm 설정 (Asterisk 설정 파일에 설정한 realm 값 입력하라는데 용도 모르겠음// )
-            display_name: username, // 표시 이름 설정
-            register: true // 자동 등록 설정
-        };
+        // 통화 시간을 업데이트하는 함수
+        function updateCallTime() {
+            var now = new Date();
+            var elapsed = new Date(now - callStartTime); // 경과 시간 계산
+            var hours = String(elapsed.getUTCHours()).padStart(2, '0');
+            var minutes = String(elapsed.getUTCMinutes()).padStart(2, '0');
+            var seconds = String(elapsed.getUTCSeconds()).padStart(2, '0');
+            document.getElementById('callTime').textContent = `Call Time: ${hours}:${minutes}:${seconds}`; // 통화 시간 표시 업데이트
+        }
 
-        ua = new JsSIP.UA(configuration); // User Agent 생성
-        ua.start(); // User Agent 시작
+        // 통화 타이머를 중지하는 함수
+        function stopCallTimer() {
+            clearInterval(callTimer); // 타이머 중지
+            document.getElementById('callTime').textContent = 'Call Time: 00:00:00'; // 통화 시간 초기화
+        }
 
-        // 등록 성공 시 이벤트 핸들러
-        ua.on('registered', () => {
-            console.log('User Agent registered successfully');
-            document.getElementById('callControls').style.display = 'block'; // 통화 컨트롤 표시
-        });
+        // 로그인 버튼 클릭 이벤트 핸들러
+        document.getElementById('loginButton').addEventListener('click', function () {
+            var sipUriInput = document.getElementById('sipUri').value;
+            var sipPassword = document.getElementById('sipPassword').value;
+            var sipUri = formatSipUri(sipUriInput); // SIP URI 포맷
 
-        // 등록 실패 시 이벤트 핸들러
-        ua.on('registrationFailed', (data) => {
-            console.error('User Agent registration failed', data.cause);
-        });
-
-        // 새로운 RTC 세션(통화) 발생 시 이벤트 핸들러
-        ua.on('newRTCSession', (data) => {
-            session = data.session; // 세션 객체 저장
-            if (session.direction === 'incoming') { // 수신 통화인 경우
-                getUserMedia().then(stream => {
-                    session.connection.addStream(stream); // 사용자의 오디오 스트림을 추가
-                    session.answer({ mediaConstraints: { audio: true, video: false }}); // 통화 수락
-                    document.getElementById('callButton').style.display = 'none';
-                    document.getElementById('hangupButton').style.display = 'block';
-                }).catch(error => {
-                    console.error('Error accessing media devices.', error);
-                });
-
-                session.connection.addEventListener('addstream', (event) => {
-                    const remoteAudio = document.getElementById('remoteAudio');
-                    remoteAudio.srcObject = event.stream; // Asterisk로부터 받은 오디오 스트림을 출력 장치에 연결
-                });
-            }
-
-            // 통화 종료 시 이벤트 핸들러
-            session.on('ended', () => {
-                document.getElementById('hangupButton').style.display = 'none';
-                document.getElementById('callButton').style.display = 'block';
-            });
-
-            // 통화 실패 시 이벤트 핸들러
-            session.on('failed', (e) => {
-                console.error('Call failed: ', e);
-            });
-
-            // 통화 확인 시 이벤트 핸들러
-            session.on('confirmed', () => {
-                console.log('Call confirmed');
-            });
-        });
-    });
-
-    // 통화 버튼 클릭 시 이벤트 핸들러
-    document.getElementById('callButton').addEventListener('click', function() {
-        const target = prompt("Enter the SIP address to call:"); // 통화할 SIP 주소 입력 받기
-        const eventHandlers = {
-            'progress': function(e) {
-                console.log('call is in progress');
-            },
-            'failed': function(e) {
-                console.log('call failed with cause: ' + e.cause);
-            },
-            'ended': function(e) {
-                console.log('call ended with cause: ' + e.cause);
-                document.getElementById('hangupButton').style.display = 'none';
-                document.getElementById('callButton').style.display = 'block';
-            },
-            'confirmed': function(e) {
-                console.log('call confirmed');
-            }
-        };
-
-        // 통화 옵션 설정
-        getUserMedia().then(stream => {
-            const options = {
-                eventHandlers: eventHandlers,
-                mediaStream: stream, // 사용자의 오디오 스트림을 추가
-                mediaConstraints: { audio: true, video: false } // 미디어 제약 조건 설정
+            var socket = new JsSIP.WebSocketInterface('wss://www.praymyk.co.kr:8089/ws'); // WebSocket 인터페이스 설정
+            var configuration = {
+                sockets: [socket],
+                uri: sipUri,
+                password: sipPassword,
+                session_timers: false
             };
 
-            session = ua.call('sip:' + target + '@www.praymyk.co.kr', options); // 통화 시작
-            document.getElementById('callButton').style.display = 'none';
-            document.getElementById('hangupButton').style.display = 'block';
+            ua = new JsSIP.UA(configuration); // User Agent 인스턴스 생성
 
-            session.connection.addEventListener('addstream', (event) => {
-                const remoteAudio = document.getElementById('remoteAudio');
-                remoteAudio.srcObject = event.stream; // Asterisk로부터 받은 오디오 스트림을 출력 장치에 연결
+            ua.start(); // User Agent 시작
+
+            // 등록 실패 이벤트 핸들러
+            ua.on('registrationFailed', function (ev) {
+                console.log('Registration failed:', ev.cause);
+                document.getElementById('status').textContent = 'Registration failed: ' + ev.cause; // 등록 실패 시 상태 메시지 업데이트
             });
-        }).catch(error => {
-            console.error('Error accessing media devices.', error);
+
+            // 등록 성공 이벤트 핸들러
+            ua.on('registered', function () {
+                console.log('Registered successfully');
+                document.getElementById('status').textContent = 'Registered successfully'; // 등록 성공 시 상태 메시지 업데이트
+                document.getElementById('login-form').style.display = 'none'; // 로그인 폼 숨기기
+                document.getElementById('phone-controls').style.display = 'block'; // 전화 제어 버튼 표시
+            });
+
+            // 새로운 RTC 세션 이벤트 핸들러
+            ua.on('newRTCSession', function (ev) {
+                session = ev.session; // 새 RTC 세션 생성
+
+                if (session.direction === 'incoming') { // 수신 전화일 경우
+                    var caller = session.remote_identity.uri.toString();
+                    if (confirm("전화온 내선 : " + caller)) {
+                        session.answer(); // 수신 전화에 대해 사용자가 수락하면 세션을 수락
+                        document.getElementById('status').textContent = 'Incoming call from: ' + caller; // 발신자 주소 상태 메시지에 표시
+                    } else {
+                        session.terminate(); // 수신 전화에 대해 사용자가 거절하면 세션을 종료
+                    }
+                }
+
+                // 통화 수락 이벤트 핸들러
+                session.on('accepted', function () {
+                    console.log('Call accepted');
+                    document.getElementById('status').textContent = 'Call accepted'; // 통화 수락 시 상태 메시지 업데이트
+                    startCallTimer(); // 통화 타이머 시작
+                });
+
+                // 통화 종료 이벤트 핸들러
+                session.on('ended', function () {
+                    console.log('Call ended');
+                    document.getElementById('status').textContent = 'Call ended'; // 통화 종료 시 상태 메시지 업데이트
+                    stopCallTimer(); // 통화 타이머 중지
+                });
+
+                // 통화 실패 이벤트 핸들러
+                session.on('failed', function (ev) {
+                    console.log('Call failed:', ev.cause);
+                    document.getElementById('status').textContent = 'Call failed: ' + ev.cause; // 통화 실패 시 상태 메시지 업데이트
+                    stopCallTimer(); // 통화 타이머 중지
+                });
+
+                // 원격 오디오 스트림 이벤트 핸들러
+                session.connection.addEventListener('addstream', function (event) {
+                    var remoteAudio = document.getElementById('remoteAudio');
+                    remoteAudio.srcObject = event.stream; // 원격 오디오 스트림 설정
+                    remoteAudio.play(); // 원격 오디오 재생
+                });
+
+                // 전화 끊기 버튼 클릭 이벤트 핸들러
+                document.getElementById('hangupButton').addEventListener('click', function () {
+                    session.terminate(); // 전화 끊기 버튼 클릭 시 세션 종료
+                });
+            });
+        });
+
+        // 전화 걸기 버튼 클릭 이벤트 핸들러
+        document.getElementById('callButton').addEventListener('click', function () {
+            var eventHandlers = {
+                'progress': function () {
+                    console.log('Call is in progress'); // 통화 진행 중 로그
+                },
+                'failed': function (ev) {
+                    console.log('Call failed with cause: ' + ev.cause);
+                    document.getElementById('status').textContent = 'Call failed: ' + ev.cause; // 통화 실패 시 상태 메시지 업데이트
+                    stopCallTimer(); // 통화 타이머 중지
+                },
+                'ended': function () {
+                    console.log('Call ended with cause: ' + ev.cause); // 통화 종료 시 로그
+                    stopCallTimer(); // 통화 타이머 중지
+                },
+                'confirmed': function () {
+                    console.log('Call confirmed'); // 통화 확인 시 로그
+                }
+            };
+
+            var options = {
+                eventHandlers: eventHandlers,
+                mediaConstraints: { audio: true, video: false } // 오디오만 허용하는 미디어 제약 조건
+            };
+
+            var targetInput = prompt("전화 걸 내선 입력 :"); // 사용자가 전화를 걸 SIP URI 입력
+            var target = formatSipUri(targetInput); // SIP URI 포맷
+            session = ua.call(target, options); // 전화 걸기
+
+            // 통화 수락 이벤트 핸들러
+            session.on('accepted', function () {
+                console.log('Call accepted');
+                document.getElementById('status').textContent = 'Call accepted'; // 통화 수락 시 상태 메시지 업데이트
+                startCallTimer(); // 통화 타이머 시작
+            });
         });
     });
-
-    // 통화 종료 버튼 클릭 시 이벤트 핸들러
-    document.getElementById('hangupButton').addEventListener('click', function() {
-        if (session) {
-            session.terminate(); // 통화 종료
-        }
-    });
-
-    // 선택한 오디오 장치로 미디어 스트림 가져오기
-    function getUserMedia() {
-        const audioSource = document.getElementById('audioSource').value;
-        const constraints = {
-            audio: {
-                deviceId: audioSource ? { exact: audioSource } : undefined // 오디오 입력 장치를 지정
-            },
-            video: false
-        };
-
-        return navigator.mediaDevices.getUserMedia(constraints);
-    }
 </script>
 </body>
 </html>
