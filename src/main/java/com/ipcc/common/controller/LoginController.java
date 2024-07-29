@@ -29,6 +29,7 @@ public class LoginController {
         // crm 로그인 성공 후 메인 페이지 이동
         @GetMapping("/crm/main")
         public String crmMain() {
-                return "crm/test3";
+                System.out.println("test");
+                return "crm/test2";
         }
 }

@@ -2,6 +2,7 @@ package com.ipcc.common.excel;
 
 import com.ipcc.manager.model.dto.agent.AgentAuth;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -19,5 +20,5 @@ import java.util.List;
 public interface ExcelUtilMethodFactory {
 
     void AgentAuthExcelDownload(List<AgentAuth> data, HttpServletResponse response);
-    void renderAgentAuthExcelBody(List<AgentAuth> data, Sheet sheet, Row row, Cell cell);
+    void renderAgentAuthExcelBody(List<AgentAuth> data, Sheet sheet, Row row, Cell cell, CellStyle bodyCellStyle);
 }

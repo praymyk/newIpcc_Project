@@ -4,11 +4,9 @@ import com.ipcc.common.annotation.ExcelColumn;
 import com.ipcc.manager.model.dto.agent.AgentAuth;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.hibernate.jdbc.Work;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -25,7 +23,6 @@ public class ExcelUtils implements ExcelUtilMethodFactory {
 
     /*
     * 상담원 리스트 엑셀 다운로드 기능
-    *
     * */
     @Override
     public void AgentAuthExcelDownload(List<AgentAuth> data, HttpServletResponse response) {
@@ -46,19 +43,25 @@ public class ExcelUtils implements ExcelUtilMethodFactory {
         // 첫 행을 생성해준다.
         row = sheet.createRow(0);
 
+        // 셀 스타일을 생성 ( ExcelUtils에 공통적으로 사용할 수 있도록 메서드로 사용)
+        CellStyle headerCellStyle = headerCellStyle(workbook);
+        
         // 헤더의 수(컬럼 이름의 수)만큼 반복해서 행을 생성한다.
-        for(int i=0; i<excelHeaderList.size(); i++)  {
-
+        for (int i = 0; i < excelHeaderList.size(); i++) {
             // 열을 만들어준다.
             cell = row.createCell(i);
-
             // 열에 헤더이름(컬럼 이름)을 넣어준다.
             cell.setCellValue(excelHeaderList.get(i));
+            // 셀 스타일을 적용한다.
+            cell.setCellStyle(headerCellStyle);
         }
 
         // Body
+        // 테두리 스타일을 추가한 셀 스타일 생성
+        CellStyle bodyCellStyle = bodyCellStyle(workbook);
+
         // 헤더 밑의 엑셀 파일 내용부분에 들어갈 내용을 그리는 작업
-        renderAgentAuthExcelBody(data, sheet, row, cell);
+        renderAgentAuthExcelBody(data, sheet, row, cell, bodyCellStyle);
 
         // DownLoad
         // 엑셀 파일이 완성 되면 파일 다운로드를 위해 content-type과 Header를 설정해준다.
@@ -80,16 +83,16 @@ public class ExcelUtils implements ExcelUtilMethodFactory {
         }
     }
 
-
     /*
      *   엑셀의 본문에 내용을 그려주는 로직
      *   @param List<StudentDto>
      *   @param Sheet
      *   @param Row
      *   @param Cell
+     *   @param CellStyle 셀 스타일
      * */
     @Override
-    public void renderAgentAuthExcelBody(List<AgentAuth> data, Sheet sheet, Row row, Cell cell) {
+    public void renderAgentAuthExcelBody(List<AgentAuth> data, Sheet sheet, Row row, Cell cell, CellStyle bodyCellStyle) {
         // 현재 행의 개수를 가지고 있는 변수 rowCount 선언(Header를 그리고 시작했으므로 1부터 시작)
         int rowCount = 1;
 
@@ -104,22 +107,29 @@ public class ExcelUtils implements ExcelUtilMethodFactory {
             cell = row.createCell(0);
             // 첫 번째 cell(열)의 값을 셋팅한다.
             cell.setCellValue(agentAuth.getAgentId());
+            cell.setCellStyle(bodyCellStyle);
             // 두 번째 cell(열)을 생성한다.
             cell = row.createCell(1);
             // 두 번째 cell(열)의 값을 셋팅한다.
             cell.setCellValue(agentAuth.getAuthType());
+            cell.setCellStyle(bodyCellStyle);
             // 세 번째 cell(열)을 생성한다.
             cell = row.createCell(2);
             // 세 번째 cell(열)의 값을 셋팅한다.
             cell.setCellValue(agentAuth.getAgentPw());
+            cell.setCellStyle(bodyCellStyle);
             // 네 번째 cell(열)을 생성한다.
             cell = row.createCell(3);
             // 네 번째 cell(열)의 값을 셋팅한다.
             cell.setCellValue(agentAuth.getAgentName());
-
+            cell.setCellStyle(bodyCellStyle);
         }
     }
 
+
+    /*
+    *  ExcelUtils 공통적으로 사용할 메서드 들 정의
+    */
 
     /*
      *   엑셀 헤더 이름들을 반환해주는 로직
@@ -181,8 +191,39 @@ public class ExcelUtils implements ExcelUtilMethodFactory {
         }
     }
 
+    /*
+    *  헤더의 셀 스타일을 반환하는 로직
+    */
+    private CellStyle headerCellStyle(Workbook workbook){
 
+        // 셀 스타일을 생성하고 배경 색을 노란색으로 설정
+        CellStyle headerCellStyle = workbook.createCellStyle();
+        headerCellStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+        headerCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        headerCellStyle.setAlignment(HorizontalAlignment.CENTER);
+        // 테두리 설정
+        headerCellStyle.setBorderTop(BorderStyle.THIN);
+        headerCellStyle.setBorderBottom(BorderStyle.THIN);
+        headerCellStyle.setBorderLeft(BorderStyle.THIN);
+        headerCellStyle.setBorderRight(BorderStyle.THIN);
 
+        return headerCellStyle;
+    }
+
+    /*
+    * 바디의 셀 스타일을 반환하는 로직
+    */
+    private CellStyle bodyCellStyle(Workbook workbook){
+
+        // 테두리 스타일을 추가한 셀 스타일 생성
+        CellStyle bodyCellStyle = workbook.createCellStyle();
+        bodyCellStyle.setBorderTop(BorderStyle.THIN);
+        bodyCellStyle.setBorderBottom(BorderStyle.THIN);
+        bodyCellStyle.setBorderLeft(BorderStyle.THIN);
+        bodyCellStyle.setBorderRight(BorderStyle.THIN);
+
+        return bodyCellStyle;
+    }
 
 
 }
