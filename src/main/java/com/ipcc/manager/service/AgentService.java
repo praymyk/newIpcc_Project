@@ -1,7 +1,8 @@
 package com.ipcc.manager.service;
 
-import com.ipcc.manager.mapper.AgentMapper;
-import com.ipcc.manager.model.dto.agent.AgentAuth;
+import com.ipcc.common.mapper.AgentMapper;
+import com.ipcc.common.model.dto.agent.Agent;
+import com.ipcc.common.model.dto.agent.AgentAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +27,9 @@ public class AgentService {
         return agentMapper.selectAgentList();
     }
 
-    public void getAgent() {
+    public Agent selectAgent(Agent agent) {
         // 에이전트 조회
+        return agentMapper.selectAgent(agent);
     }
 
     public int addAgent(AgentAuth agentAuth) {
@@ -42,4 +44,5 @@ public class AgentService {
     public void deleteAgent() {
         // 에이전트 삭제
     }
+
 }

@@ -15,6 +15,12 @@
     <input type="password" id="sipPassword">
     <br>
     <button id="loginButton">Login</button>
+
+    <div>
+        <h5>로그인 정보 출력</h5>
+        <p>Name: <span th:text="${session.loginAgent.agentName}"></span></p>
+        <p>ID: <span th:text="${session.loginAgent.agentId}"></span></p>
+    </div>
 </div>
 
 <div id="phone-controls" style="display:none;">
@@ -24,7 +30,7 @@
     <div id="callTime">통화 시간: 00:00:00</div> <!-- 통화 시간 표시 -->
 </div>
 
-<audio id="remoteAudio"></audio> <!-- 원격 오디오 재생을 위한 오디오 태그 -->
+<audio id="remoteAudio"></audio> <!-- 오디오 재생을 위한 오디오 태그 -->
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -84,14 +90,14 @@
 
             // 등록 실패 이벤트 핸들러
             ua.on('registrationFailed', function (ev) {
-                console.log('Registration failed:', ev.cause);
-                document.getElementById('status').textContent = 'Registration failed: ' + ev.cause; // 등록 실패 시 상태 메시지 업데이트
+                console.log('SIP 로그인 실패:', ev.cause);
+                document.getElementById('status').textContent = '로그인 실패: ' + ev.cause; // 등록 실패 시 상태 메시지 업데이트
             });
 
             // 등록 성공 이벤트 핸들러
             ua.on('registered', function () {
-                console.log('Registered successfully');
-                document.getElementById('status').textContent = 'Registered successfully'; // 등록 성공 시 상태 메시지 업데이트
+                console.log('SIP 로그인 성공');
+                document.getElementById('status').textContent = 'SIP ID 접속 성공'; // 등록 성공 시 상태 메시지 업데이트
                 document.getElementById('login-form').style.display = 'none'; // 로그인 폼 숨기기
                 document.getElementById('phone-controls').style.display = 'block'; // 전화 제어 버튼 표시
             });
@@ -104,7 +110,7 @@
                     var caller = session.remote_identity.uri.toString();
                     if (confirm("전화온 내선 : " + caller)) {
                         session.answer(); // 수신 전화에 대해 사용자가 수락하면 세션을 수락
-                        document.getElementById('status').textContent = 'Incoming call from: ' + caller; // 발신자 주소 상태 메시지에 표시
+                        document.getElementById('status').textContent = '전화가 왔어요!: ' + caller; // 발신자 주소 상태 메시지에 표시
                     } else {
                         session.terminate(); // 수신 전화에 대해 사용자가 거절하면 세션을 종료
                     }
@@ -146,7 +152,14 @@
         });
 
         // 전화 걸기 버튼 클릭 이벤트 핸들러
+        /*
+        * @ progress : 통화 진행 중 jssip 이벤트 핸들러
+        * @ failed : 통화 실패 jssip 이벤트 핸들러
+        * @ ended : 통화 종료 jssip 이벤트 핸들러
+        * @ confirmed : 통화 확인 jssip 이벤트 핸들러
+        * */
         document.getElementById('callButton').addEventListener('click', function () {
+
             var eventHandlers = {
                 'progress': function () {
                     console.log('Call is in progress'); // 통화 진행 중 로그
@@ -156,12 +169,18 @@
                     document.getElementById('status').textContent = 'Call failed: ' + ev.cause; // 통화 실패 시 상태 메시지 업데이트
                     stopCallTimer(); // 통화 타이머 중지
                 },
-                'ended': function () {
+                'ended': function (ev) {
                     console.log('Call ended with cause: ' + ev.cause); // 통화 종료 시 로그
                     stopCallTimer(); // 통화 타이머 중지
                 },
                 'confirmed': function () {
                     console.log('Call confirmed'); // 통화 확인 시 로그
+                    console.log("잉?");
+
+                    // 통화 연결 성공 시 통화 끊기 이벤트 헨들러르 여기에 등록해야 할듯?
+
+
+
                 }
             };
 

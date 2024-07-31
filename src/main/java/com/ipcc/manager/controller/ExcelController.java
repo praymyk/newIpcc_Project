@@ -2,7 +2,7 @@ package com.ipcc.manager.controller;
 
 import com.ipcc.common.annotation.ExcelColumn;
 import com.ipcc.common.excel.ExcelUtils;
-import com.ipcc.manager.model.dto.agent.AgentAuth;
+import com.ipcc.common.model.dto.agent.AgentAuth;
 import com.ipcc.manager.service.AgentService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;

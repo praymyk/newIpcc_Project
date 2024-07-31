@@ -3,9 +3,11 @@
 "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <typeAliases>
-        <typeAlias alias="AgentAuth" type="com.ipcc.manager.model.dto.agent.AgentAuth"/>
+        <typeAlias alias="AgentAuth" type="com.ipcc.common.model.dto.agent.AgentAuth"/>
+        <typeAlias alias="Agent" type="com.ipcc.common.model.dto.agent.Agent"/>
     </typeAliases>
     <mappers>
         <mapper resource="mapper/agent_mapper.xml"/>
     </mappers>
+
 </configuration>

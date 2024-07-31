@@ -1,12 +1,11 @@
 package com.ipcc.common.excel;
 
 import com.ipcc.common.annotation.ExcelColumn;
-import com.ipcc.manager.model.dto.agent.AgentAuth;
+import com.ipcc.common.model.dto.agent.AgentAuth;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.hibernate.jdbc.Work;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 

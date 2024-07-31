@@ -1,6 +1,6 @@
 package com.ipcc.common.excel;
 
-import com.ipcc.manager.model.dto.agent.AgentAuth;
+import com.ipcc.common.model.dto.agent.AgentAuth;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Sheet;

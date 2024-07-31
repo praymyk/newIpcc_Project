@@ -1,6 +1,6 @@
 package com.ipcc.manager.controller;
 
-import com.ipcc.manager.model.dto.agent.AgentAuth;
+import com.ipcc.common.model.dto.agent.AgentAuth;
 import com.ipcc.manager.service.AgentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -30,10 +30,8 @@ public class AgentController {
         try {
             // 상담원 등록 로직
             AgentAuth agentAuth = new AgentAuth("auth1001", "userpass", "1001password", "1001");
-            log.info("agentAuth: " + agentAuth);
-            int result = agentService.addAgent(agentAuth);
 
-            log.info("result: " + result);
+            int result = agentService.addAgent(agentAuth);
 
             // 리다이렉트 로직
             return "redirect:/manager/agent";

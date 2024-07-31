@@ -2,9 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.ipcc.manager.mapper.AgentMapper">
+<mapper namespace="com.ipcc.common.mapper.AgentMapper">
+
+    <!-- ResultMap 정의 -->
+    <resultMap id="AgentAuth" type="AgentAuth">
+        <id property="agentId" column="id"/>
+        <result property="authType" column="auth_type"/>
+        <result property="agentPw" column="password"/>
+        <result property="agentName" column="username"/>
+    </resultMap>
+
+    <resultMap id="Agent" type="Agent">
+        <id property="agentId" column="id"/>
+        <result property="agentName" column="name"/>
+        <result property="agentPw" column="password"/>
+        <result property="ccode" column="ccode"/>
+    </resultMap>
+
     <!-- 상담원 리스트 조회 -->
-    <select id="selectAgentList" resultType="AgentAuth">
+    <select id="selectAgentList" resultMap="AgentAuth">
         SELECT *
         FROM ps_auths;
     </select>
@@ -14,4 +30,11 @@
         INSERT INTO ps_auths(id, auth_type, password, username)
         VALUES (#{agentId}, #{authType}, #{agentPw}, #{agentName});
     </insert>
+
+    <!-- 상담원 조회 -->
+    <select id="selectAgent" parameterType="Agent" resultMap="Agent">
+        SELECT *
+        FROM agent
+        WHERE id = #{agentId} and password = #{agentPw} and ccode = #{ccode};
+    </select>
 </mapper>
