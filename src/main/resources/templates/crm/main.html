@@ -341,14 +341,6 @@
                     remoteAudio.play(); // 원격 오디오 재생
                 });
 
-                // 전화 끊기 버튼 클릭 이벤트 핸들러
-                document.getElementById('hangupBtn').addEventListener('click', function () {
-                    console.log("통화 끊기");
-                    stopCallTimer(); // 통화 타이머 중지
-                    // if(session){
-                    //     session.terminate();
-                    // }
-                });
             });
         }
 
@@ -401,6 +393,14 @@
             });
         });
 
+        // 전화 끊기 버튼 클릭 이벤트 핸들러
+        document.getElementById('hangupBtn').addEventListener('click', function () {
+            console.log("통화 끊기");
+            stopCallTimer(); // 통화 타이머 중지
+            if(session){
+                session.terminate();
+            }
+        });
 
         // 로그인 계정을 SIP URL 형태로 포맷
         function formatSipUri(username){
