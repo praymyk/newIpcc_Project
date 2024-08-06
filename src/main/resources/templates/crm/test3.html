@@ -18,8 +18,6 @@
 
     <div>
         <h5>로그인 정보 출력</h5>
-        <p>Name: <span th:text="${session.loginAgent.agentName}"></span></p>
-        <p>ID: <span th:text="${session.loginAgent.agentId}"></span></p>
     </div>
 </div>
 
@@ -102,7 +100,7 @@
                 document.getElementById('phone-controls').style.display = 'block'; // 전화 제어 버튼 표시
             });
 
-            // 새로운 RTC 세션 이벤트 핸들러
+            // RTC 세션 이벤트 핸들러
             ua.on('newRTCSession', function (ev) {
                 session = ev.session; // 새 RTC 세션 생성
 
@@ -176,10 +174,6 @@
                 'confirmed': function () {
                     console.log('Call confirmed'); // 통화 확인 시 로그
                     console.log("잉?");
-
-                    // 통화 연결 성공 시 통화 끊기 이벤트 헨들러르 여기에 등록해야 할듯?
-
-
 
                 }
             };

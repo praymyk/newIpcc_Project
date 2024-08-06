@@ -58,4 +58,10 @@ public class LoginController {
             return "redirect:crm/login";
         }
 
+        @GetMapping("/crm/test")
+        public String crmTest() {
+            log.info("잘들어오나");
+                return "crm/test3";
+        }
+
 }
