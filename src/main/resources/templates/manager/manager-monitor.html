@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Asterisk Endpoint Monitor</title>
+</head>
+<body>
+<h1>Asterisk Endpoint Monitor</h1>
+<ul>
+    <li th:each="endpoint : ${#json.parse(endpoints)}">
+        <span th:text="'Endpoint: ' + endpoint.endpoint"></span>,
+        <span th:text="'State: ' + endpoint.state"></span>
+    </li>
+</ul>
+</body>
+</html>

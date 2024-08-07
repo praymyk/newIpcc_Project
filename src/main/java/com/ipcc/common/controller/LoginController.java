@@ -64,4 +64,11 @@ public class LoginController {
                 return "crm/test3";
         }
 
+        @GetMapping("/crm/alogout")
+        public String crmLogout(HttpSession session) {
+            session.invalidate();
+            return "redirect:/crm/login";
+        }
+
+
 }
