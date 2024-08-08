@@ -5,12 +5,102 @@
     <title>Asterisk Endpoint Monitor</title>
 </head>
 <body>
-<h1>Asterisk Endpoint Monitor</h1>
-<ul>
-    <li th:each="endpoint : ${#json.parse(endpoints)}">
-        <span th:text="'Endpoint: ' + endpoint.endpoint"></span>,
-        <span th:text="'State: ' + endpoint.state"></span>
+<h1>아스타리스크 엔드포인트 모니터링 Ver.1</h1>
+<p>실시간 검사를 위해 ajax 처리 예정(완)</p><br>
+<p>endpoint의 통화 정보를 실시간으로 받아오기</p><br>
+<p></p>
+<ul id="endpoint-list">
+    <li th:each="endpoint : ${endpoints}">
+        <span th:text="'Endpoint: ' + ${endpoint['resource']}"></span>,
+        <span th:text="'State: ' + ${endpoint['state']}"></span>
     </li>
 </ul>
+
+<pre id="pjsip-channels"></pre>
+
+<pre id="channel-data"></pre>
+
+<pre id="channel-data2"></pre>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+
+        // 엔드포인트 모니터링 용 ajax
+        function fetchEndpoints() {
+            $.ajax({
+                url: './endpointMT',
+                method: 'GET',
+                success: function(data) {
+                    var endpointList = $('#endpoint-list');
+                    endpointList.empty();
+                    data.forEach(function(endpoint) {
+                        var listItem = $('<li></li>');
+                        listItem.append($('<span></span>').text('Endpoint: ' + endpoint['resource'] + ', '));
+                        listItem.append($('<span></span>').text('State: ' + endpoint['state']));
+                        endpointList.append(listItem);
+                    });
+                },
+                error: function(error) {
+                    console.error('Error fetching endpoints:', error);
+                }
+            });
+        }
+
+        // 채널 모니터링 AJAX(ARI)
+        function fetchPjsipChannels() {
+            $.ajax({
+                url: './pjsipChannelsMT',
+                method: 'GET',
+                success: function(data) {
+                    var pjsipChannels = $('#pjsip-channels');
+                    pjsipChannels.text(JSON.stringify(data, null, 2));
+                },
+                error: function(error) {
+                    console.error('Error fetching PJSIP channels:', error);
+                }
+            });
+        }
+
+        // 채널 모니터링 AJAX(AMI)
+        function fetchPjsipChannels2() {
+            $.ajax({
+                url: './amiPjsipChannelsMT',
+                method: 'GET',
+                success: function(data) {
+                    $('#channel-data').text(JSON.stringify(data, null, 2));
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    $('#channel-data').text('Error: ' + textStatus + ' ' + errorThrown);
+                }
+            });
+        }
+
+        function fetchPjsipChannels3() {
+            $.ajax({
+                url: './amiPjsipChannelsMT2',
+                method: 'GET',
+                success: function(data) {
+                    $('#channel-data2').text(JSON.stringify(data, null, 2));
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    $('#channel-data2').text('Error: ' + textStatus + ' ' + errorThrown);
+                }
+            });
+        }
+
+        // Fetch endpoints when the page loads
+        fetchEndpoints();
+        //fetchPjsipChannels();
+        // fetchPjsipChannels2();
+        fetchPjsipChannels3();
+
+        // Optional: set an interval to fetch endpoints every 10 seconds
+        setInterval(fetchEndpoints, 3000);
+        //setInterval(fetchPjsipChannels, 3000);
+        setInterval(fetchPjsipChannels3, 3000);
+
+    });
+</script>
 </body>
 </html>

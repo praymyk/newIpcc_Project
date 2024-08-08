@@ -31,10 +31,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.asteriskjava:asterisk-java:3.39.0' // Asterisk Java 라이브러리
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
 	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
     implementation 'org.apache.poi:poi-ooxml:5.2.3' // apache poi 라이브러리 (엑셀용)
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'       /* Thymeleaf Layout */
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE'
 	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'  /* Log4JDBC */
 	implementation 'com.mysql:mysql-connector-j:8.0.33'
 	compileOnly 'org.projectlombok:lombok'
