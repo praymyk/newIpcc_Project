@@ -3,16 +3,12 @@ package com.ipcc.common.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.asteriskjava.manager.ManagerConnection;
 import org.asteriskjava.manager.ManagerConnectionFactory;
-import org.asteriskjava.manager.ManagerEventListener;
+import org.asteriskjava.manager.ManagerConnectionState;
 import org.asteriskjava.manager.action.CommandAction;
-import org.asteriskjava.manager.event.*;
-import org.asteriskjava.manager.event.*;
-import org.asteriskjava.manager.event.ManagerEvent;
 import org.asteriskjava.manager.response.CommandResponse;
-import org.asteriskjava.pbx.asterisk.wrap.events.ChannelEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class AsteriskService {
 
@@ -69,15 +66,16 @@ public class AsteriskService {
     }
     
     // AMI API 사용을 위한 로그인 작업
-    public String getAmiPjsipChannels() {
+    public List<String> getAmiPjsipChannels() {
         try {
-            managerConnection.login();
+            if (managerConnection.getState() != ManagerConnectionState.CONNECTED) {
+                managerConnection.login();
+            }
             CommandAction action = new CommandAction("pjsip show channels");
             CommandResponse response = (CommandResponse) managerConnection.sendAction(action);
             managerConnection.logoff();
 
-            List<Map<String, String>> parsedResult = parsePjsipChannels(response.getResult());
-            return objectMapper.writeValueAsString(parsedResult); // List를 JSON으로 변환
+            return response.getResult();
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to convert result to JSON", e);
@@ -86,31 +84,6 @@ public class AsteriskService {
         }
     }
 
-    // AMI API를 통해 가져온 PJSIP 채널 정보를 키 : value 형식으로 파싱합니다
-    private List<Map<String, String>> parsePjsipChannels(List<String> result) {
-        List<Map<String, String>> channels = new ArrayList<>();
-
-        for (int i = 0; i < result.size(); i++) {
-            String line = result.get(i);
-            if (line.startsWith("Channel:")) {
-                Map<String, String> channel = new HashMap<>();
-                channel.put("Channel", line.split(":")[1].trim());
-
-                // 다음 줄에서 Exten과 CLCID를 가져옴
-                if (i + 1 < result.size() && result.get(i + 1).startsWith("Exten:")) {
-                    String extenLine = result.get(i + 1);
-                    String[] parts = extenLine.split("\\s+");
-                    channel.put("Exten", parts[1]);
-                    channel.put("CLCID", parts[3]);
-                    i++; // 다음 줄을 이미 처리했으므로 건너뜀
-                }
-                channels.add(channel);
-            }
-        }
-
-        return channels;
-    }
-    
 
 
     // Asterisk ARI API를 통해 Asterisk 서버에 등록된 모든 endpoint 정보를 가져옵니다

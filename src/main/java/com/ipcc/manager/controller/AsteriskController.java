@@ -62,7 +62,7 @@ public class AsteriskController {
 
     @GetMapping("/amiPjsipChannelsMT2")
     @ResponseBody
-    public String getPjsipChannels2() {
+    public List<String> getPjsipChannels2() {
 
         log.info("pjsip channels2 : " + asteriskService.getAmiPjsipChannels());
         return asteriskService.getAmiPjsipChannels();
