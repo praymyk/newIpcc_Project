@@ -1,0 +1,202 @@
+.inner-content-wrapper {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f5f5f7;
+    width: 100%;
+    margin: 0;
+    min-width: 750px;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-title {
+    height: 45px;
+    font-size: 1.3em;
+    font-weight: bold;
+    background: #f5f5f7;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* mon-custinfo 스타일 */
+.mon-custinfo {
+    background-color: #ffffff;
+    min-width: 750px;
+    padding: 10px;
+    margin: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 1.1em;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mon-custinfo span {
+    margin-right: 10px;
+}
+
+/* 전체 페이지 설정 */
+.monAgent-content {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/*
+좌측 monAgent-content a 스타일 
+*/
+.monAgent-content-a {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    gap: 10px;
+    min-width: 750px;
+    flex : 1;
+}
+
+.mon-state-wrapper {
+    display: flex;
+    gap: 10px;
+}
+
+.que-state-wrapper {
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    margin-bottom: 10px;
+}
+
+.agent-state, .call-state {
+    flex: 1;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.agent-state:hover, .call-state:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 버튼 스타일 */
+.state-btn {
+    background-color: #007aff;
+    color: #ffffff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s ease;
+}
+
+.state-btn:hover {
+    background-color: #005bb5;
+}
+
+/* 테이블 스타일 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+td {
+    padding: 8px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 1em;
+    color: #333;
+}
+
+th {
+    padding: 8px;
+    text-align: left;
+    background-color: #f1f1f1;
+    border-bottom: 2px solid #e0e0e0;
+    font-size: 1em;
+    color: #333;
+}
+
+/* 큐 상태 카드 스타일 */
+.que-name {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/*
+우측 monAgent-content-b 스타일
+*/
+.monAgent-content-b {
+    margin: 10px;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+/* 상담원 목록 검색 바 */
+.mon-search-bar{
+    background-color: #ffffff;
+    height: 40px;
+    padding: 10px;
+    margin: ;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 1.1em;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+/* 카드 레이아웃 설정   */
+.agent-wrapper {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    min-width: 500px
+}
+
+/* 상담원 카드 설정 */
+.agent-card {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: calc(50% - 5px); 
+    margin-bottom: 10px;
+    text-align: center;
+    transition: box-shadow 0.3s ease;
+}
+
+.agent-card:hover {
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 상담원 정보 설정 */
+.agent-name {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.agent-info {
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.agent-status {
+    font-size: 1em;
+    font-weight: bold;
+    color: #007aff; 
+    margin-bottom: 5px;
+}
+
+.status-time {
+    font-size: 0.9em;
+    color: #8e8e93; 
+}
