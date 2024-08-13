@@ -94,7 +94,7 @@
     <div class="header">
         <!--해더 내용은 replace로 대처-->
         <div th:replace="~{layout/manager-header :: manager-header}"></div>
-        <input type="hidden" id="custcode" th:value="${session.loginManager.ccode}">
+        <input type="hidden" id="custcode-manager" th:value="${session.loginManager.ccode}">
     </div>
 
 
@@ -161,6 +161,7 @@
                 success: function(data) {
                     // 기존의 content 부분을 가져온 데이터로 교체
                     $('.content').html(data);
+                    initScript();
 
                     // 선택한 메뉴에 따른 스크립트 실행
                     switch (contentId) {
@@ -182,35 +183,7 @@
 
 
     });
-
 </script>
-
-<!-- 상담원 모니터링용 스크립트 -->
-<SCRIPT>
-
-    // 상담원 리스트 조회용 함수
-    function monAgent(){
-
-        $.ajax({
-            url: 'agentList',
-            method: 'GET',
-            data : {
-                // 조회 조건
-
-
-            },
-            success: function(data) {
-                // 기존의 content 부분을 가져온 데이터로 교체
-                $('.content').html(data);
-            },
-            error: function(xhr, status, error) {
-                console.error("Error loading content:", error);
-            }
-        });
-
-    }
-
-</SCRIPT>
 
 </body>
 </html>

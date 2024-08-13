@@ -5,14 +5,13 @@ import com.ipcc.common.model.dto.agent.AgentAuth;
 import com.ipcc.manager.service.AgentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 // 상담원 관리 컨트롤러
 @Slf4j
-@Controller
+@Controller("managerAgentController")
 @RequestMapping("/manager/agent")
 public class AgentController {
 
@@ -24,8 +23,15 @@ public class AgentController {
 
     // 상담원 목록 조회
     @GetMapping("/agentList")
-    public void getAgentList(Agent agent)  {
+    @ResponseBody
+    public List<AgentAuth> getAgentList(Agent agent)  {
         log.info("agent : " + agent);
+
+        List<AgentAuth> agentList = agentService.selectAgentList();
+
+        log.info("agentList : " + agentList);
+
+        return agentList;
     }
 
     // 상담원 등록

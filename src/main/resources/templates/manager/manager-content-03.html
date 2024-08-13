@@ -347,6 +347,7 @@
             <!-- 상담원 리스트를 카드 스타일로 -->
             <div class="monAgent-content-b">
                 <div class="mon-search-bar">
+                    <input type="text" id="custcode" th:value="${session.loginManager.ccode}">
                     <input type="text" id="search-monAgents" placeholder="상담원 이름, 내선번호로 검색">
                 </div>
                 <div class="agent-wrapper">
@@ -357,26 +358,68 @@
                         <div class="agent-status">상담 중</div>
                         <div class="status-time">상태 유지 시간: 10분</div>
                     </div>
-            
-                    <!-- 두 번째 상담원 카드 -->
-                    <div class="agent-card">
-                        <div class="agent-name">정은석</div>
-                        <div class="agent-info">내선번호: 5678</div>
-                        <div class="agent-status">대기 중</div>
-                        <div class="status-time">상태 유지 시간: 5분</div>
-                    </div>
-            
-                    <!-- 세 번째 상담원 카드 -->
-                    <div class="agent-card">
-                        <div class="agent-name">정온석</div>
-                        <div class="agent-info">내선번호: 9012</div>
-                        <div class="agent-status">통화 중</div>
-                        <div class="status-time">상태 유지 시간: 20분</div>
-                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- 페이지 로드 후 실행할 스크립트 -->
+        <script>
+            /*
+            * @param custcode : 업체코드
+            * @param agentName : 상담원 이름
+            * @param agentId : 상담원 id/내선
+            * */
+            function initScript(){
+                console.log("Agent monitoring Script start");
+
+                var custcode = $('#custcode').val();
+                var agentName = $('#search-monAgents').val();
+                var agentId = $('#search-monAgents').val();
+
+                getAgentList();
+
+                // 상담원 리스트 조회용 메서드
+                function getAgentList(){
+                    var ccode = $('#custcode').val();
+                    console.log("ccode" + ccode);
+
+                    $.ajax({
+                        url: 'agent/agentList',
+                        method: 'GET',
+                        data : {
+                            // 조회 조건
+                            ccode : custcode,
+                            agentName : agentName,
+                            agentId : agentId
+                        },
+                        success: function(data) {
+                            var agentList = data;
+
+                            // agent-list-container에 동적으로 에이전트 카드를 추가
+                            agentList.forEach(function(agent) {
+                                var agentCardHtml =
+                                    `<div class="agent-card">
+                                        <div class="agent-name">${agent.agentName}</div>
+                                        <div class="agent-info">내선번호: ${agent.agentId}</div>
+                                        <div class="agent-status">상태: 상담 중</div>
+                                        <div class="status-time">상태 유지 시간: 10분</div>
+                                    </div>`;
+
+                                $('.agent-wrapper').append(agentCardHtml);
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error loading content:", error);
+                        }
+                    });
+                }
+
+            }
+        </script>
     </div>
+
+
+
 
 
 </body>
