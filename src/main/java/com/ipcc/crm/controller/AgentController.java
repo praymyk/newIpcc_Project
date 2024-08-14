@@ -1,14 +1,12 @@
 package com.ipcc.crm.controller;
 
 import com.ipcc.common.model.dto.agent.AgentEventLog;
-import com.ipcc.manager.service.AgentService;
+import com.ipcc.crm.service.AgentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller("crmAgentController")
@@ -16,44 +14,62 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class AgentController {
 
     @Autowired
-    private AgentService agentService;
+    private final AgentService agentService;
+
+    public AgentController(AgentService agentService) {
+        this.agentService = agentService;
+    }
+
+    // 현재 상담원 상태 조회용 메서드
+    @PostMapping("/getCurrentStatus")
+    @ResponseBody
+    public ResponseEntity<?> getAgentStatus(@RequestParam("agentExt") String agentExt){
+        // 상담원 상태 조회
+        if(agentExt == null || agentExt.equals("")){
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(agentService.currentAgentEvent(agentExt));
+    }
     
     // 상담원 상태 로그 저장용 메서드
     @PostMapping("/saveAgentStatusLog")
     @ResponseBody
     public String saveAgentStatusLog(AgentEventLog agentEventLog) {
-        // 상담원 상태 로그 저장
-        log.info("agentEventLog : " + agentEventLog);
 
-        String result = agentService.addAgentEvent(agentEventLog);
+        int result = agentService.addAgentEvent(agentEventLog);
 
-        return result;
+        if(result > 0){
+            return "상담원 상태 저장 성공";
+        } else {
+            return "상담원 상태 저장 실패";
+        }
     }
+
 
     // 상담원 이벤트 업데이트 용 메서드
     @PostMapping("/updateAgentStatusLog")
     @ResponseBody
-    public int updateAgentStatusLog(AgentEventLog agentEventLog,
-                                    @RequestParam("beforeEventId") String eventId,
-                                    @RequestParam("useTime") String useTime,
-                                    @RequestParam("endTime") String endTime) {
-        // step.1 상담원 이벤트 업데이트
+    public String updateAgentStatusLog(AgentEventLog agentEventLog) {
 
+        // step.1 이전 상담원 이벤트 종료 상태로 업데이트
         AgentEventLog beforeAgentEventLog = new AgentEventLog();
-        beforeAgentEventLog.setEventId(eventId);
-        beforeAgentEventLog.setTimeUse(useTime);
-        beforeAgentEventLog.setTimeEnd(endTime);
 
-        log.info("beforeAgentEventLog : " + beforeAgentEventLog);
-        agentService.updateAgentEvent(beforeAgentEventLog);
+        int result = agentService.updateAgentEvent(beforeAgentEventLog);
 
-        //step2. 새로운 상담원 이벤트 등록
+        if (result > 0) {
+            //step2. 새로운 상담원 이벤트 등록
+            int result2 = agentService.addAgentEvent(agentEventLog);
 
-        // 상담원 상태 로그 저장
-        log.info("agentEventLog : " + agentEventLog);
+            if (result2>0) {
+                return "상담원 상태 전환 성공";
+            } else {
+                return "상담원 상태 전환 실패";
+            }
 
-        String result = agentService.addAgentEvent(agentEventLog);
-
-        return 0;
+        } else {
+            return "상담원 상태 전환 실패";
+        }
     }
+
 }

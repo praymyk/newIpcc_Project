@@ -21,7 +21,7 @@
 
     <!-- 상담원 이벤트 로그 -->
     <resultMap id="AgentEventLog" type="AgentEventLog">
-        <id property="agentId" column="EVENT_ID"/>
+        <id property="eventId" column="EVENT_ID"/>
         <result property="agentExt" column="AGENT_EXT"/>
         <result property="agentName" column="AGENT_NAME"/>
         <result property="eventName" column="EVENT_NAME"/>
@@ -50,21 +50,43 @@
         FROM agent
         WHERE id = #{agentId} and password = #{agentPw} and ccode = #{ccode};
     </select>
+    
+    <!-- 현재 상담원 상태 조회 -->
+    <select id="currentAgentEvent" parameterType="String" resultMap="AgentEventLog">
+        SELECT *
+        FROM agent_log
+        WHERE AGENT_EXT = #{agentExt}
+        AND TIME_END IS NULL
+        ORDER BY TIME_START DESC
+        LIMIT 1;
+    </select>
 
     <!-- 상담원 이벤트 로그 write -->
-    <insert id="insertAgentEvent" parameterType="AgentEventLog" useGeneratedKeys="true" keyProperty="eventId">
+    <insert id="insertAgentEvent" parameterType="AgentEventLog">
         INSERT INTO agent_log (AGENT_EXT,
                                AGENT_NAME,
                                EVENT_NAME,
-                               TIME_START)
-        VALUES (#{agentExt}, #{agentName}, #{eventName}, #{timeStart});
+                               TIME_START,
+                               TIME_END)
+        VALUES (#{agentExt}, #{agentName}, #{eventName}, #{timeStart},#{timeEnd});
+    </insert>
+
+    <!-- 상담원 로그아웃 이벤트 로그 write -->
+    <insert id="insertAgentLogoutEvent" parameterType="AgentEventLog">
+        INSERT INTO agent_log (AGENT_EXT,
+                               AGENT_NAME,
+                               EVENT_NAME,
+                               TIME_START,
+                               TIME_END)
+        VALUES (#{agentExt}, #{agentName}, #{eventName}, #{timeStart}, #{timeEnd});
     </insert>
 
     <!-- 상담원 이벤트 로그 update -->
     <update id="updateAgentEvent" parameterType="AgentEventLog">
         UPDATE agent_log
-        SET TIME_USE = #{timeUse},
-            TIME_END = #{timeEnd}
-        WHERE EVENT_ID = #{eventId};
+        SET TIME_USE = TIMESTAMPDIFF(SECOND, TIME_START, NOW()),
+            TIME_END = NOW()
+        WHERE TIME_END IS NULL;
     </update>
+
 </mapper>

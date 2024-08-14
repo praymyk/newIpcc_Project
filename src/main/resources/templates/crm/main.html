@@ -246,6 +246,7 @@
     * @param agentStat 현재 상담원 상태 저장용 변수
     * @param domain : asterisk 서버 도메인 설정
     */
+
     document.addEventListener("DOMContentLoaded", function (){
 
         var ua;
@@ -257,12 +258,18 @@
         var domain = 'www.praymyk.co.kr';
 
         // 상담원 로그 저장용 변수
-        var eventId = "";
         var agentId = '[[${session.loginAgent.agentId}]]';
         var agentName = '[[${session.loginAgent.agentName}]]';
-        var CurrentStatus = "";
-        var eventTime = "";
-        var useTime = "";
+        var currentStatus;
+        var eventTime;
+        var timeEnd;
+
+        // 페이지 새로 고침 시 이전 이벤트 저장해야함.
+        window.addEventListener('beforeunload', function (event) {
+            // 여기에 새로고침 또는 페이지 떠나기 전에 실행할 코드를 작성합니다.
+            console.log("페이지가 새로고침되거나 닫히려고 합니다.");
+
+        });
 
         /*
         *  sip 로그인 이벤트
@@ -279,7 +286,6 @@
         function sipLogout(){
             ua.stop();
             saveEvent("logout");
-            eventId = "";
         }
 
         // 로그인 이벤트 헨들러
@@ -305,6 +311,9 @@
 
             ua.start();
 
+            // 로그인 후 이전 상태 불러오기 ( 첫 currentStatus 값 가져옴 )
+            getCurrentStatus();
+
             // 로그인 실패 이벤트 핸들러
             ua.on('registrationFailed', function (ev) {
                 console.log('SIP 로그인 실패:', ev.cause);
@@ -314,8 +323,7 @@
             // 로그인 성공 이벤트 핸들러
             ua.on('registered', function () {
                 console.log('SIP 로그인 성공');
-                saveEvent("login");
-                eventId = "";
+                saveEvent(currentStatus);
             });
 
             /*
@@ -393,7 +401,7 @@
 
             var eventHandlers = {
                 'progress': function () {
-                    console.log('Call is in progress'); // 통화 진행 중 로그
+                    console.log('Call is in progress'); // 전화 연결 시도 중
                     saveEvent("call progress");
                 },
                 'failed': function (ev) {
@@ -409,7 +417,7 @@
                 },
                 'confirmed': function () {
                     console.log('Call confirmed'); // 통화 확인 시 로그
-                    saveEvent("call confirmed")
+                    saveEvent("call confimed");
                 }
             };
 
@@ -495,6 +503,7 @@
             }
         }
 
+
         // 통화시간 업데이트 반영 함수
         function updateCallTime() {
             console.log("updateCallTime start" )
@@ -514,57 +523,59 @@
 
         // 상담원 상태 스위칭 함수 ( 이전 상태 시간 저장 + 시간 체크 시작 )
         function switchStatus(status){
+
+            console.log("상담원 상태 스위칭!");
+
             saveTime = document.getElementById('callTime').value;
-            useTime = convertTimeToSeconds(saveTime); // 로그 저장을 위해 사용시간 저장
+            console.log("saveTime : " + saveTime);
+
+
             console.log("상태 시간 저장 : [" + status + "] : "+ saveTime );
             // 이때는 이전 상태의 종료시간 업데이트 필요함
             stopCallTimer();
             startCallTimer();
         }
 
-        // 상담원 상태 지속시간(SAVE TIME) 초단위 변경요 함수
-        function convertTimeToSeconds(saveTime) {
-            // 시간을 ':'를 기준으로 분리합니다.
-            const parts = saveTime.split(":");
-
-            // 분리된 부분을 숫자로 변환하여 계산합니다.
-            const hours = parseInt(parts[0], 10);   // 시간 부분
-            const minutes = parseInt(parts[1], 10); // 분 부분
-            const seconds = parseInt(parts[2], 10); // 초 부분
-
-            // 전체 시간을 초 단위로 계산합니다.
-            return hours * 3600 + minutes * 60 + seconds;
-        }
-
-        // 상담원 이벤트 저장용 함수
+        // 상담원 상태 변환용 함수 ( 새로운 상태 저장 + 이전 상태 종료 처리 )
         function saveEvent(data){
-            CurrentStatus = data;
+            currentStatus = data;
             eventTime = `${new Date().getFullYear()}-${(new Date().getMonth() + 1).toString().padStart(2, '0')}-${new Date().getDate().toString().padStart(2, '0')} ${new Date().getHours().toString().padStart(2, '0')}:${new Date().getMinutes().toString().padStart(2, '0')}:${new Date().getSeconds().toString().padStart(2, '0')}`;
 
-            console.log("saveEvent 진입전 eventId : " + eventId);
-            if(eventId === "" || eventId === 0){
-                console.log("새로운 이벤트 로그 등록");
-                saveEventLog();
+            console.log("currentStatus : " + currentStatus);
+            if(currentStatus === "" || currentStatus === null || currentStatus === undefined) {
+                // 첫 이벤트는 로그인으로 처리 이후 preparing 상태로 전환 후 업데이트
+                currentStatus = "login";
+
+                saveEventLog("preparing");
+                currentStatus = "preparing";
+                stopCallTimer();
+                startCallTimer();
+
+                updateEventLog();
+            } else if (currentStatus === "logout") {
+                // 이전 상태가 로그 아웃일 경우 로그아웃 이벤트 종료 처리
+                timeEnd = `${new Date().getFullYear()}-${(new Date().getMonth() + 1).toString().padStart(2, '0')}-${new Date().getDate().toString().padStart(2, '0')} ${new Date().getHours().toString().padStart(2, '0')}:${new Date().getMinutes().toString().padStart(2, '0')}:${new Date().getSeconds().toString().padStart(2, '0')}`;
+                updateEventLog();
 
             } else {
-                console.log("종료 이벤트 ID : " + eventId + " 종료 후 새 이벤트 시작");
                 updateEventLog();
             }
         }
 
+        // 상담원 상태 저장용 함수
         function saveEventLog(){
             $.ajax({
                 url: 'crm/agent/saveAgentStatusLog',
                 method: 'POST',
                 data: {
-                    eventId: eventId,
                     agentExt: agentId,
                     agentName: agentName,
-                    eventName: CurrentStatus,
-                    timeStart: eventTime
+                    eventName: currentStatus,
+                    timeStart: eventTime,
+                    timeEnd: timeEnd
                 },
                 success: function (data) {
-                    eventId = data;
+                    console.log(data);
                 },
                 error: function (xhr, status, error) {
                     console.error("이벤트 저장 실패:", error);
@@ -574,27 +585,70 @@
 
         // 이전 이벤트 종료 + 새로운 이벤트 시작
         function updateEventLog(){
-            console.log("useTime : " + useTime);
             $.ajax({
                 url: 'crm/agent/updateAgentStatusLog',
                 method: 'POST',
                 data: {
-                    beforeEventId: eventId,
-                    useTime: useTime,
-                    endTime : eventTime,
-                    eventName: CurrentStatus,
+                    eventName: currentStatus,
                     agentExt: agentId,
                     agentName: agentName,
-                    timeStart: eventTime
+                    timeStart: eventTime,
+                    timeEnd: timeEnd
                 },
                 success: function (data) {
-                    eventId = data;
+                    console.log(data);
                 },
                 error: function (xhr, status, error) {
                     console.error("이벤트 저장 실패:", error);
                 }
             });
         }
+
+        // 현재 상태 조회용 함수 (현재 상태 값 할당, 시간 계산)
+        function getCurrentStatus(){
+            $.ajax({
+                url: 'crm/agent/getCurrentStatus',
+                method: 'POST',
+                data: {
+                    agentExt: '[[${session.loginAgent.agentId}]]'
+                },
+                success: function (response) {
+                    console.log ("data : " + response);
+                    if(response === ""){
+                        // 첫 로그인, 로그아웃 후 재접속 일시
+                        currentStatus = "";
+                        document.getElementById('status').value = "preparing"; // 이전 상태 값이 없기 때문에 preparing으로 설정
+                        startCallTimer();
+                    } else {
+                        document.getElementById('status').value = response.eventName;
+
+                        var dateString  = response.timeStart;
+                        var isoDateString  = dateString.replace(' ', 'T');
+                        const dateObject = new Date(isoDateString);
+
+                        currentStatus = response.eventName; // 현재 상태를 저장
+                        continueCallTimer(dateObject);  // 이전 상태 시간 계산
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("상태 조회 실패:", error);
+                }
+            });
+        }
+
+        // 현재 상태를 조회하여 이전 상태 시간을 계산하는 함수
+        function continueCallTimer(timeStart){
+            callStartTime = timeStart; // DB에 조회한 시간으로 변경 필요
+            callTimer = setInterval(updateCallTime, 1000);
+
+            if(callTimer === null){
+                callTimer = setInterval(updateCallTime, 1000);
+            } else {
+                stopCallTimer();
+                callTimer = setInterval(updateCallTime, 1000);
+            }
+        }
+
     });
 
     </script>

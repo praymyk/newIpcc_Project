@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+@Service("managerAgentService")
 public class AgentService {
 
     private final AgentMapper agentMapper;
@@ -34,18 +34,4 @@ public class AgentService {
         return agentMapper.insertAgent(agentAuth);
     }
 
-    // 상담원 이벤트 등록
-    public String addAgentEvent(AgentEventLog agentEventLog) {
-        int result = agentMapper.insertAgentEvent(agentEventLog);
-
-        if (result > 0 ){
-            return agentEventLog.getEventId();
-        }
-        return "이벤트 로그 저장 실패";
-    }
-
-    // 상담원 상태 로그 업데이트 용
-    public void updateAgentEvent(AgentEventLog agentEventLog) {
-        int result = agentMapper.updateAgentEvent(agentEventLog);
-    }
 }

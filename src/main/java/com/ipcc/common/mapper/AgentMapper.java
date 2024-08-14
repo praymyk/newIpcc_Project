@@ -4,6 +4,7 @@ import com.ipcc.common.model.dto.agent.Agent;
 import com.ipcc.common.model.dto.agent.AgentAuth;
 import com.ipcc.common.model.dto.agent.AgentEventLog;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -18,9 +19,13 @@ public interface AgentMapper {
     // 상담원 조회
     Agent selectAgent(Agent agent);
 
+    // 상담원 현재 상태 조회
+    AgentEventLog currentAgentEvent(@Param("agentExt") String agentExt);
+
     // 상담원 상태 이벤트 등록
     int insertAgentEvent(AgentEventLog agentEventLog);
 
     // 상담원 상태 이벤트 업데이트
     int updateAgentEvent(AgentEventLog agentEventLog);
+
 }

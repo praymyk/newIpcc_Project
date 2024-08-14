@@ -16,12 +16,21 @@
         </encoder>
     </appender>
 
-    <!-- Logger -->
-    <logger name="jdbc.sqlonly" level="INFO" appender-ref="console-infolog" />
-    <logger name="jdbc.resultsettable" level="INFO" appender-ref="console-infolog" />
+    <!-- Logger for specific JDBC loggers -->
+    <logger name="jdbc.sqlonly" level="INFO">
+        <appender-ref ref="console-infolog" />
+    </logger>
+
+    <logger name="jdbc.resultsettable" level="INFO">
+        <appender-ref ref="console-infolog" />
+    </logger>
+
+    <!-- Disable specific JDBC logs -->
+    <logger name="jdbc.resultset" level="ERROR"/>
+    <logger name="jdbc.audit" level="ERROR"/>
 
     <!-- Root Logger -->
-    <root level="off">
+    <root level="INFO">
         <appender-ref ref="console" />
     </root>
 </configuration>
