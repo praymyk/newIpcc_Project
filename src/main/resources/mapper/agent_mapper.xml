@@ -61,24 +61,23 @@
         LIMIT 1;
     </select>
 
-    <!-- 상담원 이벤트 로그 write -->
+    <!-- 상담원 로그인/아웃 이벤트 등록 -->
+    <insert id="insertAgentLogInOutEvent" parameterType="AgentEventLog">
+        INSERT INTO agent_log (AGENT_EXT,
+                               AGENT_NAME,
+                               EVENT_NAME,
+                               TIME_START,
+                               TIME_END)
+        VALUES (#{agentExt}, #{agentName}, #{eventName}, NOW(), NOW());
+    </insert>
+
+    <!-- 상담원 이벤트 로그 등록(NEW) -->
     <insert id="insertAgentEvent" parameterType="AgentEventLog">
         INSERT INTO agent_log (AGENT_EXT,
                                AGENT_NAME,
                                EVENT_NAME,
-                               TIME_START,
-                               TIME_END)
-        VALUES (#{agentExt}, #{agentName}, #{eventName}, #{timeStart},#{timeEnd});
-    </insert>
-
-    <!-- 상담원 로그아웃 이벤트 로그 write -->
-    <insert id="insertAgentLogoutEvent" parameterType="AgentEventLog">
-        INSERT INTO agent_log (AGENT_EXT,
-                               AGENT_NAME,
-                               EVENT_NAME,
-                               TIME_START,
-                               TIME_END)
-        VALUES (#{agentExt}, #{agentName}, #{eventName}, #{timeStart}, #{timeEnd});
+                               TIME_START)
+        VALUES (#{agentExt}, #{agentName}, #{eventName}, NOW());
     </insert>
 
     <!-- 상담원 이벤트 로그 update -->
@@ -86,7 +85,10 @@
         UPDATE agent_log
         SET TIME_USE = TIMESTAMPDIFF(SECOND, TIME_START, NOW()),
             TIME_END = NOW()
-        WHERE TIME_END IS NULL;
+        WHERE TIME_END IS NULL
+        AND AGENT_EXT = #{agentExt};
     </update>
+
+
 
 </mapper>

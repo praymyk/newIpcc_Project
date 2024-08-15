@@ -21,6 +21,9 @@ public interface AgentMapper {
 
     // 상담원 현재 상태 조회
     AgentEventLog currentAgentEvent(@Param("agentExt") String agentExt);
+    
+    // 상담원 로그인/로그아웃 이벤트 등록
+    int insertAgentLogInOutEvent(AgentEventLog agentEventLog);
 
     // 상담원 상태 이벤트 등록
     int insertAgentEvent(AgentEventLog agentEventLog);

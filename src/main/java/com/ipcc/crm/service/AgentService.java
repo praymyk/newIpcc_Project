@@ -15,11 +15,14 @@ public class AgentService {
         this.agentMapper = agentMapper;
     }
 
-    // 상담원 이벤트 등록
-    public int addAgentEvent(AgentEventLog agentEventLog) {
-        int result = agentMapper.insertAgentEvent(agentEventLog);
-
-        return result;
+    // 상담원 로그인, 로그아웃 이벤트 등록용 메서드
+    public int insertAgentLogInOutEvent(AgentEventLog agentEventLog) {
+        return agentMapper.insertAgentLogInOutEvent(agentEventLog);
+    }
+    
+    // 상담원 이벤트 등록용 메서드
+    public int insertAgentEvent(AgentEventLog agentEventLog) {
+        return agentMapper.insertAgentEvent(agentEventLog);
     }
 
     // 상담원 상태 로그 업데이트용 메서드
