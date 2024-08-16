@@ -238,31 +238,30 @@
     <!-- webRTC & Call Control script -->
     <script>
     /*
+    * @param JsSIP : JsSIP 라이브러리 변수
     * @param ua : User Agent 변수 선언
     * @param session : 통화 세션 변수 선언
     * @parmam callStartTime : 시작 시간 변수 선언
     * @param callTimer : 통화 상태 타이머 변수 선언 ( 통화 시간, 대기, 이석, 후처리 ... 시간 표시)
-    * @param saveTime : 통화 시간 저장 변수 선언
-    * @param agentStat 현재 상담원 상태 저장용 변수
     * @param domain : asterisk 서버 도메인 설정
     */
-
     document.addEventListener("DOMContentLoaded", function (){
 
         var ua;
         var session;
         var callStartTime;
         var callTimer;
-        var saveTime;
-        var agentStat;
         var domain = 'www.praymyk.co.kr';
 
-        // 상담원 로그 저장용 변수
+        /*
+        * 상담원 상테 이벤트 저장, 조회용 변수
+        * @param agentId : 로그인 상담원 아이디[내선]
+        * @param agentName : 로그인 상담원 이름
+        * @param currentStatus : 현재 상담원 상태
+        */
         var agentId = '[[${session.loginAgent.agentId}]]';
         var agentName = '[[${session.loginAgent.agentName}]]';
         var currentStatus;
-        var eventTime;
-        var timeEnd;
 
         // 페이지 새로 고침 시 이전 이벤트 저장해야함.
         window.addEventListener('beforeunload', function (event) {
@@ -285,7 +284,7 @@
         // 로그아웃 이벤트 헨들러
         function sipLogout(){
             ua.stop();
-            saveEvent("logout");
+            logoutEventLog();
         }
 
         // 로그인 이벤트 헨들러
@@ -323,7 +322,7 @@
             // 로그인 성공 이벤트 핸들러
             ua.on('registered', function () {
                 console.log('SIP 로그인 성공');
-                saveEvent(currentStatus);
+                loginEventLog(); // 로그인 이벤트 저장
             });
 
             /*
@@ -339,10 +338,8 @@
                     if (confirm("전화온 내선 : " + caller)) {
                         session.answer(); // 수신 전화에 대해 사용자가 수락하면 세션을 수락
                         document.getElementById('status').value = '전화가 왔어요!: ' + caller; // 발신자 주소 상태 메시지에 표시
-                        saveEvent("call in");
                     } else {
                         session.terminate(); // 수신 전화에 대해 사용자가 거절하면 세션을 종료
-                        saveEvent("refuse call");
                     }
 
                     // 통화 수락 이벤트 핸들러
@@ -350,7 +347,6 @@
                         console.log('통화 수락');
                         document.getElementById('status').value = '통화 중..'; // 통화 수락 시 상태 메시지 업데이트
                         startCallTimer(); // 통화 타이머 시작
-                        saveEvent("accept call");
                     });
 
                     // 통화 종료 이벤트 핸들러
@@ -358,7 +354,6 @@
                         console.log('Call ended');
                         stopCallTimer(); // 통화 타이머 중지
                         document.getElementById('status').value = '통화 종료'; // 통화 종료 시 상태 메시지 업데이트
-                        saveEvent("call ended");
                     });
 
                     // 통화 실패 이벤트 핸들러
@@ -367,7 +362,6 @@
                         document.getElementById('status').value = '연결 실패: ' + ev.cause; // 통화 실패 시 상태 메시지 업데이트
                         stopCallTimer(); // 통화 타이머 중지
                         document.getElementById('status').value = '통화 종료'; // 통화 종료 시 상태 메시지 업데이트
-                        saveEvent("call failed");
                     });
 
                     // 원격 오디오 스트림 이벤트 핸들러
@@ -380,13 +374,7 @@
             });
         }
 
-        /*
-        *
-        *  전화 걸기 이벤트 핸들러
-        *
-        * */
-
-        /*
+        /* 전화 걸기 이벤트 핸들러
         * @ progress : 통화 진행 중 jssip 이벤트 핸들러
         * @ failed : 통화 실패 jssip 이벤트 핸들러
         * @ ended : 통화 종료 jssip 이벤트 핸들러
@@ -395,29 +383,30 @@
         document.getElementById('callBtn').addEventListener('click', function () {
 
             document.getElementById('status').value = '통화 시도 중..';
-            switchStatus(agentStat);
-            agentStat = "통화 시도"
-            saveEvent("call try");
 
             var eventHandlers = {
                 'progress': function () {
                     console.log('Call is in progress'); // 전화 연결 시도 중
-                    saveEvent("call progress");
+                    updateAgentEventLog("callTry");
                 },
                 'failed': function (ev) {
                     console.log('Call failed with cause: ' + ev.cause);
-                    document.getElementById('status').value = '연결 실패'; // 통화 실패 시 상태 메시지 업데이트
+                    updateAgentEventLog("callFail");
+
+                    //  비동기 작업으로 인한 충돌 발생 중 .. 수정 필요
+                    updateAgentEventLog("preparing"); // 통화 실패 시 상태를 준비중으로 변경
                     stopCallTimer(); // 통화 타이머 중지
-                    saveEvent("call failed");
                 },
                 'ended': function (ev) {
                     console.log('Call ended with cause: ' + ev.cause); // 통화 종료 시 로그
-                    document.getElementById('status').value = '통화 종료(후처리)'; // 통화 종료 시 상태 메시지 업데이트
-                    saveEvent("call ended");
+                    updateAgentEventLog("callEnd");
+                    //  비동기 작업으로 인한 충돌 발생 중 .. 수정 필요
+                    // 추후 자동 후처리 전환 로직 추가--------------------
+                    updateAgentEventLog("preparing"); // 통화 종료 시 상태를 준비중으로 변경
                 },
                 'confirmed': function () {
                     console.log('Call confirmed'); // 통화 확인 시 로그
-                    saveEvent("call confimed");
+                    updateAgentEventLog("inCall");
                 }
             };
 
@@ -439,18 +428,12 @@
             // 통화 수락 이벤트 핸들러
             session.on('accepted', function () {
                 console.log('Call accepted');
-                document.getElementById('status').value = '통화 중..'; // 통화 수락 시 상태 메시지 업데이트
-                switchStatus(agentStat);
-                agentStat = "통화 중.."// 통화 타이머 시작
-                saveEvent("call accepted");
             });
         });
 
         // 전화 끊기 버튼 클릭 이벤트 핸들러
         document.getElementById('hangupBtn').addEventListener('click', function () {
             console.log("stopCallTimer strat")
-            switchStatus(agentStat);
-            agentStat = "후처리";
             if(session){
                 session.terminate();
             }
@@ -458,26 +441,20 @@
 
         // 전화 대기 버튼 클릭 이벤트 핸들러
         document.getElementById('readyBtn').addEventListener('click', function () {
+            updateAgentEventLog("ready");
             document.getElementById('status').value = '대기 중..';
-            switchStatus(agentStat);
-            agentStat = "대기 중";
-            saveEvent("ready");
         });
 
         // 이석 버튼 클릭 이벤트 핸들러
         document.getElementById("restBtn").addEventListener('click',function (){
+            updateAgentEventLog("rest");
             document.getElementById('status').value = '이석 중..';
-            switchStatus(agentStat);
-            agentStat = "이석 중";
-            saveEvent("leave");
         });
 
         // 후처리 버튼 클릭 이벤트 핸들러
         document.getElementById("afterBtn").addEventListener('click',function (){
+            updateAgentEventLog("after");
             document.getElementById('status').value = '후처리 중..';
-            switchStatus(agentStat);
-            agentStat = "후처리 중";
-            saveEvent("processing");
         });
 
 
@@ -503,7 +480,6 @@
             }
         }
 
-
         // 통화시간 업데이트 반영 함수
         function updateCallTime() {
             console.log("updateCallTime start" )
@@ -521,58 +497,20 @@
             document.getElementById('callTime').value = '00:00:00'; // 통화 시간 초기화
         }
 
-        // 상담원 상태 스위칭 함수 ( 이전 상태 시간 저장 + 시간 체크 시작 )
-        function switchStatus(status){
+        /*
+        *  상담원 상태 전환 logging 용 script
+        * */
 
-            console.log("상담원 상태 스위칭!");
-
-            saveTime = document.getElementById('callTime').value;
-            console.log("saveTime : " + saveTime);
-
-
-            console.log("상태 시간 저장 : [" + status + "] : "+ saveTime );
-            // 이때는 이전 상태의 종료시간 업데이트 필요함
-            stopCallTimer();
-            startCallTimer();
-        }
-
-        // 상담원 상태 변환용 함수 ( 새로운 상태 저장 + 이전 상태 종료 처리 )
-        function saveEvent(data){
-            currentStatus = data;
-            eventTime = `${new Date().getFullYear()}-${(new Date().getMonth() + 1).toString().padStart(2, '0')}-${new Date().getDate().toString().padStart(2, '0')} ${new Date().getHours().toString().padStart(2, '0')}:${new Date().getMinutes().toString().padStart(2, '0')}:${new Date().getSeconds().toString().padStart(2, '0')}`;
-
-            console.log("currentStatus : " + currentStatus);
-            if(currentStatus === "" || currentStatus === null || currentStatus === undefined) {
-                // 첫 이벤트는 로그인으로 처리 이후 preparing 상태로 전환 후 업데이트
-                currentStatus = "login";
-
-                saveEventLog("preparing");
-                currentStatus = "preparing";
-                stopCallTimer();
-                startCallTimer();
-
-                updateEventLog();
-            } else if (currentStatus === "logout") {
-                // 이전 상태가 로그 아웃일 경우 로그아웃 이벤트 종료 처리
-                timeEnd = `${new Date().getFullYear()}-${(new Date().getMonth() + 1).toString().padStart(2, '0')}-${new Date().getDate().toString().padStart(2, '0')} ${new Date().getHours().toString().padStart(2, '0')}:${new Date().getMinutes().toString().padStart(2, '0')}:${new Date().getSeconds().toString().padStart(2, '0')}`;
-                updateEventLog();
-
-            } else {
-                updateEventLog();
-            }
-        }
-
-        // 상담원 상태 저장용 함수
-        function saveEventLog(){
+        // 상담원 로그인 이벤트 loggign 함수
+        function loginEventLog(){
             $.ajax({
-                url: 'crm/agent/saveAgentStatusLog',
+                url: 'crm/agent/updateAgentLoginStatus',
                 method: 'POST',
                 data: {
                     agentExt: agentId,
                     agentName: agentName,
-                    eventName: currentStatus,
-                    timeStart: eventTime,
-                    timeEnd: timeEnd
+                    eventName: 'login',
+                    currentStatus: currentStatus
                 },
                 success: function (data) {
                     console.log(data);
@@ -583,20 +521,58 @@
             });
         }
 
-        // 이전 이벤트 종료 + 새로운 이벤트 시작
-        function updateEventLog(){
+        // 상담원 로그 아웃 이벤트 loggign 함수
+        function logoutEventLog(){
+            $.ajax({
+                url: 'crm/agent/updateAgentLogoutStatus',
+                method: 'POST',
+                data: {
+                    agentExt: agentId,
+                    agentName: agentName,
+                    eventName: 'logout'
+                },
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error("이벤트 저장 실패:", error);
+                }
+            });
+        }
+
+        // 상담원 상태 종료 이벤트 loggign 함수 (통화 시도 중 발생한 이벤트 기록용)
+        function endEventLog(agentStat){
+            $.ajax({
+                url: 'crm/agent/endAgentStatus',
+                method: 'POST',
+                data: {
+                    agentExt: agentId,
+                    agentName: agentName,
+                    eventName: agentStat
+                },
+                success: function (data) {
+                    console.log(data);
+                    startCallTimer();
+                },
+                error: function (xhr, status, error) {
+                    console.error("이벤트 저장 실패:", error);
+                }
+            });
+        }
+
+        // 상담원 상태 저장용 함수
+        function updateAgentEventLog(agentStat){
             $.ajax({
                 url: 'crm/agent/updateAgentStatusLog',
                 method: 'POST',
                 data: {
-                    eventName: currentStatus,
                     agentExt: agentId,
                     agentName: agentName,
-                    timeStart: eventTime,
-                    timeEnd: timeEnd
+                    eventName: agentStat
                 },
                 success: function (data) {
                     console.log(data);
+                    startCallTimer(); // 상태 전환 후 타이머 작동
                 },
                 error: function (xhr, status, error) {
                     console.error("이벤트 저장 실패:", error);
@@ -613,20 +589,19 @@
                     agentExt: '[[${session.loginAgent.agentId}]]'
                 },
                 success: function (response) {
-                    console.log ("data : " + response);
                     if(response === ""){
-                        // 첫 로그인, 로그아웃 후 재접속 일시
+                        // 이전 상태 값이 없을 경우(첫 로그인, 로그아웃 후 로그인) => 준비중 상태로 설정
+                        // Controller 단에서는 currentStatus = "" 일 경우 준비중 상태로 설정
                         currentStatus = "";
-                        document.getElementById('status').value = "preparing"; // 이전 상태 값이 없기 때문에 preparing으로 설정
+                        updateStatusMessage("preparing");
                         startCallTimer();
                     } else {
-                        document.getElementById('status').value = response.eventName;
-
                         var dateString  = response.timeStart;
                         var isoDateString  = dateString.replace(' ', 'T');
                         const dateObject = new Date(isoDateString);
 
                         currentStatus = response.eventName; // 현재 상태를 저장
+                        updateStatusMessage(currentStatus);   // 상태 메시지 업데이트
                         continueCallTimer(dateObject);  // 이전 상태 시간 계산
                     }
                 },
@@ -636,7 +611,7 @@
             });
         }
 
-        // 현재 상태를 조회하여 이전 상태 시간을 계산하는 함수
+        // 현재 상태의 시작 시간 조회 후 상태 시간을 계산하는 함수
         function continueCallTimer(timeStart){
             callStartTime = timeStart; // DB에 조회한 시간으로 변경 필요
             callTimer = setInterval(updateCallTime, 1000);
@@ -646,6 +621,35 @@
             } else {
                 stopCallTimer();
                 callTimer = setInterval(updateCallTime, 1000);
+            }
+        }
+
+        // 조회한 상태(eventName)에 따라 상태 메시지 업데이트
+        function updateStatusMessage(event){
+
+            console.log("updateStatusMessage : ", event);
+            switch (event) {
+                case 'preparing':
+                    document.getElementById('status').value = '준비 중..';
+                    break;
+                case 'logout':
+                    document.getElementById('status').value = '로그아웃 중..';
+                    break;
+                case 'ready':
+                    document.getElementById('status').value = '대기 중..';
+                    break;
+                case 'rest':
+                    document.getElementById('status').value = '이석 중..';
+                    break;
+                case 'after':
+                    document.getElementById('status').value = '후처리 중..';
+                    break;
+                case 'inCall':
+                    document.getElementById('status').value = '통화 중..';
+                    break;
+
+                default:
+                    document.getElementById('status').value = event;
             }
         }
 

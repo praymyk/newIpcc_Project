@@ -68,7 +68,7 @@ public class LoginController {
 
 
             // 세션에 상담원 정보 저장
-            return "crm/main2";
+            return "crm/main";
         }
         // 3. 일치하지 않으면 로그인 페이지로 리다이렉트
         log.info("로그인 실패");

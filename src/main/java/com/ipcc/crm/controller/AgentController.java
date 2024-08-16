@@ -85,12 +85,29 @@ public class AgentController {
             // step.2 로그아웃 이벤트 등록
             int result2 = agentService.insertAgentLogInOutEvent(agentEventLog);
 
-            return (result2 > 0) ? "상담원 로그아웃 상태 업데이트 성공" : "상담원 로그아웃 상태 업데이트 실패";
+            return (result2 > 0) ? "상담원 상태종료 업데이트 성공" : "상담원 상태 종료 업데이트 실패";
 
         } else {
-            return "상담원 로그아웃 상태 업데이트 실패";
+            return "상담원 상태 종료 업데이트 실패";
         }
 
+    }
+
+    // 상담원 상태 종료 용 메소드
+    @PostMapping("/endAgentStatus")
+    @ResponseBody
+    public String EndAgentStatus(AgentEventLog agentEventLog) {
+
+        // step.1 이전 상담원 이벤트 종료 상태로 업데이트
+        int result = agentService.updateAgentEvent(agentEventLog);
+
+        if(result > 0){
+            // step.2 현재 진행한 이벤트 등록 및 종료
+            int result2 = agentService.insertAgentLogInOutEvent(agentEventLog);
+            return (result2 > 0) ? "상담원 상태 종료 성공" : "상담원 상태 종료 실패";
+        } else {
+            return  "상담원 상태 종료 실패";
+        }
     }
 
 }
