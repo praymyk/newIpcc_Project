@@ -3,7 +3,6 @@ package com.ipcc.manager.service;
 import com.ipcc.common.mapper.AgentMapper;
 import com.ipcc.common.model.dto.agent.Agent;
 import com.ipcc.common.model.dto.agent.AgentAuth;
-import com.ipcc.common.model.dto.agent.AgentEventLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

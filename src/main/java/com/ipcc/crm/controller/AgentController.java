@@ -40,15 +40,7 @@ public class AgentController {
         // step.1 이전 상담원 이벤트 종료 상태로 업데이트
         int result = agentService.updateAgentEvent(agentEventLog);
 
-        if (result > 0) {
-            //step2. 새로운 상담원 이벤트 등록
-            int result2 = agentService.insertAgentEvent(agentEventLog);
-
-            return (result2 > 0) ? "상담원 상태 업데이트 성공" : "상담원 상태 업데이트 실패";
-
-        } else {
-            return "상담원 상태 전환 실패";
-        }
+        return (result > 0) ? "상담원 상태 업데이트 성공" : "상담원 상태 업데이트 실패";
     }
 
     // 상담원 로그인 상태 업데이트 용 메소드
@@ -59,7 +51,7 @@ public class AgentController {
 
         // step.1 로그인 시는 이전 상태를 종료 시키지 않음
         // step.2 로그인 이벤트 등록
-        int result = agentService.insertAgentLogInOutEvent(agentEventLog);
+        int result = agentService.insertAgentLogInEvent(agentEventLog);
 
         if (result>0) {
             // step.3 로그인 전 상태(currentStatus) 값이 존재않는 다면 "준비" 상태 등록
@@ -78,36 +70,7 @@ public class AgentController {
     @ResponseBody
     public String updateAgentLogOutStatus(AgentEventLog agentEventLog) {
 
-        // step.1 로그아웃 시 이전 상태를 종료
-        int result = agentService.updateAgentEvent(agentEventLog);
-
-        if( result > 0){
-            // step.2 로그아웃 이벤트 등록
-            int result2 = agentService.insertAgentLogInOutEvent(agentEventLog);
-
-            return (result2 > 0) ? "상담원 상태종료 업데이트 성공" : "상담원 상태 종료 업데이트 실패";
-
-        } else {
-            return "상담원 상태 종료 업데이트 실패";
-        }
-
+        int result = agentService.insertAgentLogOutEvent(agentEventLog);
+        return (result > 0) ? "상담원 상태종료 업데이트 성공" : "상담원 상태 종료 업데이트 실패";
     }
-
-    // 상담원 상태 종료 용 메소드
-    @PostMapping("/endAgentStatus")
-    @ResponseBody
-    public String EndAgentStatus(AgentEventLog agentEventLog) {
-
-        // step.1 이전 상담원 이벤트 종료 상태로 업데이트
-        int result = agentService.updateAgentEvent(agentEventLog);
-
-        if(result > 0){
-            // step.2 현재 진행한 이벤트 등록 및 종료
-            int result2 = agentService.insertAgentLogInOutEvent(agentEventLog);
-            return (result2 > 0) ? "상담원 상태 종료 성공" : "상담원 상태 종료 실패";
-        } else {
-            return  "상담원 상태 종료 실패";
-        }
-    }
-
 }

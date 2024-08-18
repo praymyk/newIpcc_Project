@@ -22,6 +22,7 @@
     <!-- 상담원 이벤트 로그 -->
     <resultMap id="AgentEventLog" type="AgentEventLog">
         <id property="eventId" column="EVENT_ID"/>
+        <result property="custId" column="CUST_ID"/>
         <result property="agentExt" column="AGENT_EXT"/>
         <result property="agentName" column="AGENT_NAME"/>
         <result property="eventName" column="EVENT_NAME"/>
@@ -31,6 +32,23 @@
         <result property="ipAddress" column="IP_ADDRESS"/>
     </resultMap>
 
+    <!-- 상담원 모니터링 테이블 -->
+    <resultMap id="AgentMon" type="AgentMon">
+        <id property="custId" column="CUST_ID"/>
+        <result property="agentExt" column="AGT_EXT"/>
+        <result property="trunk" column="TRUNK"/>
+        <result property="cid" column="CID"/>
+        <result property="agentName" column="AGT_NAME"/>
+        <result property="divInOut" column="DIV_INOUT"/>
+        <result property="divStat" column="DIV_STAT"/>
+        <result property="timeStart" column="TIME_START"/>
+        <result property="divLogin" column="DIV_LOGIN"/>
+        <result property="stackLogin" column="STACK_LOGIN"/>
+        <result property="stackOut" column="STACK_OUT"/>
+        <result property="stackIn" column="STACK_IN"/>
+        <result property="sipUrl" column="SIP_URL"/>
+        <result property="resetTime" column="RESET_TIME"/>
+    </resultMap>
 
     <!-- 상담원 리스트 조회 -->
     <select id="selectAgentList" resultMap="AgentAuth">
@@ -64,20 +82,22 @@
     <!-- 상담원 로그인/아웃 이벤트 등록 -->
     <insert id="insertAgentLogInOutEvent" parameterType="AgentEventLog">
         INSERT INTO agent_log (AGENT_EXT,
+                               CUST_ID,
                                AGENT_NAME,
                                EVENT_NAME,
                                TIME_START,
                                TIME_END)
-        VALUES (#{agentExt}, #{agentName}, #{eventName}, NOW(), NOW());
+        VALUES (#{agentExt}, #{custId}, #{agentName}, #{eventName}, NOW(), NOW());
     </insert>
 
     <!-- 상담원 이벤트 로그 등록(NEW) -->
     <insert id="insertAgentEvent" parameterType="AgentEventLog">
         INSERT INTO agent_log (AGENT_EXT,
+                               CUST_ID,
                                AGENT_NAME,
                                EVENT_NAME,
                                TIME_START)
-        VALUES (#{agentExt}, #{agentName}, #{eventName}, NOW());
+        VALUES (#{agentExt}, #{custId}, #{agentName}, #{eventName}, NOW());
     </insert>
 
     <!-- 상담원 이벤트 로그 update -->
@@ -88,6 +108,17 @@
         WHERE TIME_END IS NULL
         AND AGENT_EXT = #{agentExt};
     </update>
+
+    <!-- 상담원 상태 변경시 상담원 모니터링 테이블 insert/update -->
+    <insert id="updateAgentMon" parameterType="AgentEventLog">
+        INSERT INTO agent_mon (CUST_ID, AGT_EXT, TRUNK, CID, AGT_NAME, DIV_INOUT, DIV_STAT, TIME_START, DIV_LOGIN, SIP_URL)
+        VALUES (#{custId}, #{agentExt}, 1234, 1234, #{agentName},'in', #{eventName}, NOW(), 'on',  CONCAT(#{agentName}, '@praymyk.co.kr'))
+            ON DUPLICATE KEY UPDATE
+                                 CUST_ID = VALUES(CUST_ID),
+                                 AGT_NAME = VALUES(AGT_NAME),
+                                 DIV_STAT = VALUES(DIV_STAT),
+                                 TIME_START = VALUES(TIME_START)
+    </insert>
 
 
 

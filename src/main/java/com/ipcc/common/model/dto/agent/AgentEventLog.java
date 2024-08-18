@@ -1,6 +1,7 @@
 package com.ipcc.common.model.dto.agent;
 
 import lombok.*;
+import org.aspectj.weaver.AjAttribute;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -10,6 +11,7 @@ import lombok.*;
 public class AgentEventLog {
 
     private String eventId; // 이벤트 ID
+    private String custId; // 업체 ID
     private String agentExt; // 상담원 내선번호
     private String agentName;   // 상담원 이름
     private String eventName;   // 이벤트 이름

@@ -261,6 +261,7 @@
         */
         var agentId = '[[${session.loginAgent.agentId}]]';
         var agentName = '[[${session.loginAgent.agentName}]]';
+        var agentCcode = '[[${session.loginAgent.ccode}]]';
         var currentStatus;
 
         // 페이지 새로 고침 시 이전 이벤트 저장해야함.
@@ -381,28 +382,33 @@
         * @ confirmed : 통화 확인 jssip 이벤트 핸들러
         * */
         document.getElementById('callBtn').addEventListener('click', function () {
-
-            document.getElementById('status').value = '통화 시도 중..';
+            document.getElementById('status').value = '통화 걸기 중..';
+            startCallTimer();
 
             var eventHandlers = {
                 'progress': function () {
                     console.log('Call is in progress'); // 전화 연결 시도 중
                     updateAgentEventLog("callTry");
+                    document.getElementById('status').value = '수신 대기 중..';
                 },
                 'failed': function (ev) {
                     console.log('Call failed with cause: ' + ev.cause);
-                    updateAgentEventLog("callFail");
 
-                    //  비동기 작업으로 인한 충돌 발생 중 .. 수정 필요
-                    updateAgentEventLog("preparing"); // 통화 실패 시 상태를 준비중으로 변경
-                    stopCallTimer(); // 통화 타이머 중지
+                    // 통화 실패 시 로그 저장 > 준비중 상태로 변경
+                    errorAgentEventLogs("callFail", "preparing");
+                    document.getElementById('status').value = '준비 중..';
                 },
                 'ended': function (ev) {
                     console.log('Call ended with cause: ' + ev.cause); // 통화 종료 시 로그
-                    updateAgentEventLog("callEnd");
-                    //  비동기 작업으로 인한 충돌 발생 중 .. 수정 필요
-                    // 추후 자동 후처리 전환 로직 추가--------------------
-                    updateAgentEventLog("preparing"); // 통화 종료 시 상태를 준비중으로 변경
+
+                    // 통화 종료 시 로그 저장 > 준비중 상태로 변경
+                    /*
+                    *
+                    * 자동 후처리 상태로 전환 구현 할경우 여기서 구현///////////////////////////////////
+                    * */
+                    errorAgentEventLogs("callEnd", "preparing");
+                    document.getElementById('status').value = '준비 중..';
+
                 },
                 'confirmed': function () {
                     console.log('Call confirmed'); // 통화 확인 시 로그
@@ -507,6 +513,7 @@
                 url: 'crm/agent/updateAgentLoginStatus',
                 method: 'POST',
                 data: {
+                    custId: agentCcode,
                     agentExt: agentId,
                     agentName: agentName,
                     eventName: 'login',
@@ -527,6 +534,7 @@
                 url: 'crm/agent/updateAgentLogoutStatus',
                 method: 'POST',
                 data: {
+                    custId: agentCcode,
                     agentExt: agentId,
                     agentName: agentName,
                     eventName: 'logout'
@@ -540,45 +548,42 @@
             });
         }
 
-        // 상담원 상태 종료 이벤트 loggign 함수 (통화 시도 중 발생한 이벤트 기록용)
-        function endEventLog(agentStat){
-            $.ajax({
-                url: 'crm/agent/endAgentStatus',
-                method: 'POST',
-                data: {
-                    agentExt: agentId,
-                    agentName: agentName,
-                    eventName: agentStat
-                },
-                success: function (data) {
-                    console.log(data);
-                    startCallTimer();
-                },
-                error: function (xhr, status, error) {
-                    console.error("이벤트 저장 실패:", error);
-                }
+        // 상담원 상태 갱신용 함수 (이전 상태 종료 후 전환 상태 등록)
+        function updateAgentEventLog(agentStat){
+
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url: 'crm/agent/updateAgentStatusLog',
+                    method: 'POST',
+                    data: {
+                        custId: agentCcode,
+                        agentExt: agentId,
+                        agentName: agentName,
+                        eventName: agentStat
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        startCallTimer(); // 상태 전환 후 타이머 작동
+                        resolve();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("이벤트 저장 실패:", error);
+                        reject();
+                    }
+                });
             });
         }
 
-        // 상담원 상태 저장용 함수
-        function updateAgentEventLog(agentStat){
-            $.ajax({
-                url: 'crm/agent/updateAgentStatusLog',
-                method: 'POST',
-                data: {
-                    agentExt: agentId,
-                    agentName: agentName,
-                    eventName: agentStat
-                },
-                success: function (data) {
-                    console.log(data);
-                    startCallTimer(); // 상태 전환 후 타이머 작동
-                },
-                error: function (xhr, status, error) {
-                    console.error("이벤트 저장 실패:", error);
-                }
-            });
+        // 상태 전환 후 오류 상태 진입 시 오류 상태를 종료하고 준비 상태 진입 용 함수 (전환 이벤트 종료 처리 후처리 상태 전환)
+        async function errorAgentEventLogs(endStat, startStat){
+            try {
+                await updateAgentEventLog(endStat);
+                await updateAgentEventLog(startStat);
+            } catch (error) {
+                console.error("Error updating event log:", error);
+            }
         }
+
 
         // 현재 상태 조회용 함수 (현재 상태 값 할당, 시간 계산)
         function getCurrentStatus(){

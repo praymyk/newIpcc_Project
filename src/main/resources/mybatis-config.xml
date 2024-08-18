@@ -6,8 +6,10 @@
         <typeAlias alias="AgentAuth" type="com.ipcc.common.model.dto.agent.AgentAuth"/>
         <typeAlias alias="Agent" type="com.ipcc.common.model.dto.agent.Agent"/>
 
-        <!-- 상담원 이벤트 로그 -->
+        <!-- 상담원 이벤트 로그 테이블 -->
         <typeAlias alias="AgentEventLog" type="com.ipcc.common.model.dto.agent.AgentEventLog"/>
+        <!-- 상담원 모니터링 테이블 -->
+        <typeAlias alias="AgentMon" type="com.ipcc.common.model.dto.agent.AgentMon"/>
     </typeAliases>
     <mappers>
         <mapper resource="mapper/agent_mapper.xml"/>
