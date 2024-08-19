@@ -2,11 +2,10 @@ package com.ipcc.crm.service;
 
 import com.ipcc.common.mapper.AgentMapper;
 import com.ipcc.common.model.dto.agent.AgentEventLog;
+import com.ipcc.common.model.dto.agent.AgentMon;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.beans.Transient;
 
 @Service("crmAgentService")
 public class AgentService {
@@ -46,7 +45,7 @@ public class AgentService {
 
     // 상담원 상태 로그 업데이트용 메서드
     @Transactional
-    public int updateAgentEvent(AgentEventLog agentEventLog) {
+    public int updateAgentEvent(AgentEventLog agentEventLog, AgentMon agentMon) {
 
         // step 1. 이전 상담원 이벤트 종료 상태로 업데이트
         agentMapper.updateAgentEvent(agentEventLog);
@@ -55,7 +54,7 @@ public class AgentService {
         agentMapper.insertAgentEvent(agentEventLog);
 
         // step 3. 상담원 상태 모니터링 테이블 업데이트
-        return agentMapper.updateAgentMon(agentEventLog);
+        return agentMapper.updateAgentMon(agentMon);
     }
 
     // 현재 상담원 상태 조회용 메서드

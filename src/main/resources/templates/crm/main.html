@@ -413,6 +413,7 @@
                 'confirmed': function () {
                     console.log('Call confirmed'); // 통화 확인 시 로그
                     updateAgentEventLog("inCall");
+                    document.getElementById('status').value = '통화 중..';
                 }
             };
 
@@ -556,10 +557,15 @@
                     url: 'crm/agent/updateAgentStatusLog',
                     method: 'POST',
                     data: {
+                        // AgentEventLog 필드 값
                         custId: agentCcode,
                         agentExt: agentId,
                         agentName: agentName,
-                        eventName: agentStat
+                        eventName: agentStat,
+
+                        // AgentMon 필드 값
+                        did : document.getElementById('did').value,
+                        cid : document.getElementById('phoneNum').value
                     },
                     success: function (data) {
                         console.log(data);

@@ -36,7 +36,7 @@
     <resultMap id="AgentMon" type="AgentMon">
         <id property="custId" column="CUST_ID"/>
         <result property="agentExt" column="AGT_EXT"/>
-        <result property="trunk" column="TRUNK"/>
+        <result property="did" column="DID"/>
         <result property="cid" column="CID"/>
         <result property="agentName" column="AGT_NAME"/>
         <result property="divInOut" column="DIV_INOUT"/>
@@ -110,9 +110,9 @@
     </update>
 
     <!-- 상담원 상태 변경시 상담원 모니터링 테이블 insert/update -->
-    <insert id="updateAgentMon" parameterType="AgentEventLog">
-        INSERT INTO agent_mon (CUST_ID, AGT_EXT, TRUNK, CID, AGT_NAME, DIV_INOUT, DIV_STAT, TIME_START, DIV_LOGIN, SIP_URL)
-        VALUES (#{custId}, #{agentExt}, 1234, 1234, #{agentName},'in', #{eventName}, NOW(), 'on',  CONCAT(#{agentName}, '@praymyk.co.kr'))
+    <insert id="updateAgentMon" parameterType="AgentMon">
+        INSERT INTO agent_mon (CUST_ID, AGT_EXT, DID, CID, AGT_NAME, DIV_INOUT, DIV_STAT, TIME_START, DIV_LOGIN, SIP_URL)
+        VALUES (#{custId}, #{agentExt}, #{did}, #{cid}, #{agentName},#{divInOut}, #{divStat}, NOW(), #{divLogin}, CONCAT(#{agentName}, '@praymyk.co.kr'))
             ON DUPLICATE KEY UPDATE
                                  CUST_ID = VALUES(CUST_ID),
                                  AGT_NAME = VALUES(AGT_NAME),

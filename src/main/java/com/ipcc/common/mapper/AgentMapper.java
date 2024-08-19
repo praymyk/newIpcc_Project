@@ -3,6 +3,7 @@ package com.ipcc.common.mapper;
 import com.ipcc.common.model.dto.agent.Agent;
 import com.ipcc.common.model.dto.agent.AgentAuth;
 import com.ipcc.common.model.dto.agent.AgentEventLog;
+import com.ipcc.common.model.dto.agent.AgentMon;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.data.repository.query.Param;
 
@@ -32,6 +33,6 @@ public interface AgentMapper {
     int updateAgentEvent(AgentEventLog agentEventLog);
 
     // 상담원 상태 모니터링 테이블 업데이트
-    int updateAgentMon(AgentEventLog agentEventLog);
+    int updateAgentMon(AgentMon agentEventLog);
 
 }

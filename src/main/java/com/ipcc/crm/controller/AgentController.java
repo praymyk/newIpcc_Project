@@ -1,6 +1,7 @@
 package com.ipcc.crm.controller;
 
 import com.ipcc.common.model.dto.agent.AgentEventLog;
+import com.ipcc.common.model.dto.agent.AgentMon;
 import com.ipcc.crm.service.AgentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,23 @@ public class AgentController {
     // 상담원 이벤트 업데이트 용 메서드
     @PostMapping("/updateAgentStatusLog")
     @ResponseBody
-    public String updateAgentStatusLog(AgentEventLog agentEventLog) {
+    public String updateAgentStatusLog(AgentEventLog agentEventLog,
+                                       @RequestParam("did") String did,
+                                       @RequestParam("cid") String cid) {
 
-        // step.1 이전 상담원 이벤트 종료 상태로 업데이트
-        int result = agentService.updateAgentEvent(agentEventLog);
+        // agentMon 정보 갱신에 필요한 정보 vo 클래스에 담기
+        AgentMon agentMon = new AgentMon();
+
+        agentMon.setCustId(agentEventLog.getCustId());
+        agentMon.setAgentExt(agentEventLog.getAgentExt());
+        agentMon.setAgentName(agentEventLog.getAgentName());
+        agentMon.setDivStat(agentEventLog.getEventName());
+        agentMon.setDid(did);
+        agentMon.setCid(cid);
+
+        log.info("agentMon: {}", agentMon);
+
+        int result = agentService.updateAgentEvent(agentEventLog, agentMon);
 
         return (result > 0) ? "상담원 상태 업데이트 성공" : "상담원 상태 업데이트 실패";
     }

@@ -7,11 +7,12 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class AgentMon {
+public class
+AgentMon {
 
     private String custId;      // 소속 업체 ID
     private String agentExt;    // 상담사 내선번호
-    private String trunk;       // 트렁크
+    private String did;         // 상담사 사용 번호
     private String cid;         // 통화 대상 번호
     private String agentName;   // 상담사 이름
     private String divInOut;    // 통화 in/out 구분
