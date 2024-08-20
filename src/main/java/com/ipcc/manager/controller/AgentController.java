@@ -2,6 +2,7 @@ package com.ipcc.manager.controller;
 
 import com.ipcc.common.model.dto.agent.Agent;
 import com.ipcc.common.model.dto.agent.AgentAuth;
+import com.ipcc.common.model.dto.agent.AgentMon;
 import com.ipcc.manager.service.AgentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -33,6 +34,16 @@ public class AgentController {
 
         return agentList;
     }
+
+    // 상담원 상태 조회 (모니터링)
+    @GetMapping("/agentStatus")
+    @ResponseBody
+    public List<AgentMon> getAgentStatus(Agent agent) {
+        List<AgentMon> agentStatus = agentService.selectAgentStatus(agent);
+
+        return agentStatus;
+    }
+
 
     // 상담원 등록
     @PostMapping("/save")

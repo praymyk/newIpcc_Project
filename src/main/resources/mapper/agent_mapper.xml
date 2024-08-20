@@ -55,6 +55,12 @@
         SELECT *
         FROM ps_auths;
     </select>
+    <!-- 상담원 상태 조회 (모니터링) -->
+    <select id="selectAgentStatus" parameterType="Agent" resultMap="AgentMon" >
+        SELECT *
+        FROM agent_mon
+        WHERE CUST_ID = #{ccode};
+    </select>
 
     <!-- 상담원 등록 -->
     <insert id="insertAgent" parameterType="AgentAuth">
@@ -115,9 +121,13 @@
         VALUES (#{custId}, #{agentExt}, #{did}, #{cid}, #{agentName},#{divInOut}, #{divStat}, NOW(), #{divLogin}, CONCAT(#{agentName}, '@praymyk.co.kr'))
             ON DUPLICATE KEY UPDATE
                                  CUST_ID = VALUES(CUST_ID),
+                                 DID = VALUES(DID),
+                                 CID = VALUES(CID),
                                  AGT_NAME = VALUES(AGT_NAME),
+                                 DIV_INOUT = VALUES(DIV_INOUT),
                                  DIV_STAT = VALUES(DIV_STAT),
-                                 TIME_START = VALUES(TIME_START)
+                                 TIME_START = VALUES(TIME_START),
+                                 DIV_LOGIN = VALUES(DIV_LOGIN)
     </insert>
 
 

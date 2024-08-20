@@ -35,4 +35,6 @@ public interface AgentMapper {
     // 상담원 상태 모니터링 테이블 업데이트
     int updateAgentMon(AgentMon agentEventLog);
 
+    // 상담원 상태 조회 (모니터링)
+    List<AgentMon> selectAgentStatus(Agent agent);
 }

@@ -38,17 +38,20 @@ public class AgentController {
     @ResponseBody
     public String updateAgentStatusLog(AgentEventLog agentEventLog,
                                        @RequestParam("did") String did,
-                                       @RequestParam("cid") String cid) {
+                                       @RequestParam("cid") String cid,
+                                       @RequestParam("divInOut") String divInOut) {
 
         // agentMon 정보 갱신에 필요한 정보 vo 클래스에 담기
         AgentMon agentMon = new AgentMon();
 
+        agentMon.setDivLogin("in");
         agentMon.setCustId(agentEventLog.getCustId());
         agentMon.setAgentExt(agentEventLog.getAgentExt());
         agentMon.setAgentName(agentEventLog.getAgentName());
         agentMon.setDivStat(agentEventLog.getEventName());
         agentMon.setDid(did);
         agentMon.setCid(cid);
+        agentMon.setDivInOut(divInOut);
 
         log.info("agentMon: {}", agentMon);
 
@@ -62,16 +65,26 @@ public class AgentController {
     @ResponseBody
     public String updateAgentLoginStatus(AgentEventLog agentEventLog, @RequestParam("currentStatus") String currentStatus) {
         log.info("currentStatus: {}", currentStatus);
+        log.info("log in agentEventLog: {}", agentEventLog);
 
+        // agentMon에 로그인 상태 갱신에 필요한 정보 vo 클래스에 담기
+        AgentMon agentMon = new AgentMon();
+
+        agentMon.setDivLogin("in");
+        agentMon.setCustId(agentEventLog.getCustId());
+        agentMon.setAgentExt(agentEventLog.getAgentExt());
+        agentMon.setAgentName(agentEventLog.getAgentName());
+        
         // step.1 로그인 시는 이전 상태를 종료 시키지 않음
-        // step.2 로그인 이벤트 등록
+        // step.2 로그인 이벤트 등록 ( 로그인 로그 + 로그인 상태 전환 )
         int result = agentService.insertAgentLogInEvent(agentEventLog);
 
         if (result>0) {
             // step.3 로그인 전 상태(currentStatus) 값이 존재않는 다면 "준비" 상태 등록
             if(currentStatus == null || currentStatus.equals("")){
                 agentEventLog.setEventName("preparing");
-                agentService.insertAgentEvent(agentEventLog);
+                agentMon.setDivStat("preparing");
+                agentService.insertAgentEvent(agentEventLog, agentMon);
             }
             return "상담원 로그인 상태 업데이트 성공";
         } else {
@@ -84,7 +97,16 @@ public class AgentController {
     @ResponseBody
     public String updateAgentLogOutStatus(AgentEventLog agentEventLog) {
 
-        int result = agentService.insertAgentLogOutEvent(agentEventLog);
+        // agentMon에 로그아웃 상태 갱신에 필요한 정보 vo 클래스에 담기
+        AgentMon agentMon = new AgentMon();
+
+        agentMon.setDivLogin("out");
+        agentMon.setCustId(agentEventLog.getCustId());
+        agentMon.setAgentExt(agentEventLog.getAgentExt());
+        agentMon.setAgentName(agentEventLog.getAgentName());
+        agentMon.setDivStat(agentEventLog.getEventName());
+
+        int result = agentService.insertAgentLogOutEvent(agentEventLog, agentMon);
         return (result > 0) ? "상담원 상태종료 업데이트 성공" : "상담원 상태 종료 업데이트 실패";
     }
 }

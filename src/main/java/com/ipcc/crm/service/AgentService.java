@@ -21,25 +21,28 @@ public class AgentService {
     @Transactional
     public int insertAgentLogInEvent(AgentEventLog agentEventLog) {
 
-        // step. 1 로그인 이벤트 등록 후 종료
+        //agentMapper.updateAgentMon(agentMon); //상담원 상태 모니터링 테이블 업데이트
+        //로그인 이벤트 등록 후 종료
         return agentMapper.insertAgentLogInOutEvent(agentEventLog);
     }
 
-
     // 상담원 로그아웃 이벤트 등록용 메서드
     @Transactional
-    public int insertAgentLogOutEvent(AgentEventLog agentEventLog) {
+    public int insertAgentLogOutEvent(AgentEventLog agentEventLog, AgentMon agentMon) {
         
         // step. 1 로그아웃 시 이전 상태 종료
         agentMapper.updateAgentEvent(agentEventLog);
-
-        // step. 2 로그아웃 이벤트 등록
+        // step. 2 상담원 상태 모니터링 테이블 업데이트
+        agentMapper.updateAgentMon(agentMon);
+        // step. 3 로그아웃 이벤트 등록
         return agentMapper.insertAgentLogInOutEvent(agentEventLog);
     }
     
     // 상담원 이벤트 등록용 메서드
-    public int insertAgentEvent(AgentEventLog agentEventLog) {
+    @Transactional
+    public int insertAgentEvent(AgentEventLog agentEventLog, AgentMon agentMon) {
 
+        agentMapper.updateAgentMon(agentMon);
         return agentMapper.insertAgentEvent(agentEventLog);
     }
 

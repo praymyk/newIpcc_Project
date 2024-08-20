@@ -384,7 +384,7 @@
                     console.log("ccode" + ccode);
 
                     $.ajax({
-                        url: 'agent/agentList',
+                        url: 'agent/agentStatus',
                         method: 'GET',
                         data : {
                             // 조회 조건
@@ -400,12 +400,25 @@
                                 var agentCardHtml =
                                     `<div class="agent-card">
                                         <div class="agent-name">${agent.agentName}</div>
-                                        <div class="agent-info">내선번호: ${agent.agentId}</div>
-                                        <div class="agent-status">상태: 상담 중</div>
-                                        <div class="status-time">상태 유지 시간: 10분</div>
+                                        <div class="agent-info">내선번호: ${agent.agentExt}</div>
+                                        <div class="agent-status">상태 : 로딩 중..</div>
+                                        <div class="status-time">상태 유지 시간 : 계산중 ..</div>
+
+                                        <input type="hidden" class="login-stat" value="${agent.divLogin}">
                                     </div>`;
 
                                 $('.agent-wrapper').append(agentCardHtml);
+
+                                // 상태 메시지 업데이트 함수 설정
+                                monStatusMessage($('.agent-status').last(), agent.divStat, agent.divInOut);
+                                // 경과 시간 업데이트 함수 설정
+                                updateElapsedTime($('.status-time').last(), agent.timeStart);
+
+                                // .login-stat의 값이 'off'인 경우 .agent-card의 배경색 흐리게 처리
+                                if (agent.divLogin === 'out') {
+                                    $('.agent-wrapper .agent-card').last().css('opacity', '0.4');
+                                }
+
                             });
                         },
                         error: function(xhr, status, error) {
@@ -413,8 +426,52 @@
                         }
                     });
                 }
-
             }
+
+            // 경과 시간을 계산하여 .status-time div에 업데이트하는 함수
+            function updateElapsedTime($element, startTime) {
+                var startDate = new Date(startTime.replace(' ', 'T'));
+
+                setInterval(function () {
+                    var now = new Date();
+                    var elapsedTime = new Date(now - startDate);
+
+                    var hours = String(elapsedTime.getUTCHours()).padStart(2, '0');
+                    var minutes = String(elapsedTime.getUTCMinutes()).padStart(2, '0');
+                    var seconds = String(elapsedTime.getUTCSeconds()).padStart(2, '0');
+
+                    var elapsedTimeFormatted = `${hours}:${minutes}:${seconds}`;
+                    $element.text(`상태 유지 시간 ${elapsedTimeFormatted}`);
+                }, 1000);
+            }
+
+            // 모니터링 상담원의 상태 Text 작성 함수
+            // 조회한 상태(eventName)에 따라 상태 메시지 업데이트
+            function monStatusMessage($element, event, inout){
+                switch (event) {
+                    case 'preparing':
+                        $element.text('준비 중..');
+                        break;
+                    case 'logout':
+                        $element.text('로그아웃 중..');
+                        break;
+                    case 'ready':
+                        $element.text('대기 중..');
+                        break;
+                    case 'rest':
+                        $element.text('이석 중..');
+                        break;
+                    case 'after':
+                        $element.text('후처리 중..');
+                        break;
+                    case 'inCall':
+                        $element.text(inout === 'in' ? '[IN] 통화 중..' : '[OUT] 통화 중..');
+                        break;
+                    default:
+                        $element.text('로딩 중..');
+                }
+            }
+
         </script>
     </div>
 

@@ -3,6 +3,7 @@ package com.ipcc.manager.service;
 import com.ipcc.common.mapper.AgentMapper;
 import com.ipcc.common.model.dto.agent.Agent;
 import com.ipcc.common.model.dto.agent.AgentAuth;
+import com.ipcc.common.model.dto.agent.AgentMon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,11 @@ public class AgentService {
     // 상담원 목록 조회
     public List<AgentAuth> selectAgentList() {
         return agentMapper.selectAgentList();
+    }
+
+    // 상담원 상태 조회 (모니터링)
+    public List<AgentMon> selectAgentStatus(Agent agent) {
+        return agentMapper.selectAgentStatus(agent);
     }
 
     // 상담원 조건 조회

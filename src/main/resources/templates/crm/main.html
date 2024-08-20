@@ -263,6 +263,10 @@
         var agentName = '[[${session.loginAgent.agentName}]]';
         var agentCcode = '[[${session.loginAgent.ccode}]]';
         var currentStatus;
+        var did = "";
+        var cid = "";
+        var inout = "";
+        var divLogin;
 
         // 페이지 새로 고침 시 이전 이벤트 저장해야함.
         window.addEventListener('beforeunload', function (event) {
@@ -304,7 +308,7 @@
                 sockets: [socket],
                 uri: sipUri,
                 password: sipPassword,
-                session_timers: false
+                session_timers: false,
             };
 
             ua = new JsSIP.UA(configuration);
@@ -335,10 +339,15 @@
                 session = ev.session; // 새 RTC 세션 생성
 
                 if (session.direction === 'incoming') { // 수신 전화일 경우
-                    var caller = session.remote_identity.uri.toString();
-                    if (confirm("전화온 내선 : " + caller)) {
+                    cid = session.remote_identity.uri.user;
+
+                    // did = session.local_identity.uri.user; // webRTC 구동 서버의 주소를 기준으로 sip user를 가져오기 때문에 asterisk 별도 구동 시 사용 불가
+                    did = agentId;
+                    inout = "in";
+
+                    if (confirm("전화온 내선 : " + cid)) {
                         session.answer(); // 수신 전화에 대해 사용자가 수락하면 세션을 수락
-                        document.getElementById('status').value = '전화가 왔어요!: ' + caller; // 발신자 주소 상태 메시지에 표시
+                        document.getElementById('phoneNum').value = cid; // 발신자 주소 상태 메시지에 표시
                     } else {
                         session.terminate(); // 수신 전화에 대해 사용자가 거절하면 세션을 종료
                     }
@@ -346,14 +355,15 @@
                     // 통화 수락 이벤트 핸들러
                     session.on('accepted', function () {
                         console.log('통화 수락');
-                        document.getElementById('status').value = '통화 중..'; // 통화 수락 시 상태 메시지 업데이트
-                        startCallTimer(); // 통화 타이머 시작
+                        updateAgentEventLog("inCall");
+                        document.getElementById('status').value = '통화 중..'; // 통화 중 상태 메시지 업데이트
                     });
 
                     // 통화 종료 이벤트 핸들러
                     session.on('ended', function () {
                         console.log('Call ended');
                         stopCallTimer(); // 통화 타이머 중지
+                        resetValues();
                         document.getElementById('status').value = '통화 종료'; // 통화 종료 시 상태 메시지 업데이트
                     });
 
@@ -366,10 +376,16 @@
                     });
 
                     // 원격 오디오 스트림 이벤트 핸들러
-                    session.connection.addEventListener('addstream', function (event) {
+                    session.connection.addEventListener('track', function (event) {
                         var remoteAudio = document.getElementById('remoteAudio');
-                        remoteAudio.srcObject = event.stream; // 원격 오디오 스트림 설정
-                        remoteAudio.play(); // 원격 오디오 재생
+
+                        // 오디오 스트림을 포함하는 트랙만 처리
+                        if (event.track.kind === 'audio') {
+                            var stream = new MediaStream();
+                            stream.addTrack(event.track); // 개별 트랙을 새 스트림에 추가
+                            remoteAudio.srcObject = stream; // 원격 오디오 스트림 설정
+                            remoteAudio.play(); // 원격 오디오 재생
+                        }
                     });
                 }
             });
@@ -382,6 +398,11 @@
         * @ confirmed : 통화 확인 jssip 이벤트 핸들러
         * */
         document.getElementById('callBtn').addEventListener('click', function () {
+
+            did= document.getElementById('did').value;
+            cid= document.getElementById('phoneNum').value;
+            inout = "out";
+
             document.getElementById('status').value = '통화 걸기 중..';
             startCallTimer();
 
@@ -397,6 +418,7 @@
                     // 통화 실패 시 로그 저장 > 준비중 상태로 변경
                     errorAgentEventLogs("callFail", "preparing");
                     document.getElementById('status').value = '준비 중..';
+                    resetValues();
                 },
                 'ended': function (ev) {
                     console.log('Call ended with cause: ' + ev.cause); // 통화 종료 시 로그
@@ -407,8 +429,8 @@
                     * 자동 후처리 상태로 전환 구현 할경우 여기서 구현///////////////////////////////////
                     * */
                     errorAgentEventLogs("callEnd", "preparing");
+                    resetValues();
                     document.getElementById('status').value = '준비 중..';
-
                 },
                 'confirmed': function () {
                     console.log('Call confirmed'); // 통화 확인 시 로그
@@ -432,15 +454,34 @@
             var target = formatSipUri(targetInput);
             session = ua.call(target, options);
 
+            // **원격 오디오 스트림 이벤트 핸들러 추가**:
+            session.connection.addEventListener('track', function (event) {
+                var remoteAudio = document.getElementById('remoteAudio');
+
+                // 오디오 스트림을 포함하는 트랙만 처리
+                if (event.track.kind === 'audio') {
+                    var stream = new MediaStream();
+                    stream.addTrack(event.track); // 개별 트랙을 새 스트림에 추가
+                    remoteAudio.srcObject = stream; // 원격 오디오 스트림 설정
+                    remoteAudio.play(); // 원격 오디오 재생
+                }
+            });
+
             // 통화 수락 이벤트 핸들러
             session.on('accepted', function () {
                 console.log('Call accepted');
+
             });
+
+
         });
 
         // 전화 끊기 버튼 클릭 이벤트 핸들러
         document.getElementById('hangupBtn').addEventListener('click', function () {
             console.log("stopCallTimer strat")
+            // 통화 끊기 시 로그 저장 > 준비중 상태로 변경
+            errorAgentEventLogs("cutCall", "preparing");
+            document.getElementById('status').value = '준비 중..';
             if(session){
                 session.terminate();
             }
@@ -448,18 +489,21 @@
 
         // 전화 대기 버튼 클릭 이벤트 핸들러
         document.getElementById('readyBtn').addEventListener('click', function () {
+            resetValues();
             updateAgentEventLog("ready");
             document.getElementById('status').value = '대기 중..';
         });
 
         // 이석 버튼 클릭 이벤트 핸들러
         document.getElementById("restBtn").addEventListener('click',function (){
+            resetValues();
             updateAgentEventLog("rest");
             document.getElementById('status').value = '이석 중..';
         });
 
         // 후처리 버튼 클릭 이벤트 핸들러
         document.getElementById("afterBtn").addEventListener('click',function (){
+            resetValues();
             updateAgentEventLog("after");
             document.getElementById('status').value = '후처리 중..';
         });
@@ -551,7 +595,6 @@
 
         // 상담원 상태 갱신용 함수 (이전 상태 종료 후 전환 상태 등록)
         function updateAgentEventLog(agentStat){
-
             return new Promise((resolve, reject) => {
                 $.ajax({
                     url: 'crm/agent/updateAgentStatusLog',
@@ -562,10 +605,10 @@
                         agentExt: agentId,
                         agentName: agentName,
                         eventName: agentStat,
-
                         // AgentMon 필드 값
-                        did : document.getElementById('did').value,
-                        cid : document.getElementById('phoneNum').value
+                        did : did,
+                        cid : cid,
+                        divInOut : inout
                     },
                     success: function (data) {
                         console.log(data);
@@ -633,6 +676,12 @@
                 stopCallTimer();
                 callTimer = setInterval(updateCallTime, 1000);
             }
+        }
+        // 모니터링 변수 초기화 함수
+        function resetValues() {
+            did = "";
+            cid = "";
+            inout = "";
         }
 
         // 조회한 상태(eventName)에 따라 상태 메시지 업데이트
