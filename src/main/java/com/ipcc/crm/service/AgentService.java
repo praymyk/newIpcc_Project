@@ -2,7 +2,7 @@ package com.ipcc.crm.service;
 
 import com.ipcc.common.mapper.AgentMapper;
 import com.ipcc.common.model.dto.agent.AgentEventLog;
-import com.ipcc.common.model.dto.agent.AgentMon;
+import com.ipcc.manager.model.dto.agent.AgentMon;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

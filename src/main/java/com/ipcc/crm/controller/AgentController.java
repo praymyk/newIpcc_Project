@@ -1,7 +1,7 @@
 package com.ipcc.crm.controller;
 
 import com.ipcc.common.model.dto.agent.AgentEventLog;
-import com.ipcc.common.model.dto.agent.AgentMon;
+import com.ipcc.manager.model.dto.agent.AgentMon;
 import com.ipcc.crm.service.AgentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

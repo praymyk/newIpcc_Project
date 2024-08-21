@@ -365,62 +365,97 @@
         <!-- 페이지 로드 후 실행할 스크립트 -->
         <script>
             /*
+            * @param statusTimeInterval : 상담원 리스트 상태 시간 조회용 인터벌
             * @param custcode : 업체코드
             * @param agentName : 상담원 이름
             * @param agentId : 상담원 id/내선
             * */
             function initScript(){
                 console.log("Agent monitoring Script start");
+                var statusTimeInterval = null;
 
                 var custcode = $('#custcode').val();
                 var agentName = $('#search-monAgents').val();
                 var agentId = $('#search-monAgents').val();
 
-                getAgentList();
+                getMonAgentList();
+
+                // window 객체에 저장된 인터벌이 있으면 제거
+                if (window.monAgentListInterval !== undefined) {
+                    clearInterval(window.monAgentListInterval);
+                }
+                // 새로운 인터벌 설정
+                window.monAgentListInterval = setInterval(getMonAgentList, 5000);
+
+                // 기존 상태 시간 인터벌이 설정된 경우에만 clearInterval 실행
+                if (statusTimeInterval !== null) {
+                    clearInterval(statusTimeInterval);
+                }
+                // 새로운 상태 시간 인터벌 설정
+                statusTimeInterval = setInterval(function () {
+                    $('.status-time').each(function() {
+                        var startTime = $(this).data('start-time');
+                        updateElapsedTime($(this), startTime);
+                    });
+                }, 1000);
 
                 // 상담원 리스트 조회용 메서드
-                function getAgentList(){
-                    var ccode = $('#custcode').val();
-                    console.log("ccode" + ccode);
-
+                function getMonAgentList(){
                     $.ajax({
                         url: 'agent/agentStatus',
                         method: 'GET',
                         data : {
-                            // 조회 조건
+                            // 조회 조건 (검색 기능 구현을 위해 agentName, agentId 추가)
                             ccode : custcode,
                             agentName : agentName,
                             agentId : agentId
                         },
-                        success: function(data) {
-                            var agentList = data;
+                            success: function(data) {
+                                var agentList = data;
 
-                            // agent-list-container에 동적으로 에이전트 카드를 추가
-                            agentList.forEach(function(agent) {
-                                var agentCardHtml =
-                                    `<div class="agent-card">
-                                        <div class="agent-name">${agent.agentName}</div>
-                                        <div class="agent-info">내선번호: ${agent.agentExt}</div>
-                                        <div class="agent-status">상태 : 로딩 중..</div>
-                                        <div class="status-time">상태 유지 시간 : 계산중 ..</div>
+                                // 기존 에이전트 카드 삭제
+                                $('.agent-wrapper').empty();
 
-                                        <input type="hidden" class="login-stat" value="${agent.divLogin}">
-                                    </div>`;
+                                var agentElements = [];
 
-                                $('.agent-wrapper').append(agentCardHtml);
+                                // agent-list-container에 동적으로 에이전트 카드를 추가
+                                agentList.forEach(function(agent) {
 
-                                // 상태 메시지 업데이트 함수 설정
-                                monStatusMessage($('.agent-status').last(), agent.divStat, agent.divInOut);
-                                // 경과 시간 업데이트 함수 설정
-                                updateElapsedTime($('.status-time').last(), agent.timeStart);
+                                    // 초기 상태 유지 시간 계산
+                                    var startTime = new Date(agent.timeStart.replace(' ', 'T'));
+                                    var now = new Date();
+                                    var elapsedTime = new Date(now - startTime);
 
-                                // .login-stat의 값이 'off'인 경우 .agent-card의 배경색 흐리게 처리
-                                if (agent.divLogin === 'out') {
-                                    $('.agent-wrapper .agent-card').last().css('opacity', '0.4');
-                                }
+                                    var hours = String(elapsedTime.getUTCHours()).padStart(2, '0');
+                                    var minutes = String(elapsedTime.getUTCMinutes()).padStart(2, '0');
+                                    var seconds = String(elapsedTime.getUTCSeconds()).padStart(2, '0');
 
-                            });
-                        },
+                                    var elapsedTimeFormatted = `${hours}:${minutes}:${seconds}`;
+
+                                    var agentCardHtml =
+                                        `<div class="agent-card">
+                                            <div class="agent-name">${agent.agentName}</div>
+                                            <div class="agent-info">내선번호: ${agent.agentExt}</div>
+                                            <div class="agent-status">상태 : 로딩 중..</div>
+                                            <div class="status-time" data-start-time="${agent.timeStart}">상태 유지 시간 :  ${elapsedTimeFormatted}</div>
+
+                                            <input type="hidden" class="login-stat" value="${agent.divLogin}">
+                                        </div>`;
+
+                                    var $agentCard = $(agentCardHtml);
+                                    $('.agent-wrapper').append($agentCard);
+                                    agentElements.push($agentCard);
+
+                                    // 상태 메시지 업데이트 함수 설정
+                                    monStatusMessage($agentCard.find('.agent-status'), agent.divStat, agent.divInOut);
+
+                                    // .login-stat의 값이 'off'인 경우 .agent-card의 배경색 흐리게 처리
+                                    if (agent.divLogin === 'out') {
+                                        $agentCard.css('opacity', '0.4');
+                                    }
+                                });
+
+                            },
                         error: function(xhr, status, error) {
                             console.error("Error loading content:", error);
                         }
@@ -431,18 +466,15 @@
             // 경과 시간을 계산하여 .status-time div에 업데이트하는 함수
             function updateElapsedTime($element, startTime) {
                 var startDate = new Date(startTime.replace(' ', 'T'));
+                var now = new Date();
+                var elapsedTime = new Date(now - startDate);
 
-                setInterval(function () {
-                    var now = new Date();
-                    var elapsedTime = new Date(now - startDate);
+                var hours = String(elapsedTime.getUTCHours()).padStart(2, '0');
+                var minutes = String(elapsedTime.getUTCMinutes()).padStart(2, '0');
+                var seconds = String(elapsedTime.getUTCSeconds()).padStart(2, '0');
 
-                    var hours = String(elapsedTime.getUTCHours()).padStart(2, '0');
-                    var minutes = String(elapsedTime.getUTCMinutes()).padStart(2, '0');
-                    var seconds = String(elapsedTime.getUTCSeconds()).padStart(2, '0');
-
-                    var elapsedTimeFormatted = `${hours}:${minutes}:${seconds}`;
-                    $element.text(`상태 유지 시간 ${elapsedTimeFormatted}`);
-                }, 1000);
+                var elapsedTimeFormatted = `${hours}:${minutes}:${seconds}`;
+                $element.text(`상태 유지 시간 : ${elapsedTimeFormatted}`);
             }
 
             // 모니터링 상담원의 상태 Text 작성 함수
@@ -464,12 +496,33 @@
                     case 'after':
                         $element.text('후처리 중..');
                         break;
+                    case 'callTry' :
+                        $element.text(inout === 'in' ? '[IN] 콜 시도 중..' : '[OUT] 콜 시도 중..');
+                        break;
                     case 'inCall':
                         $element.text(inout === 'in' ? '[IN] 통화 중..' : '[OUT] 통화 중..');
                         break;
                     default:
                         $element.text('로딩 중..');
                 }
+            }
+
+
+            function getMonAgentListStat(){
+                $.ajax({
+                    url: 'agent/agentListStatus',
+                    method: 'GET',
+                    data : {
+                        // 조회 조건
+                        ccode : custcode
+                    },
+                    success: function(data) {
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error loading content:", error);
+                    }
+                });
             }
 
         </script>

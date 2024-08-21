@@ -2,7 +2,8 @@ package com.ipcc.manager.controller;
 
 import com.ipcc.common.model.dto.agent.Agent;
 import com.ipcc.common.model.dto.agent.AgentAuth;
-import com.ipcc.common.model.dto.agent.AgentMon;
+import com.ipcc.manager.model.dto.agent.AgentListStatus;
+import com.ipcc.manager.model.dto.agent.AgentMon;
 import com.ipcc.manager.service.AgentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -42,6 +43,14 @@ public class AgentController {
         List<AgentMon> agentStatus = agentService.selectAgentStatus(agent);
 
         return agentStatus;
+    }
+
+    // 상담원 리스트의 상태 정보 ( 모니터링)
+    @GetMapping("/agentListStatus")
+    @ResponseBody
+    public AgentListStatus getAgentListStatus() {
+
+        return null;
     }
 
 

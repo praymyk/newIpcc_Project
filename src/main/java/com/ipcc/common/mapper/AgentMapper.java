@@ -3,7 +3,7 @@ package com.ipcc.common.mapper;
 import com.ipcc.common.model.dto.agent.Agent;
 import com.ipcc.common.model.dto.agent.AgentAuth;
 import com.ipcc.common.model.dto.agent.AgentEventLog;
-import com.ipcc.common.model.dto.agent.AgentMon;
+import com.ipcc.manager.model.dto.agent.AgentMon;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.data.repository.query.Param;
 
