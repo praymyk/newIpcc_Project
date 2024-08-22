@@ -263,16 +263,15 @@
         var agentName = '[[${session.loginAgent.agentName}]]';
         var agentCcode = '[[${session.loginAgent.ccode}]]';
         var currentStatus;
-        var did = "";
-        var cid = "";
-        var inout = "";
+        var did;
+        var cid;
+        var inOut;
         var divLogin;
 
         // 페이지 새로 고침 시 이전 이벤트 저장해야함.
         window.addEventListener('beforeunload', function (event) {
             // 여기에 새로고침 또는 페이지 떠나기 전에 실행할 코드를 작성합니다.
             console.log("페이지가 새로고침되거나 닫히려고 합니다.");
-
         });
 
         /*
@@ -343,7 +342,7 @@
 
                     // did = session.local_identity.uri.user; // webRTC 구동 서버의 주소를 기준으로 sip user를 가져오기 때문에 asterisk 별도 구동 시 사용 불가
                     did = agentId;
-                    inout = "in";
+                    inOut = "in";
 
                     if (confirm("전화온 내선 : " + cid)) {
                         session.answer(); // 수신 전화에 대해 사용자가 수락하면 세션을 수락
@@ -401,7 +400,7 @@
 
             did= document.getElementById('did').value;
             cid= document.getElementById('phoneNum').value;
-            inout = "out";
+            inOut = "out";
 
             document.getElementById('status').value = '통화 걸기 중..';
             startCallTimer();
@@ -608,7 +607,7 @@
                         // AgentMon 필드 값
                         did : did,
                         cid : cid,
-                        divInOut : inout
+                        divInOut : inOut
                     },
                     success: function (data) {
                         console.log(data);
@@ -679,9 +678,9 @@
         }
         // 모니터링 변수 초기화 함수
         function resetValues() {
-            did = "";
-            cid = "";
-            inout = "";
+            did = null;
+            cid = null;
+            inOut = "";
         }
 
         // 조회한 상태(eventName)에 따라 상태 메시지 업데이트

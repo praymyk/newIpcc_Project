@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ipcc.common.mapper.ManagerMapper">
+
+    <!-- ResultMap 정의 -->
+    <resultMap id="Manager" type="Manager">
+        <id property="managerNo" column="int"/>
+        <result property="ccode" column="CUST_ID"/>
+        <result property="mngId" column="MNG_ID"/>
+        <result property="mngPw" column="MNG_PW"/>
+        <result property="managerName" column="MNG_NAME"/>
+        <result property="managerEmail" column="EMAIL"/>
+        <result property="managerPhone" column="PHONE"/>
+        <result property="enfollDay" column="ENROLL_DAY"/>
+        <result property="unerollDay" column="UNENROLL_DAY"/>
+        <result property="status" column="STATUS"/>
+    </resultMap>
+
+    <select id="selectManager" resultMap="Manager">
+        SELECT
+            *
+        FROM
+            mng_user
+        WHERE
+            CUST_ID = #{ccode}
+            AND MNG_ID = #{mngId}
+            AND MNG_PW = #{mngPw}
+    </select>
+
+
+</mapper>

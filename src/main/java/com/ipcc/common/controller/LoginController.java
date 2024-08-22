@@ -1,9 +1,9 @@
 package com.ipcc.common.controller;
 
 import com.ipcc.common.model.dto.agent.Agent;
-import com.ipcc.manager.model.dto.manager.Manager;
-import com.ipcc.manager.service.AgentService;
-import com.ipcc.manager.service.ManagerService;
+import com.ipcc.common.manager.model.dto.manager.Manager;
+import com.ipcc.common.manager.service.AgentService;
+import com.ipcc.common.manager.service.ManagerService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,9 @@ public class LoginController {
     // 상담원 인증정보 확인을 위한 service 주입
     private final AgentService agentService;
 
-    public LoginController(AgentService agentService) {
+    public LoginController(AgentService agentService, ManagerService managerService) {
             this.agentService = agentService;
+            this.managerService = managerService;
     }
 
     // manager 로그인 페이지로 리다이렉트
@@ -30,9 +31,6 @@ public class LoginController {
 
         // 1. 관리자 인증 정보 확인
         Manager loginManager = managerService.selectManager(manager);
-        log.info("Manager : " + manager);
-        log.info("LoginManager : " + loginManager);
-
         // 2. 관리자 인증 정보가 일치하면 manager 메인 페이지로 리다이렉트 + 세션에 관리자 정보 저장
         if(loginManager != null) {
             session.setAttribute("loginManager", loginManager);
@@ -65,8 +63,6 @@ public class LoginController {
         // 2. 상담원 인증 정보와 회사 코드가 일치하면 crm 메인 페이지로 리다이렉트 + 세션에 상담원 정보 저장
         if(loginAgent != null) {
             session.setAttribute("loginAgent", loginAgent);
-
-
             // 세션에 상담원 정보 저장
             return "crm/main";
         }

@@ -1,4 +1,4 @@
-package com.ipcc.manager.controller;
+package com.ipcc.common.manager.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.formula.atp.Switch;

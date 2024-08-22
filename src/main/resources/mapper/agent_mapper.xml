@@ -25,6 +25,9 @@
         <result property="custId" column="CUST_ID"/>
         <result property="agentExt" column="AGENT_EXT"/>
         <result property="agentName" column="AGENT_NAME"/>
+        <result property="cid" column="CID"/>
+        <result property="did" column="DID"/>
+        <result property="inOut" column="INOUT"/>
         <result property="eventName" column="EVENT_NAME"/>
         <result property="timeStart" column="TIME_START"/>
         <result property="timeUse" column="TIME_USE"/>
@@ -101,9 +104,12 @@
         INSERT INTO agent_log (AGENT_EXT,
                                CUST_ID,
                                AGENT_NAME,
+                               CID,
+                               DID,
+                               DIV_INOUT,
                                EVENT_NAME,
                                TIME_START)
-        VALUES (#{agentExt}, #{custId}, #{agentName}, #{eventName}, NOW());
+        VALUES (#{agentExt}, #{custId}, #{agentName}, #{cid}, #{did}, #{divInOut}, #{eventName}, NOW());
     </insert>
 
     <!-- 상담원 이벤트 로그 update -->
@@ -129,7 +135,35 @@
                                  TIME_START = VALUES(TIME_START),
                                  DIV_LOGIN = VALUES(DIV_LOGIN)
     </insert>
+    
+    <!-- 상담원 현황(모니터링) 조회용 select-->
+    <select id="selectAgentListStatus" parameterType="String" resultType="com.ipcc.common.manager.model.dto.agent.AgentListStatus">
+        SELECT
+            COUNT(*) AS totalAgents,
+            SUM(CASE WHEN DIV_STAT = 'ready' THEN 1 ELSE 0 END) AS readyAgents,
+            SUM(CASE WHEN DIV_STAT = 'after' THEN 1 ELSE 0 END) AS afterAgents,
+            SUM(CASE WHEN DIV_STAT = 'rest' THEN 1 ELSE 0 END) AS restAgents,+
+            SUM(CASE WHEN DIV_STAT = 'preparing' THEN 1 ELSE 0 END) AS etcAgent,
+            SUM(CASE WHEN DIV_LOGIN = 'on' THEN 1 ELSE 0 END) AS loginAgents,
+            SUM(CASE WHEN DIV_INOUT = 'in' THEN 1 ELSE 0 END) AS inCallAgents,
+            SUM(CASE WHEN DIV_INOUT = 'out' THEN 1 ELSE 0 END) AS outCallAgents
+            FROM agent_mon
+            WHERE CUST_ID = #{ccode};
+    </select>
 
+    <!-- 상담원 현황(모니터링 조회용 select2) -->
+    <select id="selectAgentListStatus2" parameterType="String" resultType="com.ipcc.common.manager.model.dto.agent.AgentListStatus">
+        SELECT
+            SUM(CASE WHEN EVENT_NAME = 'callTry' AND  THEN 1 ELSE 0 END) AS readyAgents,
+            SUM(CASE WHEN DIV_STAT = 'after' THEN 1 ELSE 0 END) AS afterAgents,
+            SUM(CASE WHEN DIV_STAT = 'rest' THEN 1 ELSE 0 END) AS restAgents,
+            SUM(CASE WHEN DIV_STAT = 'preparing' THEN 1 ELSE 0 END) AS etcAgent,
+            SUM(CASE WHEN DIV_LOGIN = 'on' THEN 1 ELSE 0 END) AS loginAgents,
+            SUM(CASE WHEN DIV_INOUT = 'in' THEN 1 ELSE 0 END) AS inCallAgents,
+            SUM(CASE WHEN DIV_INOUT = 'out' THEN 1 ELSE 0 END) AS outCallAgents
+            FROM agent_log
+            WHERE CUST_ID = #{ccode};
+    </select>
 
 
 </mapper>

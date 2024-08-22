@@ -1,7 +1,7 @@
 package com.ipcc.crm.controller;
 
 import com.ipcc.common.model.dto.agent.AgentEventLog;
-import com.ipcc.manager.model.dto.agent.AgentMon;
+import com.ipcc.common.manager.model.dto.agent.AgentMon;
 import com.ipcc.crm.service.AgentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,24 +36,19 @@ public class AgentController {
     // 상담원 이벤트 업데이트 용 메서드
     @PostMapping("/updateAgentStatusLog")
     @ResponseBody
-    public String updateAgentStatusLog(AgentEventLog agentEventLog,
-                                       @RequestParam("did") String did,
-                                       @RequestParam("cid") String cid,
-                                       @RequestParam("divInOut") String divInOut) {
+    public String updateAgentStatusLog(AgentEventLog agentEventLog) {
 
         // agentMon 정보 갱신에 필요한 정보 vo 클래스에 담기
         AgentMon agentMon = new AgentMon();
 
-        agentMon.setDivLogin("in");
+        agentMon.setDivLogin("on");
         agentMon.setCustId(agentEventLog.getCustId());
         agentMon.setAgentExt(agentEventLog.getAgentExt());
         agentMon.setAgentName(agentEventLog.getAgentName());
         agentMon.setDivStat(agentEventLog.getEventName());
-        agentMon.setDid(did);
-        agentMon.setCid(cid);
-        agentMon.setDivInOut(divInOut);
-
-        log.info("agentMon: {}", agentMon);
+        agentMon.setCid(agentEventLog.getCid());
+        agentMon.setDid(agentEventLog.getCid());
+        agentMon.setDivInOut(agentEventLog.getDivInOut());
 
         int result = agentService.updateAgentEvent(agentEventLog, agentMon);
 
@@ -70,7 +65,7 @@ public class AgentController {
         // agentMon에 로그인 상태 갱신에 필요한 정보 vo 클래스에 담기
         AgentMon agentMon = new AgentMon();
 
-        agentMon.setDivLogin("in");
+        agentMon.setDivLogin("on");
         agentMon.setCustId(agentEventLog.getCustId());
         agentMon.setAgentExt(agentEventLog.getAgentExt());
         agentMon.setAgentName(agentEventLog.getAgentName());
@@ -100,7 +95,7 @@ public class AgentController {
         // agentMon에 로그아웃 상태 갱신에 필요한 정보 vo 클래스에 담기
         AgentMon agentMon = new AgentMon();
 
-        agentMon.setDivLogin("out");
+        agentMon.setDivLogin("off");
         agentMon.setCustId(agentEventLog.getCustId());
         agentMon.setAgentExt(agentEventLog.getAgentExt());
         agentMon.setAgentName(agentEventLog.getAgentName());

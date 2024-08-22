@@ -1,4 +1,4 @@
-package com.ipcc.manager.controller;
+package com.ipcc.common.manager.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ipcc.common.service.AsteriskService;

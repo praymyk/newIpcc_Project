@@ -249,27 +249,27 @@
                             <table>
                                 <tr>
                                     <td>수신대기</td>
-                                    <td> 3</td>
+                                    <td id="waiting"></td>
                                     <td>IN 통화 중</td>
-                                    <td> 0</td>
+                                    <td id="inCalling"></td>
                                 </tr>
                                 <tr>
                                     <td>후처리</td>
-                                    <td></td>
+                                    <td id="afterCallWork"></td>
                                     <td>OUT 통화중</td>
-                                    <td></td>
+                                    <td id="outCalling"></td>
                                 </tr>
                                 <tr>
                                     <td>자리비움</td>
-                                    <td></td>
+                                    <td id="rest"></td>
                                     <td>기타업무</td>
-                                    <td></td>
+                                    <td id="otherWork"></td>
                                 </tr>
                                 <tr>
                                     <td>로그인</td>
-                                    <td></td>
+                                    <td id="logonAgents"></td>
                                     <td>전체상담원</td>
-                                    <td></td>
+                                    <td id="totalAgents"></td>
                                 </tr>
                             </table>
                         </div>
@@ -378,14 +378,14 @@
                 var agentName = $('#search-monAgents').val();
                 var agentId = $('#search-monAgents').val();
 
-                getMonAgentList();
+                monAgentMonitoring();
 
                 // window 객체에 저장된 인터벌이 있으면 제거
-                if (window.monAgentListInterval !== undefined) {
-                    clearInterval(window.monAgentListInterval);
+                if (window.monAgentMonitoringInterval !== undefined) {
+                    clearInterval(window.monAgentMonitoringInterval);
                 }
                 // 새로운 인터벌 설정
-                window.monAgentListInterval = setInterval(getMonAgentList, 5000);
+                window.monAgentMonitoringInterval = setInterval(monAgentMonitoring, 5000);
 
                 // 기존 상태 시간 인터벌이 설정된 경우에만 clearInterval 실행
                 if (statusTimeInterval !== null) {
@@ -398,6 +398,12 @@
                         updateElapsedTime($(this), startTime);
                     });
                 }, 1000);
+
+                // 모니터링 래핑 함수
+                function monAgentMonitoring(){
+                    getMonAgentList();
+                    getMonAgentListStat();
+                }
 
                 // 상담원 리스트 조회용 메서드
                 function getMonAgentList(){
@@ -461,75 +467,82 @@
                         }
                     });
                 }
-            }
 
-            // 경과 시간을 계산하여 .status-time div에 업데이트하는 함수
-            function updateElapsedTime($element, startTime) {
-                var startDate = new Date(startTime.replace(' ', 'T'));
-                var now = new Date();
-                var elapsedTime = new Date(now - startDate);
+                // 경과 시간을 계산하여 .status-time div에 업데이트하는 함수
+                function updateElapsedTime($element, startTime) {
+                    var startDate = new Date(startTime.replace(' ', 'T'));
+                    var now = new Date();
+                    var elapsedTime = new Date(now - startDate);
 
-                var hours = String(elapsedTime.getUTCHours()).padStart(2, '0');
-                var minutes = String(elapsedTime.getUTCMinutes()).padStart(2, '0');
-                var seconds = String(elapsedTime.getUTCSeconds()).padStart(2, '0');
+                    var hours = String(elapsedTime.getUTCHours()).padStart(2, '0');
+                    var minutes = String(elapsedTime.getUTCMinutes()).padStart(2, '0');
+                    var seconds = String(elapsedTime.getUTCSeconds()).padStart(2, '0');
 
-                var elapsedTimeFormatted = `${hours}:${minutes}:${seconds}`;
-                $element.text(`상태 유지 시간 : ${elapsedTimeFormatted}`);
-            }
+                    var elapsedTimeFormatted = `${hours}:${minutes}:${seconds}`;
+                    $element.text(`상태 유지 시간 : ${elapsedTimeFormatted}`);
+                }
 
-            // 모니터링 상담원의 상태 Text 작성 함수
-            // 조회한 상태(eventName)에 따라 상태 메시지 업데이트
-            function monStatusMessage($element, event, inout){
-                switch (event) {
-                    case 'preparing':
-                        $element.text('준비 중..');
-                        break;
-                    case 'logout':
-                        $element.text('로그아웃 중..');
-                        break;
-                    case 'ready':
-                        $element.text('대기 중..');
-                        break;
-                    case 'rest':
-                        $element.text('이석 중..');
-                        break;
-                    case 'after':
-                        $element.text('후처리 중..');
-                        break;
-                    case 'callTry' :
-                        $element.text(inout === 'in' ? '[IN] 콜 시도 중..' : '[OUT] 콜 시도 중..');
-                        break;
-                    case 'inCall':
-                        $element.text(inout === 'in' ? '[IN] 통화 중..' : '[OUT] 통화 중..');
-                        break;
-                    default:
-                        $element.text('로딩 중..');
+                // 모니터링 상담원의 상태 Text 작성 함수
+                // 조회한 상태(eventName)에 따라 상태 메시지 업데이트
+                function monStatusMessage($element, event, inout){
+                    switch (event) {
+                        case 'preparing':
+                            $element.text('준비 중..');
+                            break;
+                        case 'logout':
+                            $element.text('로그아웃 중..');
+                            break;
+                        case 'ready':
+                            $element.text('대기 중..');
+                            break;
+                        case 'rest':
+                            $element.text('이석 중..');
+                            break;
+                        case 'after':
+                            $element.text('후처리 중..');
+                            break;
+                        case 'callTry' :
+                            $element.text(inout === 'in' ? '[IN] 콜 시도 중..' : '[OUT] 콜 시도 중..');
+                            break;
+                        case 'inCall':
+                            $element.text(inout === 'in' ? '[IN] 통화 중..' : '[OUT] 통화 중..');
+                            break;
+                        default:
+                            $element.text('로딩 중..');
+                    }
+                }
+
+                // 상담원 현황 모니터링 ( 현재 상담원 수, 로그인, 인콜, 아웃콜, 상태 구분)
+                function getMonAgentListStat(){
+                    $.ajax({
+                        url: 'agent/agentListStatus',
+                        method: 'GET',
+                        data : {
+                            // 조회 조건
+                            ccode : custcode
+                        },
+                        success: function(data) {
+                            var agentListStat = data;
+
+                            // 상담원 현황 정보 업데이트
+                            $('#waiting').text(agentListStat.readyAgents);
+                            $('#inCalling').text(agentListStat.inCallAgents);
+                            $('#afterCallWork').text(agentListStat.afterAgents);
+                            $('#outCalling').text(agentListStat.outCallAgents);
+                            $('#rest').text(agentListStat.restAgents);
+                            $('#otherWork').text(agentListStat.etcAgent);
+                            $('#logonAgents').text(agentListStat.loginAgents);
+                            $('#totalAgents').text(agentListStat.totalAgents);
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error loading content:", error);
+                        }
+                    });
                 }
             }
-
-
-            function getMonAgentListStat(){
-                $.ajax({
-                    url: 'agent/agentListStatus',
-                    method: 'GET',
-                    data : {
-                        // 조회 조건
-                        ccode : custcode
-                    },
-                    success: function(data) {
-
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error loading content:", error);
-                    }
-                });
-            }
-
         </script>
     </div>
-
-
-
 
 
 </body>

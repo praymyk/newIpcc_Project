@@ -130,6 +130,8 @@
 <script th:src="@{/js/manager/manager-menu.js}"></script>
 <!-- 상세화면 Toggle Script -->
 <script th:src="@{/js/manager/manager-detailbar.js}"></script>
+<!-- 헤더 Script (로그인 정보 담고 있음) -->
+<script th:src="@{/js/manager/manager-header.js}"></script>
 <!-- 푸터 Toggle Script -->
 <script th:src="@{/js/manager/manager-footer.js}"></script>
 
@@ -139,14 +141,16 @@
 <!-- 메뉴 클릭 후 콘텐츠 교체용 스크립트 -->
 <script>
     /*
+    * @param LoginCcode : 로그인한 계정의 업체 코드
+    * @param LoginId : 로그인한 계정의 ID
     * @param contentId : 클릭한 메뉴의 data-content-id 값
-    * @param custcode : 고객사 코드
     */
-    $(document).ready(function(){
-        console.log("ajax 작동");
-        var custcode = $('#custcode').val();
-        console.log(custcode);
+    <!-- 전역 변수 선언 -->
+    // Thymeleaf로 값 설정
+    window.LoginCcode = '[[${session.loginManager.ccode}]]';
+    window.LoginId = '[[${session.loginManager.mngId}]]';
 
+    $(document).ready(function(){
         $('.content-link').click(function(event){
             event.preventDefault(); // 링크 기본 동작 방지
             console.log("content-link clicked");
@@ -178,7 +182,6 @@
                     console.error("Error loading content:", error);
                 }
             });
-
         });
 
 
