@@ -1,7 +1,7 @@
-package com.ipcc.common.manager.service;
+package com.ipcc.manager.service;
 
 import com.ipcc.common.mapper.ManagerMapper;
-import com.ipcc.common.manager.model.dto.manager.Manager;
+import com.ipcc.manager.model.dto.manager.Manager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

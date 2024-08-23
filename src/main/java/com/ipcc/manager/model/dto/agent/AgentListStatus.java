@@ -1,4 +1,4 @@
-package com.ipcc.common.manager.model.dto.agent;
+package com.ipcc.manager.model.dto.agent;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,9 +1,9 @@
 package com.ipcc.common.controller;
 
 import com.ipcc.common.model.dto.agent.Agent;
-import com.ipcc.common.manager.model.dto.manager.Manager;
-import com.ipcc.common.manager.service.AgentService;
-import com.ipcc.common.manager.service.ManagerService;
+import com.ipcc.manager.model.dto.manager.Manager;
+import com.ipcc.manager.service.AgentService;
+import com.ipcc.manager.service.ManagerService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

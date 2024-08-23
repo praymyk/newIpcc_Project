@@ -1,4 +1,4 @@
-package com.ipcc.common.manager.model.dto.manager;
+package com.ipcc.manager.model.dto.manager;
 
 import lombok.*;
 

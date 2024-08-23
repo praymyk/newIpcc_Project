@@ -226,6 +226,12 @@
         </div>
     </div>
 
+    <div id="callAlert" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:#fff; padding:20px; box-shadow:0 0 10px rgba(0,0,0,0.5); z-index:1000;">
+        <p id="callMessage">전화온 내선:</p>
+        <button id="acceptButton">수락</button>
+        <button id="rejectButton" style="margin-left:10px;">거절</button>
+    </div>
+
     <!-- crm-menu toggle script -->
     <script>
         $(document).ready(function () {
@@ -339,17 +345,40 @@
 
                 if (session.direction === 'incoming') { // 수신 전화일 경우
                     cid = session.remote_identity.uri.user;
-
                     // did = session.local_identity.uri.user; // webRTC 구동 서버의 주소를 기준으로 sip user를 가져오기 때문에 asterisk 별도 구동 시 사용 불가
                     did = agentId;
                     inOut = "in";
 
-                    if (confirm("전화온 내선 : " + cid)) {
+                    updateAgentEventLog("callTry");
+
+                    var callAccepted = false; // 사용자가 수락했는지 여부를 추적
+
+                    // 전화 수신 알림창 내용 설정
+                    var callAlert = document.getElementById('callAlert');
+                    var callMessage = document.getElementById('callMessage');
+                    callMessage.textContent = '전화온 내선: ' + cid;
+
+                    // 알림창 노출
+                    callAlert.style.display = 'block';
+
+
+                    // 수락 버튼 클릭 이벤트
+                    var acceptButton = document.getElementById('acceptButton');
+                    acceptButton.onclick = function() {
+                        callAccepted = true;
                         session.answer(); // 수신 전화에 대해 사용자가 수락하면 세션을 수락
                         document.getElementById('phoneNum').value = cid; // 발신자 주소 상태 메시지에 표시
-                    } else {
+                        callAlert.style.display = 'none'; // 알림창 숨기기
+                    };
+
+                    // 거절 버튼 클릭 이벤트
+                    var rejectButton = document.getElementById('rejectButton');
+                    rejectButton.onclick = function() {
                         session.terminate(); // 수신 전화에 대해 사용자가 거절하면 세션을 종료
-                    }
+                        updateAgentEventLog("refuseCall");
+                        callAlert.style.display = 'none'; // 알림창 숨기기
+                    };
+
 
                     // 통화 수락 이벤트 핸들러
                     session.on('accepted', function () {
@@ -364,6 +393,12 @@
                         stopCallTimer(); // 통화 타이머 중지
                         resetValues();
                         document.getElementById('status').value = '통화 종료'; // 통화 종료 시 상태 메시지 업데이트
+
+                        if (!callAccepted) {
+                            alert('발신자가 통화를 취소했습니다.');
+                        }
+
+                        callAlert.style.display = 'none'; // 알림창 숨기기
                     });
 
                     // 통화 실패 이벤트 핸들러
@@ -372,6 +407,11 @@
                         document.getElementById('status').value = '연결 실패: ' + ev.cause; // 통화 실패 시 상태 메시지 업데이트
                         stopCallTimer(); // 통화 타이머 중지
                         document.getElementById('status').value = '통화 종료'; // 통화 종료 시 상태 메시지 업데이트
+
+                        if (!callAccepted) {
+                            alert('발신자가 통화를 취소했습니다.');
+                        }
+                        callAlert.style.display = 'none'; // 알림창 숨기기
                     });
 
                     // 원격 오디오 스트림 이벤트 핸들러

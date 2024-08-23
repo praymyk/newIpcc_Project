@@ -1,6 +1,6 @@
 package com.ipcc.common.mapper;
 
-import com.ipcc.common.manager.model.dto.manager.Manager;
+import com.ipcc.manager.model.dto.manager.Manager;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

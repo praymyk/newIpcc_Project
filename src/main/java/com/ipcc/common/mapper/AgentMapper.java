@@ -3,8 +3,9 @@ package com.ipcc.common.mapper;
 import com.ipcc.common.model.dto.agent.Agent;
 import com.ipcc.common.model.dto.agent.AgentAuth;
 import com.ipcc.common.model.dto.agent.AgentEventLog;
-import com.ipcc.common.manager.model.dto.agent.AgentListStatus;
-import com.ipcc.common.manager.model.dto.agent.AgentMon;
+import com.ipcc.manager.model.dto.agent.AgentListStatus;
+import com.ipcc.manager.model.dto.agent.AgentMon;
+import com.ipcc.manager.model.dto.agent.TodayCallStatus;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.data.repository.query.Param;
 
@@ -39,6 +40,9 @@ public interface AgentMapper {
     // 상담원 상태 조회 (모니터링)
     List<AgentMon> selectAgentStatus(Agent agent);
 
-    // 상담원 현황 상태 정보 (모니터링)
+    // 상담원 현황 상태 통계 (모니터링)
     AgentListStatus selectAgentListStatus(String ccode);
+
+    // 금일 통화량 통계 (모니터링)
+    TodayCallStatus selectTodayCallStatus(String ccode);
 }
