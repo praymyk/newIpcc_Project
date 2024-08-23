@@ -207,6 +207,20 @@
             padding: 10px;
             border: 1px solid #e1e1e1;
         }
+
+        #callAlert{
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            z-index: 1000;
+
+        }
+
     </style>
 </head>
 <body>
@@ -226,7 +240,7 @@
         </div>
     </div>
 
-    <div id="callAlert" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:#fff; padding:20px; box-shadow:0 0 10px rgba(0,0,0,0.5); z-index:1000;">
+    <div id="callAlert">
         <p id="callMessage">전화온 내선:</p>
         <button id="acceptButton">수락</button>
         <button id="rejectButton" style="margin-left:10px;">거절</button>
