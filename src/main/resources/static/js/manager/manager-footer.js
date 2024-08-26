@@ -4,14 +4,13 @@ $(document).ready(function(){
         $(this).toggleClass("fa-angle-down fa-angle-up"); // 아이콘 변경
     });
 
-    footerTodayCallStatus();
-    footerAgentListSatus();
+    footerInterval(); // footer 현황 interval 실행
 
     // window 객체에 저장된 인터벌이 있으면 제거
-    if (window.footerAgentListSatusInterval !== undefined) {
-        clearInterval(window.footerAgentListSatusInterval);
+    if (window.footerInterval !== undefined) {
+        clearInterval(window.footerInterval);
     }
-    window.footerAgentListSatusInterval = setInterval(footerAgentListSatus, 5000);
+    window.footerInterval = setInterval(footerInterval, 5000);
 
     // footer 상담원현황 갱신용 ajax
     function footerAgentListSatus(){
@@ -76,5 +75,11 @@ $(document).ready(function(){
             rate = (response / total) * 100;
         }
         $('#footer-todayResponseRate').text(rate.toFixed(2) + '%');
+    }
+
+    // footer 현황 interval 패키징
+    function footerInterval(){
+        footerTodayCallStatus();
+        footerAgentListSatus();
     }
 });

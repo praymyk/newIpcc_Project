@@ -208,42 +208,240 @@
             border: 1px solid #e1e1e1;
         }
 
+        /* 콜 인입 시 팝업창 스타일 */
+        #overlay {
+            display: none; /* 기본적으로 숨김 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* 반투명한 검정 배경 */
+            backdrop-filter: blur(5px); /* 배경을 흐리게 */
+            z-index: 999; /* 팝업 뒤에 위치하도록 설정 */
+        }
+
         #callAlert{
-            display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            width: 400px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            margin: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             z-index: 1000;
-
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #333;
+            display: none;
         }
 
+        #popupHeader {
+            background-color: #007aff;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 18px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        #callAlertContent {
+            margin: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        #callAlert table {
+            width: 100%;
+        }
+
+        #callAlert td {
+            padding: 10px 0;
+        }
+
+        #callAlert input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        #callAlert input[type="text"]:focus {
+            border-color: #007aff;
+            outline: none;
+        }
+
+        #buttonContainer {
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            flex-direction: column;
+            margin: 20px;
+            gap: 10px;
+        }
+
+        #controllerContainer {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        #controllerContainer button {
+            flex: 1;
+            padding: 12px;
+            background-color: #007aff;
+            color: white;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        #controllerContainer button:hover {
+            background-color: #005bb5;
+        }
+
+        #controllerContainer button:active {
+            transform: scale(0.98);
+        }
+
+        #transButtonContainer {
+            display: flex;
+            align-items: stretch;
+            justify-content: flex-end;
+            flex-direction: row;
+            gap: 10px;
+            margin-left: auto;
+            width: 100%;
+        }
+
+        #transButtonContainer span,
+        #transButtonContainer input[type="text"],
+        #transButtonContainer button {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            padding: 0 10px;
+            box-sizing: border-box;
+            color: #555;
+        }
+
+        #transButtonContainer input[type="text"] {
+            width: 150px;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            transition: border-color 0.2s;
+        }
+
+        #transButtonContainer input[type="text"]:focus {
+            border-color: #007aff;
+            outline: none;
+        }
+
+        #transButtonContainer button {
+            padding: 8px 16px;
+            background-color: #34c759;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        #transButtonContainer button:hover {
+            background-color: #28a745;
+        }
+
+        #transButtonContainer button:active {
+            transform: scale(0.98);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        #callAlert {
+            animation: fadeIn 0.3s ease-out;
+        }
     </style>
 </head>
 <body>
+    <div id="overlay"></div>
     <div class="crm-wrapper">
-        <div class="crm-sidemenu">
-            <div th:replace="~{crm/crm-menu :: crm-menu}"></div>
-        </div>
-        <div class="crm-content">
-            <div class="crm-topmenu">
-                <div th:replace="~{layout/crm-header :: crm-header}"> </div>
+            <div class="crm-sidemenu">
+                <div th:replace="~{crm/crm-menu :: crm-menu}"></div>
             </div>
-            <div class="crm-viewmenu">
-                <div>
-                    th:replace 예정
+            <div class="crm-content">
+                <div class="crm-topmenu">
+                    <div th:replace="~{layout/crm-header :: crm-header}"> </div>
+                </div>
+                <div class="crm-viewmenu">
+                    <div>
+                        th:replace 예정
+                    </div>
                 </div>
             </div>
-        </div>
     </div>
 
+
     <div id="callAlert">
-        <p id="callMessage">전화온 내선:</p>
-        <button id="acceptButton">수락</button>
-        <button id="rejectButton" style="margin-left:10px;">거절</button>
+        <div id="popupHeader"><span>고객정보 팝업 - 인바운드</span></div>
+        <div id="callAlertContent">
+            <table>
+                <tr>
+                    <td>인입번호</td>
+                    <td id="phoneNum"><input type="text"></td>
+                </tr>
+                <tr>
+                    <td>인입 ARS</td>
+                    <td id="arsNum"><input type="text"></td>
+                </tr>
+                <tr>
+                    <td>고객전화</td>
+                    <td id="custPhone"><input type="text" id="custPhoneValue"></td>
+                </tr>
+                <tr>
+                    <td>고객명</td>
+                    <td id="callName"><input type="text"></td>
+                </tr>
+                <tr>
+                    <td>최근 접수</td>
+                    <td id="callDate"><input type="text"></td>
+                </tr>
+            </table>
+        </div>
+        <div id="buttonContainer">
+            <div id="transButtonContainer">
+                <span>번호 연결:</span> <input type="text"> <button id="transButton">전환</button>
+            </div>
+            <div id="controllerContainer">
+                <button id="acceptButton">수락</button>
+                <button id="rejectButton">거절</button>
+            </div>
+        </div>
     </div>
 
     <!-- crm-menu toggle script -->
@@ -363,83 +561,91 @@
                     did = agentId;
                     inOut = "in";
 
-                    updateAgentEventLog("callTry");
-
-                    var callAccepted = false; // 사용자가 수락했는지 여부를 추적
+                    updateAgentEventLog("Try");
 
                     // 전화 수신 알림창 내용 설정
                     var callAlert = document.getElementById('callAlert');
-                    var callMessage = document.getElementById('callMessage');
-                    callMessage.textContent = '전화온 내선: ' + cid;
+                    var overlay = document.getElementById('overlay');
+                    var callMessage = document.getElementById('custPhoneValue');
+                    callMessage.value = cid;
 
                     // 알림창 노출
                     callAlert.style.display = 'block';
-
+                    overlay.style.display = 'block';
 
                     // 수락 버튼 클릭 이벤트
                     var acceptButton = document.getElementById('acceptButton');
                     acceptButton.onclick = function() {
-                        callAccepted = true;
                         session.answer(); // 수신 전화에 대해 사용자가 수락하면 세션을 수락
                         document.getElementById('phoneNum').value = cid; // 발신자 주소 상태 메시지에 표시
                         callAlert.style.display = 'none'; // 알림창 숨기기
+                        overlay.style.display = 'none';   // 오버레이 숨기기
+
+                        // 원격 오디오 스트림 이벤트 핸들러
+                        session.connection.addEventListener('track', function (event) {
+                            var remoteAudio = document.getElementById('remoteAudio');
+
+                            // 오디오 스트림을 포함하는 트랙만 처리
+                            if (event.track.kind === 'audio') {
+                                var stream = new MediaStream();
+                                stream.addTrack(event.track); // 개별 트랙을 새 스트림에 추가
+                                remoteAudio.srcObject = stream; // 원격 오디오 스트림 설정
+                                remoteAudio.play(); // 원격 오디오 재생
+                            }
+                        });
                     };
 
                     // 거절 버튼 클릭 이벤트
                     var rejectButton = document.getElementById('rejectButton');
                     rejectButton.onclick = function() {
+
                         session.terminate(); // 수신 전화에 대해 사용자가 거절하면 세션을 종료
-                        updateAgentEventLog("refuseCall");
+
                         callAlert.style.display = 'none'; // 알림창 숨기기
+                        overlay.style.display = 'none';   // 오버레이 숨기기
                     };
 
 
                     // 통화 수락 이벤트 핸들러
                     session.on('accepted', function () {
                         console.log('통화 수락');
-                        updateAgentEventLog("inCall");
+                        updateAgentEventLog("OnCall");
                         document.getElementById('status').value = '통화 중..'; // 통화 중 상태 메시지 업데이트
                     });
 
                     // 통화 종료 이벤트 핸들러
                     session.on('ended', function () {
                         console.log('Call ended');
+                        errorAgentEventLogs("End", "Preparing"); // 통화 종료 시 로그 저장 > 준비중 상태로 변경
                         stopCallTimer(); // 통화 타이머 중지
                         resetValues();
-                        document.getElementById('status').value = '통화 종료'; // 통화 종료 시 상태 메시지 업데이트
-
-                        if (!callAccepted) {
-                            alert('발신자가 통화를 취소했습니다.');
-                        }
 
                         callAlert.style.display = 'none'; // 알림창 숨기기
+                        overlay.style.display = 'none';   // 오버레이 숨기기
+
+                        document.getElementById('status').value = '통화 종료'; // 통화 종료 시 상태 메시지 업데이트
                     });
 
                     // 통화 실패 이벤트 핸들러
                     session.on('failed', function (ev) {
                         console.log('Call failed:', ev.cause);
-                        document.getElementById('status').value = '연결 실패: ' + ev.cause; // 통화 실패 시 상태 메시지 업데이트
                         stopCallTimer(); // 통화 타이머 중지
-                        document.getElementById('status').value = '통화 종료'; // 통화 종료 시 상태 메시지 업데이트
 
-                        if (!callAccepted) {
+                        if(ev.cause == 'Canceled'){
                             alert('발신자가 통화를 취소했습니다.');
+                            errorAgentEventLogs( 'Canceled', "Preparing"); // 발신자 통화 종료(Canceled) 시 로그 저장 > 준비중 상태로 변경
+                            resetValues();
+                        } else if(ev.cause == 'Rejected'){ // 통화 인입 거절 시 로그 저장 > 준비중 상태로 변경
+                            errorAgentEventLogs( 'Rejected', "Preparing"); // 통화 실패 시 로그 저장 > 준비중 상태로 변경
                         }
+
                         callAlert.style.display = 'none'; // 알림창 숨기기
+                        overlay.style.display = 'none';   // 오버레이 숨기기
+
+                        document.getElementById('status').value = '통화 종료'; // 통화 종료 시 상태 메시지 업데이트
                     });
 
-                    // 원격 오디오 스트림 이벤트 핸들러
-                    session.connection.addEventListener('track', function (event) {
-                        var remoteAudio = document.getElementById('remoteAudio');
 
-                        // 오디오 스트림을 포함하는 트랙만 처리
-                        if (event.track.kind === 'audio') {
-                            var stream = new MediaStream();
-                            stream.addTrack(event.track); // 개별 트랙을 새 스트림에 추가
-                            remoteAudio.srcObject = stream; // 원격 오디오 스트림 설정
-                            remoteAudio.play(); // 원격 오디오 재생
-                        }
-                    });
                 }
             });
         }
@@ -462,14 +668,14 @@
             var eventHandlers = {
                 'progress': function () {
                     console.log('Call is in progress'); // 전화 연결 시도 중
-                    updateAgentEventLog("callTry");
+                    updateAgentEventLog("Try");
                     document.getElementById('status').value = '수신 대기 중..';
                 },
                 'failed': function (ev) {
                     console.log('Call failed with cause: ' + ev.cause);
 
                     // 통화 실패 시 로그 저장 > 준비중 상태로 변경
-                    errorAgentEventLogs("callFail", "preparing");
+                    errorAgentEventLogs("Fail", "Preparing");
                     document.getElementById('status').value = '준비 중..';
                     resetValues();
                 },
@@ -481,13 +687,13 @@
                     *
                     * 자동 후처리 상태로 전환 구현 할경우 여기서 구현///////////////////////////////////
                     * */
-                    errorAgentEventLogs("callEnd", "preparing");
+                    errorAgentEventLogs("End", "Preparing");
                     resetValues();
                     document.getElementById('status').value = '준비 중..';
                 },
                 'confirmed': function () {
                     console.log('Call confirmed'); // 통화 확인 시 로그
-                    updateAgentEventLog("inCall");
+                    updateAgentEventLog("OnCall");
                     document.getElementById('status').value = '통화 중..';
                 }
             };
@@ -525,16 +731,13 @@
                 console.log('Call accepted');
 
             });
-
-
         });
 
         // 전화 끊기 버튼 클릭 이벤트 핸들러
         document.getElementById('hangupBtn').addEventListener('click', function () {
             console.log("stopCallTimer strat")
             // 통화 끊기 시 로그 저장 > 준비중 상태로 변경
-            errorAgentEventLogs("cutCall", "preparing");
-            document.getElementById('status').value = '준비 중..';
+            updateAgentEventLog("Cut");
             if(session){
                 session.terminate();
             }
@@ -543,21 +746,21 @@
         // 전화 대기 버튼 클릭 이벤트 핸들러
         document.getElementById('readyBtn').addEventListener('click', function () {
             resetValues();
-            updateAgentEventLog("ready");
+            updateAgentEventLog("Ready");
             document.getElementById('status').value = '대기 중..';
         });
 
         // 이석 버튼 클릭 이벤트 핸들러
         document.getElementById("restBtn").addEventListener('click',function (){
             resetValues();
-            updateAgentEventLog("rest");
+            updateAgentEventLog("Rest");
             document.getElementById('status').value = '이석 중..';
         });
 
         // 후처리 버튼 클릭 이벤트 핸들러
         document.getElementById("afterBtn").addEventListener('click',function (){
             resetValues();
-            updateAgentEventLog("after");
+            updateAgentEventLog("Processing");
             document.getElementById('status').value = '후처리 중..';
         });
 
@@ -614,7 +817,7 @@
                     custId: agentCcode,
                     agentExt: agentId,
                     agentName: agentName,
-                    eventName: 'login',
+                    eventName: 'Login',
                     currentStatus: currentStatus
                 },
                 success: function (data) {
@@ -635,7 +838,7 @@
                     custId: agentCcode,
                     agentExt: agentId,
                     agentName: agentName,
-                    eventName: 'logout'
+                    eventName: 'Logout'
                 },
                 success: function (data) {
                     console.log(data);
@@ -700,7 +903,7 @@
                         // 이전 상태 값이 없을 경우(첫 로그인, 로그아웃 후 로그인) => 준비중 상태로 설정
                         // Controller 단에서는 currentStatus = "" 일 경우 준비중 상태로 설정
                         currentStatus = "";
-                        updateStatusMessage("preparing");
+                        updateStatusMessage("Preparing");
                         startCallTimer();
                     } else {
                         var dateString  = response.timeStart;
@@ -742,22 +945,22 @@
 
             console.log("updateStatusMessage : ", event);
             switch (event) {
-                case 'preparing':
+                case 'Preparing':
                     document.getElementById('status').value = '준비 중..';
                     break;
-                case 'logout':
+                case 'Logout':
                     document.getElementById('status').value = '로그아웃 중..';
                     break;
-                case 'ready':
+                case 'Ready':
                     document.getElementById('status').value = '대기 중..';
                     break;
-                case 'rest':
+                case 'Rest':
                     document.getElementById('status').value = '이석 중..';
                     break;
-                case 'after':
+                case 'Processing':
                     document.getElementById('status').value = '후처리 중..';
                     break;
-                case 'inCall':
+                case 'OnCall':
                     document.getElementById('status').value = '통화 중..';
                     break;
 

@@ -77,8 +77,8 @@ public class AgentController {
         if (result>0) {
             // step.3 로그인 전 상태(currentStatus) 값이 존재않는 다면 "준비" 상태 등록
             if(currentStatus == null || currentStatus.equals("")){
-                agentEventLog.setEventName("preparing");
-                agentMon.setDivStat("preparing");
+                agentEventLog.setEventName("Preparing");
+                agentMon.setDivStat("Preparing");
                 agentService.insertAgentEvent(agentEventLog, agentMon);
             }
             return "상담원 로그인 상태 업데이트 성공";

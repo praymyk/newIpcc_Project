@@ -285,27 +285,27 @@
                             <table>
                                 <tr>
                                     <td>고객대기</td>
-                                    <td></td>
+                                    <td id="watingCall"></td>
                                     <td>콜백</td>
-                                    <td></td>
+                                    <td id="callBack"></td>
                                 </tr>
                                 <tr>
                                     <td>상담요청</td>
-                                    <td></td>
+                                    <td id="totalCall"></td>
                                     <td>응대호</td>
-                                    <td></td>
+                                    <td id="responseCall"></td>
                                 </tr>
                                 <tr>
                                     <td>포기호</td>
-                                    <td></td>
+                                    <td id="abandonCall"></td>
                                     <td>응대율</td>
-                                    <td></td>
+                                    <td id="todayResponseRate"></td>
                                 </tr>
                                 <tr>
                                     <td>아웃시도</td>
-                                    <td></td>
+                                    <td id="outCallTry"></td>
                                     <td>아웃콜</td>
-                                    <td></td>
+                                    <td id="outCall"></td>
                                 </tr>
                             </table>
                         </div>
@@ -399,12 +399,6 @@
                     });
                 }, 1000);
 
-                // 모니터링 래핑 함수
-                function monAgentMonitoring(){
-                    getMonAgentList();
-                    getMonAgentListStat();
-                }
-
                 // 상담원 리스트 조회용 메서드
                 function getMonAgentList(){
                     $.ajax({
@@ -486,25 +480,25 @@
                 // 조회한 상태(eventName)에 따라 상태 메시지 업데이트
                 function monStatusMessage($element, event, inout){
                     switch (event) {
-                        case 'preparing':
+                        case 'Preparing':
                             $element.text('준비 중..');
                             break;
-                        case 'logout':
+                        case 'Logout':
                             $element.text('로그아웃 중..');
                             break;
-                        case 'ready':
+                        case 'Ready':
                             $element.text('대기 중..');
                             break;
-                        case 'rest':
+                        case 'Rest':
                             $element.text('이석 중..');
                             break;
-                        case 'after':
+                        case 'Processing':
                             $element.text('후처리 중..');
                             break;
-                        case 'callTry' :
+                        case 'Try' :
                             $element.text(inout === 'in' ? '[IN] 콜 시도 중..' : '[OUT] 콜 시도 중..');
                             break;
-                        case 'inCall':
+                        case 'OnCall':
                             $element.text(inout === 'in' ? '[IN] 통화 중..' : '[OUT] 통화 중..');
                             break;
                         default:
@@ -540,6 +534,54 @@
                         }
                     });
                 }
+
+                // 콜 현황 모니터링
+                function getMonCallStat() {
+
+                    $.ajax({
+                        url: 'agent/todayCallStatus',
+                        method: 'GET',
+                        data : {
+                            // 조회 조건
+                            ccode : window.LoginCcode
+                        },
+                        success: function(data) {
+                            var todayCallStat = data;
+                            var totalCall = todayCallStat.totalCall;
+                            var responseCall = todayCallStat.responseCall;
+
+                            // 금일 통화 현황 정보 업데이트
+                            $('#outCallTry').text(todayCallStat.outCallTry); // 아웃 시도
+                            $('#outCall').text(todayCallStat.outCall);  // 아웃콜(성공)
+                            $('#totalCall').text(todayCallStat.totalCall); // 전체호
+                            $('#watingCall').text(todayCallStat.watingCall);  // 대기호 => 추후 asterisk에게 뺴와야함
+                            $('#responseCall').text(todayCallStat.responseCall);  // 응대호(IB)
+                            $('#abandonCall').text(todayCallStat.abandonCall);    // 포기호(IB)
+
+                            calcResponseRate(responseCall, totalCall);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error loading content:", error);
+                        }
+                    });
+                }
+
+                // 응대율 계산
+                function calcResponseRate(response, total){
+                    var rate = 0;
+                    if(total > 0){
+                        rate = (response / total) * 100;
+                    }
+                    $('#todayResponseRate').text(rate.toFixed(2) + '%');
+                }
+
+                // 모니터링 래핑 함수
+                function monAgentMonitoring(){
+                    getMonAgentList();
+                    getMonAgentListStat();
+                    getMonCallStat();
+                }
+
             }
         </script>
     </div>

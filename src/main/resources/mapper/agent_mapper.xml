@@ -140,10 +140,10 @@
     <select id="selectAgentListStatus" parameterType="String" resultType="com.ipcc.manager.model.dto.agent.AgentListStatus">
         SELECT
             COUNT(*) AS totalAgents,
-            SUM(CASE WHEN DIV_STAT = 'ready' THEN 1 ELSE 0 END) AS readyAgents,
-            SUM(CASE WHEN DIV_STAT = 'after' THEN 1 ELSE 0 END) AS afterAgents,
-            SUM(CASE WHEN DIV_STAT = 'rest' THEN 1 ELSE 0 END) AS restAgents,+
-            SUM(CASE WHEN DIV_STAT = 'preparing' THEN 1 ELSE 0 END) AS etcAgent,
+            SUM(CASE WHEN DIV_STAT = 'Ready' THEN 1 ELSE 0 END) AS readyAgents,
+            SUM(CASE WHEN DIV_STAT = 'Processing' THEN 1 ELSE 0 END) AS afterAgents,
+            SUM(CASE WHEN DIV_STAT = 'Rest' THEN 1 ELSE 0 END) AS restAgents,+
+            SUM(CASE WHEN DIV_STAT = 'Preparing' THEN 1 ELSE 0 END) AS etcAgent,
             SUM(CASE WHEN DIV_LOGIN = 'on' THEN 1 ELSE 0 END) AS loginAgents,
             SUM(CASE WHEN DIV_INOUT = 'in' THEN 1 ELSE 0 END) AS inCallAgents,
             SUM(CASE WHEN DIV_INOUT = 'out' THEN 1 ELSE 0 END) AS outCallAgents
@@ -154,12 +154,12 @@
     <!-- 상담원 현황(모니터링 조회용 select2) -->
     <select id="selectTodayCallStatus" parameterType="String" resultType="com.ipcc.manager.model.dto.agent.TodayCallStatus">
         SELECT
-            SUM(CASE WHEN DIV_INOUT = 'out' AND EVENT_NAME = 'callTry' THEN 1 ELSE 0 END) AS outCallTry,
-            SUM(CASE WHEN DIV_INOUT = 'out' AND EVENT_NAME ='inCall' THEN 1 ELSE 0 END) AS outCall,
-            SUM(CASE WHEN DIV_INOUT = 'in' AND EVENT_NAME = 'callTry' THEN 1 ELSE 0 END) AS totalCall,
-            SUM(CASE WHEN DIV_INOUT = 'in' AND EVENT_NAME = 'callTry' THEN 1 ELSE 0 END) AS watingCall,
-            SUM(CASE WHEN DIV_INOUT = 'in' AND EVENT_NAME ='inCall' THEN 1 ELSE 0 END) AS responseCall,
-            SUM(CASE WHEN DIV_INOUT = 'in' AND EVENT_NAME = 'refuseCall' THEN 1 ELSE 0 END) AS abandonCall
+            SUM(CASE WHEN DIV_INOUT = 'out' AND EVENT_NAME = 'Try' THEN 1 ELSE 0 END) AS outCallTry,
+            SUM(CASE WHEN DIV_INOUT = 'out' AND EVENT_NAME ='OnCall' THEN 1 ELSE 0 END) AS outCall,
+            SUM(CASE WHEN DIV_INOUT = 'in' AND EVENT_NAME = 'Try' THEN 1 ELSE 0 END) AS totalCall,
+            SUM(CASE WHEN DIV_INOUT = 'in' AND EVENT_NAME = 'Try' THEN 1 ELSE 0 END) AS watingCall,
+            SUM(CASE WHEN DIV_INOUT = 'in' AND EVENT_NAME ='OnCall' THEN 1 ELSE 0 END) AS responseCall,
+            SUM(CASE WHEN DIV_INOUT = 'in' AND (EVENT_NAME = 'Canceled' OR EVENT_NAME = 'Rejected') THEN 1 ELSE 0 END) AS abandonCall
             FROM agent_log
             WHERE CUST_ID = #{ccode}
             AND DATE(TIME_START) = CURDATE();
