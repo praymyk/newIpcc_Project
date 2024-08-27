@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+    <!-- Font Awesome JS -->
+    <script src="https://kit.fontawesome.com/22698b3d17.js" crossorigin="anonymous"></script>
+<body>
+
+    <div class="content">
+        <div class="call-info-wrap">
+
+
+        </div>
+
+        <div class="counsel-log-wrap">
+            <div class="counsel-log-category">
+                <span>상담 정보</span>    
+            </div>
+
+            <div class="counsel-log-stat">
+                <div>
+                    <span>상담 날짜 -</span>
+                    <input type="text" disabled placeholder="2024-00-00 00:00:00">
+                </div>
+                <div>
+                    <sapn>통화 시간</sapn>
+                    <input type="text" disabled placeholder="00:00:00">
+                </div>
+            </div>
+
+
+            <form action="" class="counsel-log">
+
+                <div class="counsel-memo">
+                    <label>
+                        상담 메모
+                    </label>
+                    <textarea placeholder="상담 내용을 작성해 주세요.">
+    
+                    </textarea>
+                </div>
+                
+                <div class="counsel-entry">
+                    <label>
+                        인입 경로
+                    </label>
+                    <select id="ARS-1">
+                        <option value="ars-1">인입경로</option>
+
+                    </select>
+                    <i class="fa-solid fa-angle-down" id="dropdown-icon"></i>
+                </div>
+
+                <div class="counsel-group">
+                    <div>
+                        <label>
+                            상담 유형
+                        </label>
+                        <select id="COUNSEL-GROUP-A">
+                            <option value="number-1">대분류</option>
+    
+                        </select>
+                        <i class="fa-solid fa-angle-down" id="dropdown-icon"></i>
+                    </div>
+                    <div>
+                        <select id="COUNSEL-GROUP-B">
+                            <option value="number-1">중분류</option>
+    
+                        </select>
+                        <i class="fa-solid fa-angle-down" id="dropdown-icon"></i>
+                    </div>
+                    <div>
+                        <select id="COUNSEL-GROUP-C">
+                            <option value="number-1">소분류</option>
+    
+                        </select>
+                        <i class="fa-solid fa-angle-down" id="dropdown-icon"></i>
+                    </div>
+
+                </div>
+                <button>상담 내용 등록</button>
+            </form>
+
+            <form action="" class="callback-schedule">
+                <div class="callback-schedule-time">
+                    <div>
+                        <label>
+                            콜백 예약
+                        </label>
+                        <input type="date">
+                    </div>
+                    <div>
+                        <label>
+                            시간
+                        </label>
+                        <input type="time">
+                    </div>
+                </div>
+                <div class="callback-schedule-memo">
+                    <textarea name="" id=""></textarea>
+                </div>     
+                <button>콜백 예약 등록</button>
+            </form>
+        </div>
+
+        <div class="cust-info-wrap">
+            <div class="cust-info-category">
+                <div>
+                    고객 정보
+                </div>
+                <div>
+                    상담이력
+                </div>
+                <div>
+                    메모
+                </div>
+                <div>
+                    콜백
+                </div>
+                <div>
+                    상담문자
+                </div>
+            </div>
+
+            <div class="cust-info-content">
+                <div class="cust-ccode">업체명</div>
+                <form action="" class="cust-info-table">
+                    <table>
+                        <tr>
+                            <td>이름</td>
+                            <td>미확인</td>
+                            <td>전화번호</td>
+                            <td>미확인</td>
+                        </tr>
+                        <tr>
+                            <td>이메일</td>
+                            <td>미확인</td>
+                        </tr>
+                        <tr>
+                            <td>주소</td>
+                            <td>미확인</td>
+                        </tr>
+                        <tr>
+                            <td>고객 분류</td>
+                            <td>미확인</td>
+                        </tr>
+                    </table>
+                    <div>
+                        <label for="">
+                            기타 정보
+                        </label>
+                        <textarea placeholder="고객 관련 기타 메모를 입력해 주세요">
+                        
+                        </textarea>
+                    </div>
+                    <button>편집</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
