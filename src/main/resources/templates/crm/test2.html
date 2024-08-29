@@ -1,166 +1,452 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+    <title>전화 상담 페이지</title>
+
     <!-- Font Awesome JS -->
     <script src="https://kit.fontawesome.com/22698b3d17.js" crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            min-width: 300px;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .sidebar {
+            padding-top : 70px;
+            min-width: 60px;
+            background-color: #0071e3;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .sidebar.hidden {
+            width: 0;
+        }
+
+        .sidebar > a {
+            width: 100%;
+            height: 70px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            font-size: 11px;
+            color: #fff;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+
+        .sidebar > a:hover {
+            background-color: #005bb5;
+            color: #e2e2e2;
+        }
+
+        .sidebar > a.active {
+            background-color: #003f7f;
+            color: #ffffff;
+        }
+
+        .sidebar > a > i {
+            font-size: 18px;
+        }
+
+        .crm-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: row;
+        }
+
+        /* HEADER 스타일 */
+
+        .header {
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #d2d2d7;
+        }
+
+
+        /* 상담원 상태 전환 스타일 */
+
+        .left-controller{
+            display: flex;
+            flex-direction: row;
+        }
+
+        .crm-logo-wrap{
+            margin-right: 20px;
+        }
+
+        .crm-logo-box {
+            border-radius: 8px;
+            width: 40px;
+            aspect-ratio: 1 / 1;
+            background-color: #0071e3;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .agent-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #e0f7fa;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bolder;
+        }
+
+        .agent-status.waiting {
+            background-color: #e0f7fa;
+            color: #00796b;
+        }
+
+        .agent-status.away {
+            background-color: #fff3e0;
+            color: #f57c00;
+        }
+
+        .agent-status.processing {
+            background-color: #fbe9e7;
+            color: #d32f2f;
+        }
+
+        #status-icon {
+            font-size: 14px;
+        }
+
+        #status-timer {
+            font-size: 12px;
+            font-weight: normal;
+            color: #757575;
+        }
+
+        /* 상담원 상태 전환 숨긴 메뉴 */
+        .status-dropdown {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-top: 5px;
+            min-width: 100px;
+            z-index: 1000;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .status-dropdown div {
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .status-dropdown div:hover {
+            background-color: #f1f1f1;
+        }
+
+
+        .right-controller {
+            display: flex;
+            margin-left: auto;
+            align-items: center;
+        }
+
+        .callback-button-wrap{
+            margin-right: 20px;
+            font-size: 20px;
+            color: #1d1d1f;
+            cursor: pointer;
+        }
+
+
+        .call-input-wrap, .agent-info{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            padding: 8px 16px; /* 버튼과 동일한 높이 조정을 위해 패딩을 추가 */
+            background-color: #f8f8f8; /* 버튼과 일관된 스타일을 위해 배경색 추가 */
+        }
+
+        .select-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        #agent-number {
+            border: none;
+            background: none;
+            font-size: 13px;
+            font-weight: bolder;
+            color: #afafb8;
+            padding: 0;
+            height: 100%;
+            width: 120px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 20px; /* 드롭다운 아이콘과 간격을 위해 오른쪽 패딩 추가 */
+        }
+
+        #call-number {
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: bolder;
+            color: #1d1d1f;
+            padding: 0;
+            margin-right: 5px;
+            width: 120px;
+        }
+
+        #call-number:focus {
+            outline: none;
+        }
+
+        #dropdown-icon {
+            position: absolute;
+            right: 0;
+            color: #0071e3;
+            cursor: pointer;
+            padding-right: 5px; /* 아이콘 클릭 영역을 넓히기 위한 패딩 */
+            pointer-events: none; /* 아이콘 자체 클릭 이벤트는 무시하고, select 클릭에만 반응 */
+        }
+
+        .select-container select:focus + #dropdown-icon {
+            color: #005bb5; /* 선택 시 아이콘 색상 변경 */
+        }
+
+        .call-input-wrap > i {
+            color: #0071e3; /* 초기 색상 설정 */
+            cursor: pointer; /* 커서 포인터로 변경 */
+            transition: color 0.3s ease; /* 호버 시 색상 변경을 위한 트랜지션 */
+        }
+
+        .call-input-wrap > i:hover {
+            color: #005bb5; /* 호버 시 색상 변경 */
+        }
+
+        .agent-info {
+            font-size: 14px;
+            color: #1d1d1f;
+            font-weight: bolder;
+            margin-left: 20px;
+            gap: 20px;
+        }
+
+        #agent-number {
+            border: none;
+            background: none;
+            font-size: 13px;
+            font-weight: bolder;
+            color: #afafb8;
+            padding: 0;
+            height: 100%;
+            width: 120px;
+            appearance: none; /* 기본 드롭다운 화살표 제거 (필요 시) */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        #agent-number:focus {
+            outline: none;
+        }
+
+        .logout-button {
+            padding: 8px 16px;
+            margin-left: 20px;
+            background-color: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background-color: #005bb5;
+        }
+
+
+    </style>
+</head>
 <body>
 
-    <div class="content">
-        <div class="call-info-wrap">
-
-
+    <div class="header">
+        <div class="left-controller">
+            <div class="crm-logo-wrap">
+                <a class="crm-logo-box">
+                    <i class="fa-solid fa-phone"></i>   
+                </a>
+            </div>
+            <div class="agent-status" onclick="toggleStatusDropdown()">
+                <i id="status-icon" class="fa-solid fa-circle"></i>
+                <span id="status-text">대기</span>
+                <span id="status-timer">00:00</span>
+            </div>
+            <div class="status-dropdown" id="status-dropdown">
+                <div onclick="updateStatus('waiting')">대기</div>
+                <div onclick="updateStatus('away')">이석</div>
+                <div onclick="updateStatus('processing')">후처리</div>
+            </div>
         </div>
 
-        <div class="counsel-log-wrap">
-            <div class="counsel-log-category">
-                <span>상담 정보</span>    
+        <div class="right-controller">
+            <span class="callback-button-wrap">
+                <i class="fa-regular fa-calendar-check"></i>
+            </span>
+        
+            <div class="call-input-wrap">
+                <input id="call-number" type="text" placeholder="전화번호 입력">
+                <i class="fa-solid fa-phone-flip"></i>
             </div>
-
-            <div class="counsel-log-stat">
+        
+            <div class="agent-info"> 
                 <div>
-                    <span>상담 날짜 -</span>
-                    <input type="text" disabled placeholder="2024-00-00 00:00:00">
+                    <span>가나다</span> 님
                 </div>
-                <div>
-                    <sapn>통화 시간</sapn>
-                    <input type="text" disabled placeholder="00:00:00">
-                </div>
-            </div>
-
-
-            <form action="" class="counsel-log">
-
-                <div class="counsel-memo">
-                    <label>
-                        상담 메모
-                    </label>
-                    <textarea placeholder="상담 내용을 작성해 주세요.">
-    
-                    </textarea>
-                </div>
-                
-                <div class="counsel-entry">
-                    <label>
-                        인입 경로
-                    </label>
-                    <select id="ARS-1">
-                        <option value="ars-1">인입경로</option>
-
+                <div class="select-container">
+                    <select id="agent-number">
+                        <option value="my-number">내 번호</option>
+                        <option value="number-1">번호 1</option>
+                        <option value="number-2">번호 2</option>
+                        <option value="number-3">번호 3</option>
                     </select>
                     <i class="fa-solid fa-angle-down" id="dropdown-icon"></i>
                 </div>
-
-                <div class="counsel-group">
-                    <div>
-                        <label>
-                            상담 유형
-                        </label>
-                        <select id="COUNSEL-GROUP-A">
-                            <option value="number-1">대분류</option>
-    
-                        </select>
-                        <i class="fa-solid fa-angle-down" id="dropdown-icon"></i>
-                    </div>
-                    <div>
-                        <select id="COUNSEL-GROUP-B">
-                            <option value="number-1">중분류</option>
-    
-                        </select>
-                        <i class="fa-solid fa-angle-down" id="dropdown-icon"></i>
-                    </div>
-                    <div>
-                        <select id="COUNSEL-GROUP-C">
-                            <option value="number-1">소분류</option>
-    
-                        </select>
-                        <i class="fa-solid fa-angle-down" id="dropdown-icon"></i>
-                    </div>
-
-                </div>
-                <button>상담 내용 등록</button>
-            </form>
-
-            <form action="" class="callback-schedule">
-                <div class="callback-schedule-time">
-                    <div>
-                        <label>
-                            콜백 예약
-                        </label>
-                        <input type="date">
-                    </div>
-                    <div>
-                        <label>
-                            시간
-                        </label>
-                        <input type="time">
-                    </div>
-                </div>
-                <div class="callback-schedule-memo">
-                    <textarea name="" id=""></textarea>
-                </div>     
-                <button>콜백 예약 등록</button>
-            </form>
-        </div>
-
-        <div class="cust-info-wrap">
-            <div class="cust-info-category">
-                <div>
-                    고객 정보
-                </div>
-                <div>
-                    상담이력
-                </div>
-                <div>
-                    메모
-                </div>
-                <div>
-                    콜백
-                </div>
-                <div>
-                    상담문자
-                </div>
             </div>
-
-            <div class="cust-info-content">
-                <div class="cust-ccode">업체명</div>
-                <form action="" class="cust-info-table">
-                    <table>
-                        <tr>
-                            <td>이름</td>
-                            <td>미확인</td>
-                            <td>전화번호</td>
-                            <td>미확인</td>
-                        </tr>
-                        <tr>
-                            <td>이메일</td>
-                            <td>미확인</td>
-                        </tr>
-                        <tr>
-                            <td>주소</td>
-                            <td>미확인</td>
-                        </tr>
-                        <tr>
-                            <td>고객 분류</td>
-                            <td>미확인</td>
-                        </tr>
-                    </table>
-                    <div>
-                        <label for="">
-                            기타 정보
-                        </label>
-                        <textarea placeholder="고객 관련 기타 메모를 입력해 주세요">
-                        
-                        </textarea>
-                    </div>
-                    <button>편집</button>
-                </form>
-            </div>
-
+            <button class="logout-button">로그아웃</button>
         </div>
     </div>
+    
+
+    <div class="crm-body">
+        <div class="sidebar">
+            <a>
+                <i class="fa-solid fa-phone-volume"></i>
+                <span>상담</span>
+            </a>
+    
+            <a>
+                <i class="fa-solid fa-tv"></i>
+                <span>상담관리</span>
+            </a>
+    
+            <a>
+                <i class="fa-solid fa-table-list"></i>
+                <span>통화내역</span>
+            </a>
+    
+            <a>
+                <i class="fa-solid fa-person-circle-question"></i>
+                <span>고객관리</span>
+            </a>
+    
+            <a>
+                <i class="fa-solid fa-chart-simple"></i>
+                <span>통계</span>
+            </a>
+        </div>
+
+        <div class="crm-content">
+            <h1>전화 상담 페이지</h1>
+            <p>여기에 상담 관련 내용이 표시됩니다.</p>
+
+            
+            <div class="call-info-wrap">
+            </div>
+    
+            <div class="counsel-log-wrap">
+            </div>
+    
+            <div class="cust-info-wrap">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수로 타이머 인터벌을 정의합니다.
+        let timerInterval;
+
+        // 사이드 메뉴 선택 강조
+        const menuItems = document.querySelectorAll('.sidebar > a');
+
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // 모든 항목에서 active 클래스를 제거
+                menuItems.forEach(el => el.classList.remove('active'));
+                // 클릭된 항목에 active 클래스 추가
+                this.classList.add('active');
+            });
+        });
+
+        function toggleStatusDropdown() {
+            const dropdown = document.getElementById('status-dropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function updateStatus(newStatus) {
+            clearInterval(timerInterval); // 이전 타이머 초기화
+            const statusElement = document.querySelector('.agent-status');
+            const statusIcon = document.getElementById('status-icon');
+            const statusText = document.getElementById('status-text');
+            const dropdown = document.getElementById('status-dropdown');
+
+            // 상태별 클래스와 텍스트 업데이트
+            statusElement.className = 'agent-status ' + newStatus;
+            if (newStatus === "waiting") {
+                statusIcon.className = "fa-solid fa-circle";
+                statusText.textContent = "대기";
+            } else if (newStatus === "away") {
+                statusIcon.className = "fa-solid fa-chair";
+                statusText.textContent = "이석";
+            } else if (newStatus === "processing") {
+                statusIcon.className = "fa-solid fa-tasks";
+                statusText.textContent = "후처리";
+            }
+
+            // 타이머 시작
+            let seconds = 0;
+            const timerElement = document.getElementById('status-timer');
+            timerInterval = setInterval(() => {
+                seconds++;
+                const minutes = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const secs = (seconds % 60).toString().padStart(2, '0');
+                timerElement.textContent = `${minutes}:${secs}`;
+            }, 1000);
+
+            // 드롭다운 메뉴 닫기
+            dropdown.style.display = 'none';
+        }
+
+        // 메뉴 외부 클릭 시 드롭다운 닫기
+        window.onclick = function(event) {
+            const dropdown = document.getElementById('status-dropdown');
+            if (!event.target.closest('.agent-status') && !event.target.closest('.status-dropdown')) {
+                dropdown.style.display = 'none';
+            }
+        }
+
+    </script>
+
 </body>
 </html>

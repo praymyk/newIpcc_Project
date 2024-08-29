@@ -1,0 +1,124 @@
+.call-stat-wrap {
+    flex: 1;
+    min-width: 450px;
+    margin: 0;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px; /* 디스코드 스타일의 둥근 모서리 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 가벼운 그림자 효과 */
+}
+
+.call-stat-category {
+    display: flex;
+    justify-content: space-around;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e2e2e7;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.call-stat-category-item {
+    width: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #999;
+    cursor: pointer;
+    padding: 12px;
+    border-radius: 8px; /* 디스코드 스타일의 둥근 모서리 */
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+.call-stat-category-item:hover {
+    background-color: #e2e2e7;
+    transform: translateY(-2px); /* 디스코드 스타일의 살짝 올라가는 효과 */
+}
+
+.active {
+    background-color: #0071e3;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* 디스코드 스타일의 클릭된 요소 그림자 */
+    transform: translateY(0); /* 클릭된 요소는 원래 위치에 둠 */
+}
+
+.active:hover {
+    background-color: #0071e3;
+}
+
+.call-stat-category-item span:last-child {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.call-stat-content {
+    padding: 20px 0;
+}
+
+.call-stat-searchbar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.call-stat-search-date,
+.call-stat-search-info {
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f5;
+    padding: 10px;
+    border-radius: 8px; /* 디스코드 스타일의 둥근 모서리 */
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.call-stat-search-info {
+    margin-right: 0;
+}
+
+.call-stat-search-date i,
+.call-stat-search-info i {
+    color: #999;
+    margin-right: 10px;
+}
+
+.call-stat-searchbar input[type="text"] {
+    border: none;
+    background-color: transparent;
+    font-size: 14px;
+    color: #333;
+    width: 100%;
+    padding: 5px;
+}
+
+.call-stat-searchbar input[type="text"]:focus {
+    outline: none;
+}
+
+.call-stat-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+.call-stat-table th,
+.call-stat-table td {
+    padding: 10px;
+    border: 1px solid #e2e2e7;
+    text-align: center;
+}
+
+.call-stat-table th {
+    background-color: #f0f0f5;
+    font-weight: bold;
+}
+
+.call-stat-table td {
+    color: #333;
+}
+
+.call-stat-table td[colspan="6"] {
+    text-align: center;
+    color: #999;
+}

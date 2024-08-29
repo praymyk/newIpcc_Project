@@ -1,0 +1,237 @@
+.counsel-log-wrap {
+    min-width: 500px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;      /* 남은 가로 공간을 차지 */
+    margin: 0;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px; /* 둥근 모서리 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 가벼운 그림자 효과 */
+}
+
+.counsel-log-category {
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e2e2e7;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: bolder;
+    color: #0071e3;
+}
+
+.counsel-log-stat {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.counsel-log-stat > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.counsel-log-stat input[type="text"] {
+    border: none;
+    background-color: #f0f0f5;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    box-sizing: border-box;
+    width: 20ch; 
+}
+
+.counsel-log, .callback-schedule {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.counsel-memo, .callback-schedule-memo {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.counsel-memo textarea, .callback-schedule-memo textarea {
+    flex-grow: 1;
+    min-height: 100px; /* 최소 높이 설정 */
+    max-height: 100%; /* 최대 높이 설정 */
+    resize: none; /* 사용자가 크기를 조절할 수 없도록 설정 */
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+#counsel-timeuse{
+    width: 13ch;
+}
+
+.counsel-memo {
+    margin-bottom: 20px;
+}
+
+.counsel-memo label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.counsel-memo textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.counsel-entry {
+    margin-bottom: 20px;
+}
+
+.counsel-entry label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.select-container {
+    position: relative;
+    width: 100%;
+}
+
+.select-container select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    font-size: 14px;
+    color: #333;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 40px; /* 아이콘과 간격을 위해 오른쪽 패딩 추가 */
+    cursor: pointer;
+}
+
+.select-container i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #0071e3;
+    pointer-events: none;
+}
+
+.counsel-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.counsel-group > div {
+    flex: 1;
+    position: relative;
+}
+
+.counsel-group label {
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    display: block;
+}
+
+.counsel-group select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    font-size: 14px;
+    color: #333;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 40px; /* 아이콘과 간격을 위해 오른쪽 패딩 추가 */
+    cursor: pointer;
+}
+
+.submit-btn {
+    padding: 10px 20px;
+    background-color: #0071e3;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* 버튼에 그림자 추가 */
+}
+
+button:hover {
+    background-color: #005bb5;
+}
+
+.submit-wrap {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px 0px 10px auto;
+}
+
+.callback-schedule label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.callback-schedule-time {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.callback-schedule-time > div {
+    flex: 1;
+}
+
+.callback-schedule-time input[type="date"],
+.callback-schedule-time input[type="time"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    font-size: 14px;
+    color: #333;
+    box-sizing: border-box;
+}
+
+.callback-schedule-memo textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    resize: vertical;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
