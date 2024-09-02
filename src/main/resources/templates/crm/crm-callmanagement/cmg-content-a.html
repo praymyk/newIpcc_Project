@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상담관리 - 실시간 현황</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* 전체 배경 및 폰트 설정 */
+        body {
+            background-color: #F9F9F9; /* 애플 스타일 화이트 배경 */
+            font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; /* 최신 애플 스타일 폰트 */
+            color: #333333; /* 기본 텍스트 색상 */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* 메인 컨테이너 설정 */
+        .cmg-content-a {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            background-color: #F0F0F5; /* 패널 배경색 */
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
+        }
+
+        /* 통화 상태 정보 컨테이너 */
+        .cmg-call-stat {
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            height: 100%;
+        }
+
+        /* 통화 상태 정보 카드 스타일 */
+        .call-stat-card {
+            background-color: #FFFFFF; /* 애플 스타일 라이트 그레이 */
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            margin: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* 가벼운 그림자 */
+            text-align: center;
+        }
+
+        /* 카드 타이틀 스타일 */
+        .call-stat-title {
+            font-weight: 600;
+            font-size: 18px;
+            color: #1C1C1E; /* 다크 그레이 텍스트 색상 */
+            margin-bottom: 10px;
+        }
+
+        /* 카드 숫자 스타일 */
+        .call-stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #007AFF; /* 애플 스타일 블루 */
+        }
+
+        /* 차트 컨테이너 스타일 */
+        .cmg-call-chart {
+            height: 100%;
+            max-width: 600px;
+            background-color: #FFFFFF; /* 화이트 배경 */
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 가벼운 그림자 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="cmg-content-a">
+        <div class="cmg-call-stat">
+            <!-- 통화 상태 정보 -->
+            <div class="call-stat-card"> 
+                <span class="call-stat-title">연결 대기 고객</span>
+                <span class="call-stat-number" id="waiting"></span>
+            </div>
+            <div class="call-stat-card">
+                <span class="call-stat-title">상담 가능(대기)</span>
+                <span class="call-stat-number" id="ready"></span>
+            </div>
+            <div class="call-stat-card"> 
+                <span class="call-stat-title">상담 중</span>
+                <span class="call-stat-number" id="busy"></span>
+            </div>
+            <div class="call-stat-card"> 
+                <span class="call-stat-title">포기 호</span>
+                <span class="call-stat-number" id="abandon"></span>
+            </div>
+        </div>
+        <div class="cmg-call-chart">
+            <canvas id="myDonutChart"></canvas>
+            <div class="chart-labels"></div>
+        </div>
+    </div>
+
+    <!-- 통화 상태 차트 -->
+    <script>
+    const ctx = document.getElementById('myDonutChart').getContext('2d');
+
+    const dataValues = [10,10,10,10]; // 각 영역의 초기 값
+    const labels = ['연결 대기 고객', '상담 가능(대기)', '상담 중', '포기 호']; // 라벨 이름
+    const backgroundColors = ['#A3E3D8', '#FFE8AE', '#CBC4F2', '#F28C8C']; // 각 라벨의 색상
+
+    const myDonutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: dataValues,
+                backgroundColor: backgroundColors, // 애플 스타일 색상
+                borderWidth: 0 // 외곽선 없애기
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // 비율 유지 비활성화
+            cutout: '50%', // 도넛 내부 구멍 크기 조정
+            plugins: {
+                legend: {
+                    display: true, // 기본 범례 완전히 숨김
+                },
+                tooltip: {
+                    enabled: true, // 툴팁 유지 (필요에 따라)
+                }
+            }
+        }
+    });
+
+    // 라벨 업데이트 함수
+    function updateLabels(chart) {
+        const labels = chart.data.labels;
+        const data = chart.data.datasets[0].data;
+        const colors = chart.data.datasets[0].backgroundColor;
+
+        document.getElementById('waiting').textContent = `${data[0]}`;
+        document.getElementById('ready').textContent = `${data[1]}`;
+        document.getElementById('busy').textContent = `${data[2]}`;
+        document.getElementById('abandon').textContent = `${data[3]}`;
+    }
+
+    // 초기 라벨 설정
+    updateLabels(myDonutChart);
+
+    // 차트 데이터를 주기적으로 업데이트하는 함수
+    function updateChartData() {
+        // 실제로는 서버에서 데이터를 가져와야 하지만, 여기서는 예시로 랜덤 데이터 사용
+        const newData = [
+            Math.floor(Math.random() * 100), 
+            Math.floor(Math.random() * 100), 
+            Math.floor(Math.random() * 100), 
+            Math.floor(Math.random() * 100)
+        ];
+
+        // 차트 데이터 업데이트
+        myDonutChart.data.datasets[0].data = newData;
+        myDonutChart.update();
+
+        // 업데이트된 데이터를 기반으로 라벨 갱신
+        updateLabels(myDonutChart);
+    }
+
+    // 5초마다 데이터 갱신
+    setInterval(updateChartData, 5000);
+    </script>
+</body>
+</html>

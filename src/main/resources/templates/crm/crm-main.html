@@ -113,17 +113,8 @@
             </div>
         </div>
 
-        <div class="content">
-            <div class="call-info-wrap" th:replace="~{crm/crm-call-stat :: crm-call-stat}">
-            </div>
-    
-            <div class="counsel-log-wrap" th:replace="~{crm/crm-counsel-log :: crm-counsel-log}">
-            </div>
-    
-            <div class="cust-info-controller">
-                <div class="cust-info-search" th:replace="~{crm/crm-cust-info-search :: crm-cust-info-search}"></div>
-                <div class="cust-info-wrap" th:replace="~{crm/crm-cust-info :: crm-cust-info}"></div>
-            </div>
+        <div class="content" th:replace="~{crm/crm-counsel/crm-counsel-content}">
+            <!-- th:replace 이용 메뉴별 콘텐츠 전환 -->
         </div>
     </div>
 
