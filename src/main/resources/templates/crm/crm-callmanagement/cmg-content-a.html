@@ -10,9 +10,9 @@
     <style>
         /* 전체 배경 및 폰트 설정 */
         body {
-            background-color: #F9F9F9; /* 애플 스타일 화이트 배경 */
-            font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; /* 최신 애플 스타일 폰트 */
-            color: #333333; /* 기본 텍스트 색상 */
+            background-color: #F9F9F9;
+            font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #333333;
             margin: 0;
             padding: 0;
             display: flex;
@@ -26,33 +26,32 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-            width: 100%;
-            height: 100%;
-            background-color: #F0F0F5; /* 패널 배경색 */
+            background-color: #F0F0F5;
             border-radius: 20px;
             padding: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         /* 통화 상태 정보 컨테이너 */
         .cmg-call-stat {
             display: flex;
             flex-direction: column;
-            padding: 10px;
-            height: 100%;
+            padding: 20px 20px 20px 0px;
+            flex: 1;
+            justify-content: space-around;
         }
 
         /* 통화 상태 정보 카드 스타일 */
         .call-stat-card {
-            background-color: #FFFFFF; /* 애플 스타일 라이트 그레이 */
-            padding: 20px;
+            background-color: #FFFFFF;
+            padding: 15px;
             border-radius: 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
             flex: 1;
-            margin: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* 가벼운 그림자 */
+            margin: 5px 5px 5px 0px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             text-align: center;
         }
 
@@ -60,7 +59,7 @@
         .call-stat-title {
             font-weight: 600;
             font-size: 18px;
-            color: #1C1C1E; /* 다크 그레이 텍스트 색상 */
+            color: #1C1C1E;
             margin-bottom: 10px;
         }
 
@@ -68,23 +67,53 @@
         .call-stat-number {
             font-size: 32px;
             font-weight: bold;
-            color: #007AFF; /* 애플 스타일 블루 */
+            color: #007AFF;
         }
 
         /* 차트 컨테이너 스타일 */
         .cmg-call-chart {
-            height: 100%;
             max-width: 600px;
-            background-color: #FFFFFF; /* 화이트 배경 */
+            background-color: #FFFFFF;
             border-radius: 20px;
             padding: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 가벼운 그림자 */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            flex: 1;
         }
 
+        /* 차트 canvas는 부모 요소의 크기를 따라감 */
+        .myDonutChart-box {
+            height: 300px;
+            margin-bottom: 20px;
+        }
+
+        /* 범례 컨테이너 */
+        .legend-container {
+            display: flex;
+            flex-direction: column;
+            margin-right: auto;
+        }
+
+        /* 범례 항목 스타일 */
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .legend-color-box {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 50%; /* 아이콘을 둥글게 만듦 */
+        }
+
+        .legend-label {
+            font-size: 14px;
+            color: #333333;
+        }
     </style>
 </head>
 <body>
@@ -105,22 +134,26 @@
             </div>
             <div class="call-stat-card"> 
                 <span class="call-stat-title">포기 호</span>
-                <span class="call-stat-number" id="abandon"></span>
+                <span class="call-stat-number" id="abandon">0</span>
             </div>
         </div>
         <div class="cmg-call-chart">
-            <canvas id="myDonutChart"></canvas>
-            <div class="chart-labels"></div>
+            <div class="myDonutChart-box">
+                <canvas id="myDonutChart"></canvas>
+            </div>
+            <div class="legend-container" id="legend"></div> <!-- 범례를 표시할 컨테이너 -->
         </div>
     </div>
 
     <!-- 통화 상태 차트 -->
     <script>
+    // Chart.js 설정 및 초기화
     const ctx = document.getElementById('myDonutChart').getContext('2d');
 
-    const dataValues = [10,10,10,10]; // 각 영역의 초기 값
-    const labels = ['연결 대기 고객', '상담 가능(대기)', '상담 중', '포기 호']; // 라벨 이름
-    const backgroundColors = ['#A3E3D8', '#FFE8AE', '#CBC4F2', '#F28C8C']; // 각 라벨의 색상
+    // 여기에 값 불러 오기
+    const dataValues = [10, 10, 10]; // 각 영역의 초기 값
+    const labels = ['연결 대기 고객', '상담 가능(대기)', '상담 중']; // 라벨 이름
+    const backgroundColors = ['#A3E3D8', '#FFE8AE', '#CBC4F2']; // 각 라벨의 색상
 
     const myDonutChart = new Chart(ctx, {
         type: 'doughnut',
@@ -128,20 +161,22 @@
             labels: labels,
             datasets: [{
                 data: dataValues,
-                backgroundColor: backgroundColors, // 애플 스타일 색상
-                borderWidth: 0 // 외곽선 없애기
+                backgroundColor: backgroundColors,
+                borderColor: '#F9F9F9', // 도넛 사이의 경계선 색상 (배경색과 동일하게 설정)
+                borderWidth: 4, // 경계선 너비
+                borderRadius: 10
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false, // 비율 유지 비활성화
-            cutout: '50%', // 도넛 내부 구멍 크기 조정
+            maintainAspectRatio: false,
+            cutout: '50%',
             plugins: {
                 legend: {
-                    display: true, // 기본 범례 완전히 숨김
+                    display: false // 기본 범례 숨김
                 },
                 tooltip: {
-                    enabled: true, // 툴팁 유지 (필요에 따라)
+                    enabled: true,
                 }
             }
         }
@@ -149,24 +184,50 @@
 
     // 라벨 업데이트 함수
     function updateLabels(chart) {
-        const labels = chart.data.labels;
         const data = chart.data.datasets[0].data;
-        const colors = chart.data.datasets[0].backgroundColor;
 
         document.getElementById('waiting').textContent = `${data[0]}`;
         document.getElementById('ready').textContent = `${data[1]}`;
         document.getElementById('busy').textContent = `${data[2]}`;
-        document.getElementById('abandon').textContent = `${data[3]}`;
+    }
+
+    // 사용자 정의 범례 생성
+    function generateCustomLegend(chart) {
+        const legendContainer = document.getElementById('legend');
+        legendContainer.innerHTML = ''; // 기존 범례 제거
+
+        const labels = chart.data.labels;
+        const colors = chart.data.datasets[0].backgroundColor;
+        const data = chart.data.datasets[0].data; // 데이터 값을 가져옴
+
+        labels.forEach((label, index) => {
+            const legendItem = document.createElement('div');
+            legendItem.classList.add('legend-item');
+
+            const colorBox = document.createElement('div');
+            colorBox.classList.add('legend-color-box');
+            colorBox.style.backgroundColor = colors[index];
+
+            const labelText = document.createElement('span');
+            labelText.classList.add('legend-label');
+            labelText.textContent = `${label}: ${data[index]}`;  // 라벨과 데이터 값 함께 표시
+
+            legendItem.appendChild(colorBox);
+            legendItem.appendChild(labelText);
+            legendContainer.appendChild(legendItem);
+        });
     }
 
     // 초기 라벨 설정
     updateLabels(myDonutChart);
 
+    // 사용자 정의 범례 생성
+    generateCustomLegend(myDonutChart);
+
     // 차트 데이터를 주기적으로 업데이트하는 함수
     function updateChartData() {
         // 실제로는 서버에서 데이터를 가져와야 하지만, 여기서는 예시로 랜덤 데이터 사용
         const newData = [
-            Math.floor(Math.random() * 100), 
             Math.floor(Math.random() * 100), 
             Math.floor(Math.random() * 100), 
             Math.floor(Math.random() * 100)
@@ -178,6 +239,9 @@
 
         // 업데이트된 데이터를 기반으로 라벨 갱신
         updateLabels(myDonutChart);
+
+        // 범례를 새로 고침
+        generateCustomLegend(myDonutChart);
     }
 
     // 5초마다 데이터 갱신
