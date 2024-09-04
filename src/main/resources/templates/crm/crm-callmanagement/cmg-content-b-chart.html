@@ -17,20 +17,17 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            min-height: 100vh;
-            width: 100%;
         }
         /* 메인 컨테이너 */
-
-        .cmg-content-c{
+        .cmg-content-b-chart{
             background-color: #FFFFFF;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            width: 100%;
-            max-width: 1200px;
             display: flex;
-            gap:20px;            
+            gap:20px;       
+            width: 100%;     
+            flex-wrap: wrap;
         }
 
         .inCall-Chart {
@@ -40,7 +37,10 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
-            flex : 3;
+            flex-grow: 4; /* 자식 요소가 남는 공간을 차지할 수 있도록 */
+            flex-shrink: 1; /* 공간이 부족하면 줄어들 수 있도록 설정 */
+            flex-basis: 300px; /* 초기 가로 너비를 설정 */
+            min-width: 300px; /* 요소가 너무 작아지지 않도록 최소 너비 설정 */
         }
 
         .inCall-Chart span {
@@ -101,7 +101,6 @@
         /* 라벨 아이콘 스타일 */
         .chart-label-icon {
             display: flex;
-            ali;
             width: 12px;
             height: 12px;
             border-radius: 50%;
@@ -119,6 +118,10 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            flex-grow: 1; /* 자식 요소가 남는 공간을 차지할 수 있도록 */
+            flex-shrink: 1; /* 공간이 부족하면 줄어들 수 있도록 설정 */
+            flex-basis: 300px; /* 초기 가로 너비를 설정 */
+            min-width: 300px; /* 요소가 너무 작아지지 않도록 최소 너비 설정 */
         }
 
         .response-stat-card {
@@ -202,13 +205,11 @@
         .legend-color-2 {
             background-color: #FFE8AE; /* '포기 호' 색상 */
         }
-
-
     </style>
 </head>
 <body>
 
-    <div class="cmg-content-c">
+    <div class="cmg-content-b-chart">
 
         <div class="inCall-Chart">
             <span>콜 인입 현황</span>

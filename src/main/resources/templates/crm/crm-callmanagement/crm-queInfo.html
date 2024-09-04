@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>상담원 상태</title>
+    <title>큐별 현황</title>
 
     <style>
         /* 전체 배경 및 폰트 설정 */
@@ -20,17 +20,16 @@
         }
 
         /* 컨테이너 설정 */
-        .agtInfo-container {
+        .queInfo-container {
             background-color: #F9F9F9; /* 부모 요소와 동일한 배경색 */
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 800px;
         }
 
         /* 제목 스타일 */
-        .agtInfo-container > span {
+        .queInfo-container > span {
             display: block;
             font-size: 24px;
             font-weight: bold;
@@ -100,27 +99,23 @@
     </style>
 </head>
 <body>
-    <div class="agtInfo-container">
-        <span>상담원 상태</span>
+    <div class="queInfo-container">
+        <span>큐 현황</span>
         <table>
             <thead>
                 <tr>
-                    <th class="sortable">상담사 명</th>
-                    <th class="sortable">내선번호</th>
-                    <th class="sortable">상태</th>
-                    <th class="sortable">통화시간</th>
-                    <th class="sortable">인</th>
-                    <th class="sortable">아웃</th>
+                    <th class="sortable">no</th>
+                    <th class="sortable">큐 이름</th>
+                    <th class="sortable">인입</th>
+                    <th class="sortable">비율</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>김상담</td>
-                    <td>1001</td>
-                    <td>대기</td>
-                    <td>02:15</td>
-                    <td>5</td>
-                    <td>3</td>
+                    <td>1</td>
+                    <td>아동센터</td>
+                    <td>10</td>
+                    <td>100%</td>
                 </tr>
             </tbody>
         </table>
