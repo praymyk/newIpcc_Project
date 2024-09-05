@@ -1,0 +1,144 @@
+.cmg-content-c {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-wrap: wrap;
+    flex:1;
+}
+
+.cmg-content-c > span {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333333;
+    margin : 20px 0px 10px 0px;
+}
+
+.content-c-wrap{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* 좌,우 통계  (큐 현황)
+컨테이너 설정 */
+.queInfo-container, .etcInfo-container {
+    background-color: #FFFFFF; /* 부모 요소와 동일한 배경색 */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    flex-grow: 10; /* 자식 요소가 남는 공간을 차지할 수 있도록 */
+    flex-shrink: 1; /* 공간이 부족하면 줄어들 수 있도록 설정 */
+    min-width: 450px; /* 요소가 너무 작아지지 않도록 최소 너비 설정 */
+}
+
+/* 제목 스타일 */
+.queInfo-container > span, .etcInfo-container > span {
+    display: block;
+    font-size: 24px;
+    font-weight: bold;
+    color: #1C1C1E; /* 진한 텍스트 색상 */
+    margin-bottom: 20px;
+}
+
+/* 테이블 스타일 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #FFFFFF; /* 부모 요소와 동일한 배경색 */
+    overflow: hidden;
+}
+
+/* 테이블 헤더 스타일 */
+thead {
+    color: #1C1C1E; /* 진한 텍스트 색상 */
+    text-align: left;
+    font-size: 18px;
+    font-weight: 600; /* 헤더 텍스트를 더 굵게 */
+    cursor: pointer;
+}
+
+thead th {
+    padding: 12px 15px;
+}
+
+/* 정렬 아이콘 스타일 */
+thead th.sortable::after {
+    content: '▲';
+    font-size: 12px;
+    margin-left: 8px;
+    opacity: 0.5;
+    transform: rotate(0deg);
+    transition: transform 0.2s ease;
+}
+
+thead th.sortable.desc::after {
+    content: '▼';
+    transform: rotate(180deg);
+}
+
+/* 테이블 본문 스타일 */
+tbody {
+    text-align: left;
+    font-size: 16px;
+    color: #1C1C1E; /* 다크 텍스트 */
+}
+
+tbody td {
+    padding: 12px 15px;
+    border-top: 1px solid #E5E5EA; /* 구분선으로 행을 구분 */
+}
+
+tbody tr:last-child td {
+    border-bottom: 1px solid #E5E5EA; /* 마지막 행의 구분선 */
+}
+
+/* 비어있는 상태 메시지 스타일 */
+tbody td.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #6D6D72; /* 애플 스타일 서브 텍스트 색상 */
+}
+
+/* 중앙 차트 스타일
+ARS 인입 현황 차트 스타일 */
+.ars-chart-wrap {
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* 자식 요소가 남는 공간을 차지할 수 있도록 */
+    flex-shrink: 1; /* 공간이 부족하면 줄어들 수 있도록 설정 */
+    flex-basis: 300px; /* 초기 가로 너비를 설정 */
+    min-width: 300px; /* 요소가 너무 작아지지 않도록 최소 너비 설정 */
+}
+
+.arsDonutChart-box {
+    height: 300px;
+    margin-bottom: 20px;
+}
+
+.arsLegend-container {
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+}
+
+.arsLegend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.arsLegend-color-box {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+.arsLegend-label {
+    font-size: 16px;
+    color: #333333;
+}

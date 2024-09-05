@@ -1,0 +1,183 @@
+    /* 메인 컨테이너 */
+    .cmg-content-b-chart{
+        display: flex;
+        gap:20px;       
+        width: 100%;     
+        flex-wrap: wrap;
+    }
+
+    .inCall-Chart {
+        background-color: #FFFFFF;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 4; /* 자식 요소가 남는 공간을 차지할 수 있도록 */
+        flex-shrink: 1; /* 공간이 부족하면 줄어들 수 있도록 설정 */
+        flex-basis: 300px; /* 초기 가로 너비를 설정 */
+        min-width: 300px; /* 요소가 너무 작아지지 않도록 최소 너비 설정 */
+    }
+
+    .inCall-Chart span {
+        font-weight: bold;
+        font-size: 14px;
+        display: block;
+        color: #6D6D72;
+        margin-bottom: 20px;
+    }
+
+    .inCall-Chart-wrap {
+        flex: 1;
+    }
+
+    /* 차트 범례 커스터마이징 */
+    .chartjs-legend ul {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        padding: 0;
+        margin: 20px 0 0 0;
+    }
+
+    .chartjs-legend ul li {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+        font-size: 14px;
+        color: #6D6D72;
+    }
+
+    .chartjs-legend ul li span {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        margin-right: 8px;
+        border-radius: 50%;
+    }
+
+    .chartjs-legend ul li:last-child {
+        margin-right: 0;
+    }
+
+    /* 중앙에 좁게 정렬된 라벨 스타일 */
+    .chart-labels {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        gap: 20px; /* 라벨 간 간격 조정 */
+    }
+
+    .chart-labels div{
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* 라벨 아이콘 스타일 */
+    .chart-label-icon {
+        display: flex;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+
+    /* 라벨 텍스트 스타일 */
+    .chart-label-text {
+        vertical-align: middle;
+    }
+
+    /*
+    * 우측 응대율 부분
+    */
+    .response-stat-wrap{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex-grow: 1; /* 자식 요소가 남는 공간을 차지할 수 있도록 */
+        flex-shrink: 1; /* 공간이 부족하면 줄어들 수 있도록 설정 */
+        flex-basis: 300px; /* 초기 가로 너비를 설정 */
+        min-width: 300px; /* 요소가 너무 작아지지 않도록 최소 너비 설정 */
+    }
+
+    .response-stat-card {
+        display: flex;
+        flex-direction: row;
+        height: 110px;
+        gap: 10px;
+    }
+
+    .resStat-detail-item {
+        background-color: #FFFFFF;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex: 1;
+        font-weight: bold;
+    }
+
+    .resStat-detail-item span:first-child{
+        color: #6D6D72; /* 애플 스타일 흐린 텍스트 색상 */
+        font-size: 16px;
+    }
+
+    .resStat-detail-item span:last-child {
+        display: flex;
+        font-size: 24px;
+        color: #1C1C1E; /* 진한 텍스트 색상 */
+        margin: 10px 0px 10px 0px;
+    }
+
+    .myDonutChart-2-box{
+        position: relative;
+        background-color: #FFFFFF;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+    }
+
+    .chart2-legend {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background-color: rgba(255, 255, 255, 0.8); /* 배경색과 투명도 설정 */
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 14px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .chart2-legend ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .chart2-legend li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+
+    .chart2-legend li span {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        margin-right: 8px;
+        border-radius: 50%;
+    }
+
+    .legend-color-1 {
+        background-color: #A3E3D8; /* '통화 성공' 색상 */
+    }
+
+    .legend-color-2 {
+        background-color: #FFE8AE; /* '포기 호' 색상 */
+    }

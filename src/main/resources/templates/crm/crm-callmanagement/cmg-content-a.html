@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- css 미리보기용 지정 -->
-    <link rel="stylesheet" href="../../../static/css/crm/crm-callmangement/cmg-content-a.css">
+    <link rel="stylesheet" href="../../../static/css/crm/crm-callmanagement/cmg-content-a.css">
 
     <style>
         /* 전체 배경 및 폰트 설정 */
@@ -26,68 +26,74 @@
     </style>
 </head>
 <body>
-    <div class="cmg-content-a">
-        <div class="cmg-call-stat">
-            <!-- 통화 상태 정보 -->
-            <div class="call-stat-card"> 
-                <span class="call-stat-title">연결 대기 고객</span>
-                <span class="call-stat-number" id="waiting"></span>
-            </div>
-            <div class="call-stat-card">
-                <span class="call-stat-title">상담 가능(대기)</span>
-                <span class="call-stat-number" id="ready"></span>
-            </div>
-            <div class="call-stat-card"> 
-                <span class="call-stat-title">상담 중</span>
-                <span class="call-stat-number" id="busy"></span>
-            </div>
-            <div class="call-stat-card"> 
-                <span class="call-stat-title">포기 호</span>
-                <span class="call-stat-number" id="abandon">0</span>
-            </div>
-        </div>
+    <div class="cmg-content-a" th:fragment="cmg-content-a">
 
-        <div class="cmg-call-chart">
-            <div class="myDonutChart-box">
-                <canvas id="myDonutChart"></canvas>
+        <span>실시간 현황</span>
+        <div class="cmg-call-stat-wrap">
+            <div class="cmg-call-stat">
+                <!-- 통화 상태 정보 -->
+                <div class="call-stat-card">
+                    <span class="call-stat-title">연결 대기 고객</span>
+                    <span class="call-stat-number" id="waiting"></span>
+                </div>
+                <div class="call-stat-card">
+                    <span class="call-stat-title">상담 가능(대기)</span>
+                    <span class="call-stat-number" id="ready"></span>
+                </div>
+                <div class="call-stat-card">
+                    <span class="call-stat-title">상담 중</span>
+                    <span class="call-stat-number" id="busy"></span>
+                </div>
+                <div class="call-stat-card">
+                    <span class="call-stat-title">포기 호</span>
+                    <span class="call-stat-number" id="abandon">0</span>
+                </div>
             </div>
-            <div class="legend-container" id="legend"></div> <!-- 범례를 표시할 컨테이너 -->
-        </div>
 
-        <div class="agtInfo-container">
-            <span>상담원 상태</span>
-            <table>
-                <thead>
-                    <tr>
-                        <th class="sortable">상담사 명</th>
-                        <th class="sortable">내선번호</th>
-                        <th class="sortable">상태</th>
-                        <th class="sortable">통화시간</th>
-                        <th class="sortable">인</th>
-                        <th class="sortable">아웃</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>김상담</td>
-                        <td>1001</td>
-                        <td>대기</td>
-                        <td>02:15</td>
-                        <td>5</td>
-                        <td>3</td>
-                    </tr>
-                    <tr>
-                        <td>나상담</td>
-                        <td>2001</td>
-                        <td>대기</td>
-                        <td>03:15</td>
-                        <td>7</td>
-                        <td>2</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="cmg-call-chart">
+                <div class="myDonutChart-box">
+                    <canvas id="myDonutChart"></canvas>
+                </div>
+                <div class="legend-container" id="legend"></div> <!-- 범례를 표시할 컨테이너 -->
+            </div>
+
+            <div class="agtInfo-container">
+                <span>상담원 상태</span>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="sortable">상담사 명</th>
+                            <th class="sortable">내선번호</th>
+                            <th class="sortable">상태</th>
+                            <th class="sortable">통화시간</th>
+                            <th class="sortable">인</th>
+                            <th class="sortable">아웃</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>김상담</td>
+                            <td>1001</td>
+                            <td>대기</td>
+                            <td>02:15</td>
+                            <td>5</td>
+                            <td>3</td>
+                        </tr>
+                        <tr>
+                            <td>나상담</td>
+                            <td>2001</td>
+                            <td>대기</td>
+                            <td>03:15</td>
+                            <td>7</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
+
 
     <!-- 통화 상태 차트 -->
     <script>

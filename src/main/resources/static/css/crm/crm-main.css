@@ -277,6 +277,12 @@ body {
     background-color: #005bb5;
 }
 
+.content-box{
+    display: flex;
+    flex : 1;
+    height: auto;
+}
+
 .content{
     display: flex;
     flex : 1;

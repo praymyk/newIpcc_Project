@@ -1,12 +1,30 @@
         /* 메인 컨테이너 설정 */
+        .cmg-content{
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
         .cmg-content-a {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .cmg-content-a > span {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333333;
+            margin: 20px 0px 10px 0px;
+        }
+
+
+        .cmg-call-stat-wrap{
             display: flex;
             flex-direction: row;
             align-items: stretch;
-            background-color: #F0F0F5;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             gap: 10px;
             flex-wrap: wrap;
             flex:1;

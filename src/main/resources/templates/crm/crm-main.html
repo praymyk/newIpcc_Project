@@ -7,18 +7,25 @@
 
     <!-- Font Awesome JS -->
     <script src="https://kit.fontawesome.com/22698b3d17.js" crossorigin="anonymous"></script>
-    <!-- css 미리보기용 지정 -->
-    <link rel="stylesheet" href="../../static/css/crm/crm-main.css">
+    <!-- Chart.js 라이브러리 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery for AJAX -->
 
     <!-- css 파일 지정 -->
     <link rel="stylesheet" th:href="@{/css/crm/crm-main.css}">
 
     <!-- 전화 상담 css 스타일 -->
-    <link rel="stylesheet" th:href="@{/css/crm/crm-call-stat.css}">
-    <link rel="stylesheet" th:href="@{/css/crm/crm-counsel-log.css}">
-    <link rel="stylesheet" th:href="@{/css/crm/crm-cust-info.css}">
-    <link rel="stylesheet" th:href="@{/css/crm/crm-cust-info-search.css}">
+    <link rel="stylesheet" th:href="@{/css/crm/crm-counsel/crm-call-stat.css}">
+    <link rel="stylesheet" th:href="@{/css/crm/crm-counsel/crm-counsel-log.css}">
+    <link rel="stylesheet" th:href="@{/css/crm/crm-counsel/crm-cust-info.css}">
+    <link rel="stylesheet" th:href="@{/css/crm/crm-counsel/crm-cust-info-search.css}">
 
+    <!-- 상담 관리 css 스타일-->
+    <link rel="stylesheet" th:href="@{/css/crm/crm-callmanagement/cmg-content-a.css}">
+    <link rel="stylesheet" th:href="@{/css/crm/crm-callmanagement/cmg-content-b.css}">
+    <link rel="stylesheet" th:href="@{/css/crm/crm-callmanagement/cmg-content-b-chart.css}">
+    <link rel="stylesheet" th:href="@{/css/crm/crm-callmanagement/cmg-content-c.css}">
 </head>
 <body>
     <!-- 전화 상담 javascript 파일 -->
@@ -32,17 +39,17 @@
             </a>
         </div>
 
-        <a>
+        <a class="content-link" data-content-id="counsel">
             <i class="fa-solid fa-phone-volume"></i>
             <span>상담</span>
         </a>
 
-        <a>
+        <a class="content-link" data-content-id="callmanagement">
             <i class="fa-solid fa-tv"></i>
             <span>상담관리</span>
         </a>
 
-        <a>
+        <a class="content-link">
             <i class="fa-solid fa-table-list"></i>
             <span>통화내역</span>
         </a>
@@ -52,11 +59,11 @@
             <span>고객관리</span>
         </a>
 
-        <a>
+        <a class="content-link">
             <i class="fa-solid fa-chart-simple"></i>
             <span>통계</span>
         </a>
-        <a>
+        <a class="content-link">
             <i class="fa-solid fa-gear"></i>
             <span>설정</span>
         </a>
@@ -113,14 +120,46 @@
             </div>
         </div>
 
-        <div class="content" th:replace="~{crm/crm-counsel/crm-counsel-content}">
+        <div class="content-box" >
             <!-- th:replace 이용 메뉴별 콘텐츠 전환 -->
         </div>
     </div>
 
+    <script th:inline="javascript">
+        var contextPath = /*[[@{/}]]*/ '';  // 타임리프가 컨텍스트 경로를 서버에서 삽입
+    </script>
     <script>
-        let timerInterval; // 타이머를 초기화하기 위한 변수
 
+        /* 메뉴 클릭 선택 이벤트 */
+        <!-- 전역 변수 선언 -->
+        // Thymeleaf로 값 설정
+        $(document).on('click', '.content-link', function(event){
+            event.preventDefault(); // 링크 기본 동작 방지
+            var contentId = $(this).data('content-id');
+
+            $.ajax({
+                url: 'loadContent',
+                method: 'GET',
+                data: {
+                    contentId: contentId
+                },
+                success: function(data) {
+                    // 기존의 content 부분을 가져온 데이터로 교체
+                    $('.content-box').html(data);
+
+                    if (contentId === 'callmanagement') {
+                        $.getScript(contextPath + '/js/crm/crm-callmanagement.js');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error loading content:", error);
+                }
+            });
+        });
+
+        /* 전화 상담 상태 관련 스크립트 */
+
+        let timerInterval; // 타이머를 초기화하기 위한 변수
         // 사이드 메뉴 선택 강조
         const menuItems = document.querySelectorAll('.sidebar > a');
 
@@ -187,7 +226,6 @@
         }
 
         updateStatus("waiting");
-
 
     </script>
 

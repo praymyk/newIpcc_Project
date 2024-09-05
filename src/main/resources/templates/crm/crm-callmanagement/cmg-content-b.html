@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- css 미리보기용 지정 -->
-    <link rel="stylesheet" href="../../../static/css/crm/crm-callmangement/cmg-content-b.css">  
+    <link rel="stylesheet" href="../../../static/css/crm/crm-callmanagement/cmg-content-b.css">
 
     <style>
         /* 전체 배경 및 폰트 설정 */
@@ -26,85 +26,87 @@
             min-height: 100vh;
             width: 100%;
         }
-
     </style>
 </head>
 <body>
 
-    <div class="call-status">
-        <div class="call-statCard inCall-statCard">
-            <div class="call-stat">
-                <div class="call-statcard-icon">
-                    <i class="fa-solid fa-right-to-bracket"></i><!-- 인바운드 아이콘 -->
+    <div class="cmg-content-b" th:fragment="cmg-content-b">
+        <span>전화상담 현황</span>
+        <div class="call-status">
+            <div class="call-statCard inCall-statCard">
+                <div class="call-stat">
+                    <div class="call-statcard-icon">
+                        <i class="fa-solid fa-right-to-bracket"></i><!-- 인바운드 아이콘 -->
+                    </div>
+                    <div class="callStat-title">
+                        <span>인바운드 전화</span>
+                        <div class="callStat-total">
+                            <span>상담 0건 /</span>
+                            <span>총 0건</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="callStat-title">
-                    <span>인바운드 전화</span>
-                    <div class="callStat-total">
-                        <span>상담 0건 /</span>
-                        <span>총 0건</span>
+                <div class="callStat-detail">
+                    <div class="callStat-detail-item">
+                        <span>총 상담시간</span>
+                        <span>00분 00초</span>
+                    </div>
+                    <div class="callStat-detail-item">
+                        <span>평균 상담시간</span>
+                        <span>00분 00초</span>
+                    </div>
+                    <div class="callStat-detail-item">
+                        <span>통화 실패</span>
+                        <span>0건</span>
+                    </div>
+                    <div class="callStat-detail-item">
+                        <span>평균 고객 대기 시간</span>
+                        <span>0분 0초</span>
                     </div>
                 </div>
             </div>
-            <div class="callStat-detail">
-                <div class="callStat-detail-item">
-                    <span>총 상담시간</span>
-                    <span>00분 00초</span>
-                </div>
-                <div class="callStat-detail-item">
-                    <span>평균 상담시간</span>
-                    <span>00분 00초</span>
-                </div>
-                <div class="callStat-detail-item">
-                    <span>통화 실패</span>
-                    <span>0건</span>
-                </div>
-                <div class="callStat-detail-item">
-                    <span>평균 고객 대기 시간</span>
-                    <span>0분 0초</span>
-                </div>
-            </div>
-        </div>
 
-        <div class="call-statCard outCall-statCard">
-            <div class="call-stat">
-                <div class="call-statcard-icon">
-                    <i class="fa-solid fa-right-from-bracket"></i> <!-- 아웃바운드 아이콘 -->
+            <div class="call-statCard outCall-statCard">
+                <div class="call-stat">
+                    <div class="call-statcard-icon">
+                        <i class="fa-solid fa-right-from-bracket"></i> <!-- 아웃바운드 아이콘 -->
+                    </div>
+                    <div class="callStat-title">
+                        <span>아웃바운드 전화</span>
+                        <div class="callStat-total">
+                            <span>총 0건</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="callStat-title">
-                    <span>아웃바운드 전화</span>
-                    <div class="callStat-total">
-                        <span>총 0건</span>
+                <div class="callStat-detail">
+                    <div class="callStat-detail-item">
+                        <span>총 상담시간</span>
+                        <span>00분 00초</span>
+                    </div>
+                    <div class="callStat-detail-item">
+                        <span>평균 상담시간</span>
+                        <span>00분 00초</span>
+                    </div>
+                    <div class="callStat-detail-item">
+                        <span>상담통화 실패</span>
+                        <span>0건</span>
                     </div>
                 </div>
             </div>
-            <div class="callStat-detail">
-                <div class="callStat-detail-item">
-                    <span>총 상담시간</span>
-                    <span>00분 00초</span>
-                </div>
-                <div class="callStat-detail-item">
-                    <span>평균 상담시간</span>
-                    <span>00분 00초</span>
-                </div>
-                <div class="callStat-detail-item">
-                    <span>상담통화 실패</span>
-                    <span>0건</span>
-                </div>
-            </div>
-        </div>
 
-        <div class="call-statCard etcCall-statCard">
-                <div class="etcStat-detail-item ">
-                    <span>콜백 예약</span>
-                    <span>총 0건</span>
-                </div>
-                <div class="etcStat-detail-item ">
-                    <span>문자메시지 발송</span>
-                    <span>총 0건</span>
-                </div>
-                <div class="etcStat-detail-item ">
-                    <span>기타</span>
-                    <span>총 0건</span>
+            <div class="call-statCard etcCall-statCard">
+                    <div class="etcStat-detail-item ">
+                        <span>콜백 예약</span>
+                        <span>총 0건</span>
+                    </div>
+                    <div class="etcStat-detail-item ">
+                        <span>문자메시지 발송</span>
+                        <span>총 0건</span>
+                    </div>
+                    <div class="etcStat-detail-item ">
+                        <span>기타</span>
+                        <span>총 0건</span>
+                    </div>
                 </div>
             </div>
         </div>

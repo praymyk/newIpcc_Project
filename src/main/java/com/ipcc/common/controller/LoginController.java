@@ -64,7 +64,7 @@ public class LoginController {
         if(loginAgent != null) {
             session.setAttribute("loginAgent", loginAgent);
             // 세션에 상담원 정보 저장
-            return "crm/crm-main";
+            return "redirect:crm/main";
         }
         // 3. 일치하지 않으면 로그인 페이지로 리다이렉트
         log.info("로그인 실패");
@@ -72,11 +72,12 @@ public class LoginController {
         return "redirect:crm/login";
     }
 
-    @GetMapping("/crm/test")
-    public String crmTest() {
-        log.info("잘들어오나");
-        return "crm/test3";
+    // 로그인 성공 후 crm 메인 페이지 이동
+    @GetMapping("/crm/main")
+    public String crmMain() {
+        return "crm/crm-main";
     }
+
 
     @GetMapping("/crm/alogout")
     public String crmLogout(HttpSession session) {

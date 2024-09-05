@@ -8,6 +8,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery for AJAX -->
 
+    <!-- css 미리보기용 지정 -->
+    <link rel="stylesheet" href="../../../static/css/crm/crm-callmanagement/cmg-content-c.css">
+
     <style>
         /* 스타일은 동일하게 유지 */
         body {
@@ -20,241 +23,79 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-        }
-
-        .comg-content-c {
-            display: flex;
-            flex-direction: column;
-            background-color: #FFFFFF;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
             width: 100%;
-        }
-
-        .comg-content-c > span {
-            font-size: 24px;
-            font-weight: 600;
-            color: #333333;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .ars-chart-wrap {
-            max-width: 300px;
-            background-color: #FFFFFF;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-
-        .arsDonutChart-box {
-            height: 300px;
-            margin-bottom: 20px;
-        }
-
-        .arsLegend-container {
-            display: flex;
-            flex-direction: column;
-            margin-right: auto;
-        }
-
-        .arsLegend-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .arsLegend-color-box {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-            border-radius: 50%;
-        }
-
-        .arsLegend-label {
-            font-size: 16px;
-            color: #333333;
         }
     </style>
 </head>
 <body>
-    <div class="comg-content-c">
+    <div class="cmg-content-c" th:fragment="cmg-content-c">
         <span>ARS 인입 현황</span>
-        <div class="">
-            <span>채널별 유입현황</span>
-            <div class="">
+        <div class="content-c-wrap">
+            <div class="queInfo-container">
+                <span>큐 현황</span>
                 <table>
-                    <thead></thead>
-                    <tbody></tbody>
+                    <thead>
+                        <tr>
+                            <th class="sortable">no</th>
+                            <th class="sortable">큐 이름</th>
+                            <th class="sortable">인입</th>
+                            <th class="sortable">비율</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>아동센터</td>
+                            <td>10</td>
+                            <td>100%</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>남성센터</td>
+                            <td>12</td>
+                            <td>90%</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>여성센터</td>
+                            <td>20</td>
+                            <td>50%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        
+            <div class="ars-chart-wrap">
+                <span>ARS 처리율</span>
+                <div class="ars-chart">                    
+                    <div class="arsDonutChart-box">
+                        <canvas id="arsDonutChart"></canvas>
+                    </div>
+                    <div class="arsLegend-container" id="arsLegend"></div>
+                </div>
+            </div>
+    
+            <!-- 미정 현황 표-->
+            <div class="etcInfo-container">
+                <span>기타 현황</span>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="sortable">no</th>
+                            <th class="sortable">이름</th>
+                            <th class="sortable">미정</th>
+                            <th class="sortable">미정</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: #888; opacity: 0.6;">조회 자료 없음</td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>
-
-        <div class="ars-chart-wrap">
-            <span>ARS 처리율</span>
-            <div class="ars-chart">                    
-                <div class="arsDonutChart-box">
-                    <canvas id="arsDonutChart"></canvas>
-                </div>
-                <div class="arsLegend-container" id="arsLegend"></div>
-            </div>
-        </div>
-
-        <div>
-            <span>ARS 시나리오 유입</span>
-            <div></div>
-        </div>
     </div>
 
-    <script>
-        let myDonutChart;
-
-        // 흘니 스타일 색상 팔레트 (파스텔톤)
-        const hulniStyleColors = [
-            '#FFB3BA', // 밝은 핑크
-            '#FFDFBA', // 피치
-            '#FFFFBA', // 연노랑
-            '#BAFFC9', // 연그린
-            '#BAE1FF', // 연블루
-            '#F5C7F7', // 라이트 퍼플
-            '#C3FBD8', // 민트
-            '#FFD6E0', // 연한 장미색
-            '#D4E157', // 라임
-            '#FFECB3'  // 연크림
-        ];
-
-        // 차트를 초기화하는 함수
-        function initDonutChart(labels = [], dataValues = []) {
-            const ctx3 = document.getElementById('arsDonutChart').getContext('2d');
-
-            // 라벨 개수에 맞게 색상 순차적으로 선택
-            const backgroundColors = labels.map((_, index) => hulniStyleColors[index % hulniStyleColors.length]);
-
-            myDonutChart = new Chart(ctx3, {
-                type: 'doughnut',
-                data: {
-                    labels: labels, // 동적으로 채워질 라벨
-                    datasets: [{
-                        data: dataValues, // 동적으로 채워질 데이터
-                        backgroundColor: backgroundColors, // 미리 정의된 흘니 스타일 색상
-                        borderColor: '#F9F9F9', // 도넛 사이 경계선
-                        borderWidth: 4, // 경계선 너비
-                        borderRadius: 10
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '50%',
-                    plugins: {
-                        legend: {
-                            display: false // 기본 범례 숨김
-                        },
-                        tooltip: {
-                            enabled: true
-                        }
-                    }
-                }
-            });
-        }
-
-        // 사용자 정의 범례 생성 함수
-        function generateCustomLegend(chart) {
-            const legendContainer = document.getElementById('arsLegend');
-            legendContainer.innerHTML = ''; // 기존 범례 제거
-
-            const labels = chart.data.labels;
-            const colors = chart.data.datasets[0].backgroundColor;
-            const data = chart.data.datasets[0].data; // 데이터 값을 가져옴
-
-            labels.forEach((label, index) => {
-                const legendItem = document.createElement('div');
-                legendItem.classList.add('arsLegend-item');
-
-                const colorBox = document.createElement('div');
-                colorBox.classList.add('arsLegend-color-box');
-                colorBox.style.backgroundColor = colors[index];
-
-                const labelText = document.createElement('span');
-                labelText.classList.add('arsLegend-label');
-                labelText.textContent = `${label}: ${data[index]}`;  // 라벨과 데이터 값 함께 표시
-
-                legendItem.appendChild(colorBox);
-                legendItem.appendChild(labelText);
-                legendContainer.appendChild(legendItem);
-            });
-        }
-
-        // 차트 데이터를 가져오고 차트 업데이트 (Ajax로 값 받아오기)
-        function fetchChartData() {
-            $.ajax({
-                url: '/api/getChartData', // 서버로부터 차트 데이터를 가져오는 API 엔드포인트
-                method: 'GET',
-                success: function(response) {
-                    // 서버 응답 형식:
-                    // response = {
-                    //     labels: ["네이버", "카카오", "내부랜딩", "버스광고", "전광판", "틱톡"], 
-                    //     dataValues: [10, 20, 30, 40, 50, 60]
-                    // }
-
-                    const labels = response.labels; // 서버로부터 받은 라벨 배열
-                    const dataValues = response.dataValues; // 서버로부터 받은 데이터 배열
-
-                    // 차트 초기화 또는 업데이트
-                    if (myDonutChart) {
-                        // 차트가 이미 있을 경우 데이터 업데이트
-                        myDonutChart.data.labels = labels;
-                        myDonutChart.data.datasets[0].data = dataValues;
-                        myDonutChart.data.datasets[0].backgroundColor = labels.map((_, index) => hulniStyleColors[index % hulniStyleColors.length]);
-                        myDonutChart.update(); // 차트 갱신
-                    } else {
-                        // 차트가 없을 경우 초기화
-                        initDonutChart(labels, dataValues);
-                    }
-
-                    // 사용자 정의 범례 생성
-                    generateCustomLegend(myDonutChart);
-                },
-                error: function(error) {
-                    console.error('Error fetching chart data:', error); // 에러 발생 시 콘솔에 로그
-                }
-            });
-        }
-
-
-        // ajax 완성 전 더미 데이터! (ajax 완성 시 삭제 할 것)
-        function dummy(){
-            const dummyData = {
-                    labels: ["네이버", "카카오", "내부랜딩", "버스광고", "전광판", "틱톡"],
-                    dataValues: [10, 20, 30, 40, 50, 60]
-                };
-
-                const labels = dummyData.labels;
-                const dataValues = dummyData.dataValues;
-
-                if (myDonutChart) {
-                    myDonutChart.data.labels = labels;
-                    myDonutChart.data.datasets[0].data = dataValues;
-                    myDonutChart.data.datasets[0].backgroundColor = labels.map((_, index) => hulniStyleColors[index % hulniStyleColors.length]);
-                    myDonutChart.update(); // 차트 갱신
-                } else {
-                    initDonutChart(labels, dataValues);
-                }
-
-                generateCustomLegend(myDonutChart); // 범례 생성
-        }
-
-        // 페이지 로드 시 차트 데이터를 가져와서 차트 그리기
-        $(document).ready(function() {
-            dummy();
-            //fetchChartData(); // Ajax 요청으로 데이터를 받아 차트를 생성
-        });
-
-    </script>
 </body>
 </html>

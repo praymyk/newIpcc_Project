@@ -14,13 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@Controller
+@Controller("managerMenuController")
 public class MenuController {
-    private final RequestContextFilter requestContextFilter;
-
-    public MenuController(RequestContextFilter requestContextFilter) {
-        this.requestContextFilter = requestContextFilter;
-    }
 
     public void getMenuList() {
         // 메뉴 목록 조회
