@@ -21,11 +21,6 @@
     <link rel="stylesheet" th:href="@{/css/crm/crm-counsel/crm-cust-info.css}">
     <link rel="stylesheet" th:href="@{/css/crm/crm-counsel/crm-cust-info-search.css}">
 
-    <!-- 상담 관리 css 스타일-->
-    <link rel="stylesheet" th:href="@{/css/crm/crm-callmanagement/cmg-content-a.css}">
-    <link rel="stylesheet" th:href="@{/css/crm/crm-callmanagement/cmg-content-b.css}">
-    <link rel="stylesheet" th:href="@{/css/crm/crm-callmanagement/cmg-content-b-chart.css}">
-    <link rel="stylesheet" th:href="@{/css/crm/crm-callmanagement/cmg-content-c.css}">
 </head>
 <body>
     <!-- 전화 상담 javascript 파일 -->
@@ -125,17 +120,47 @@
         </div>
     </div>
 
+    <!--ContexPath를 자바스크립트로 전달-->
     <script th:inline="javascript">
         var contextPath = /*[[@{/}]]*/ '';  // 타임리프가 컨텍스트 경로를 서버에서 삽입
     </script>
     <script>
+        /*****
+            *  메뉴별 컨텐츠 스크립트/스타일 모듈화
+            *  > 메뉴 추가 시 추가 스크립트/스타일 파일을 맵에 추가
+            *  > 메뉴 컨텐츠 불러오는 ajax 내에 스크립트/스타일 맵 로드
+            *****/
+        var scriptMap = {
+            'callmanagement': [
+                contextPath + '/js/crm/crm-callmanagement.js'
+            ]
+        };
+        var styleMap = {
+            'callmanagement': [
+                contextPath + '/css/crm/crm-callmanagement/cmg-content-a.css',
+                contextPath + '/css/crm/crm-callmanagement/cmg-content-b.css',
+                contextPath + '/css/crm/crm-callmanagement/cmg-content-b-chart.css',
+                contextPath + '/css/crm/crm-callmanagement/cmg-content-c.css'
+            ],
+        }
 
-        /* 메뉴 클릭 선택 이벤트 */
-        <!-- 전역 변수 선언 -->
-        // Thymeleaf로 값 설정
+
+        /******
+         * 메뉴 클릭 선택 이벤트
+         ***********/
         $(document).on('click', '.content-link', function(event){
             event.preventDefault(); // 링크 기본 동작 방지
+
             var contentId = $(this).data('content-id');
+
+            // 선택한 메뉴에 active class 부여 (스타일 적용 및 선택 메뉴 구분)
+            if ($(this).hasClass('active')) {
+                // 이미 선택된 메뉴라면 추가 작업을 하지 않음
+                console.log("Same menu clicked, no action taken.");
+            }
+            // 메뉴가 변경된 경우, 모든 메뉴에서 'active' 클래스를 제거하고 현재 메뉴에 추가
+            $('.content-link').removeClass('active');
+            $(this).addClass('active');
 
             $.ajax({
                 url: 'loadContent',
@@ -147,8 +172,12 @@
                     // 기존의 content 부분을 가져온 데이터로 교체
                     $('.content-box').html(data);
 
-                    if (contentId === 'callmanagement') {
-                        $.getScript(contextPath + '/js/crm/crm-callmanagement.js');
+                    // 스크립트와 스타일을 모듈화된 방식으로 로드
+                    if (scriptMap[contentId]) {
+                        loadScripts(scriptMap[contentId]);
+                    }
+                    if (styleMap[contentId]) {
+                        loadStyles(styleMap[contentId]);
                     }
                 },
                 error: function(xhr, status, error) {
@@ -157,20 +186,10 @@
             });
         });
 
-        /* 전화 상담 상태 관련 스크립트 */
-
+        /************
+         상담원 상태 관련 스크립트
+         *************/
         let timerInterval; // 타이머를 초기화하기 위한 변수
-        // 사이드 메뉴 선택 강조
-        const menuItems = document.querySelectorAll('.sidebar > a');
-
-        menuItems.forEach(item => {
-            item.addEventListener('click', function() {
-                // 모든 항목에서 active 클래스를 제거
-                menuItems.forEach(el => el.classList.remove('active'));
-                // 클릭된 항목에 active 클래스 추가
-                this.classList.add('active');
-            });
-        });
 
         // 상태 변경 드랍다운 메뉴 출현 이벤트
         function toggleStatusDropdown() {
@@ -224,8 +243,43 @@
                 dropdown.style.display = 'none';
             }
         }
-
         updateStatus("waiting");
+
+
+        /************
+         * 스크립트/스타일 로드 함수
+         ************/
+        // 스크립트 동적 로드 함수
+        function loadScripts(scripts) {
+            scripts.forEach(function(scriptPath) {
+                if (!$('script[src="' + scriptPath + '"]').length) {
+                    $.getScript(scriptPath)
+                        .done(function(script, textStatus) {
+                            console.log(`Script ${scriptPath} loaded.`);
+                        })
+                        .fail(function(jqxhr, settings, exception) {
+                            console.error(`Failed to load script ${scriptPath}: `, exception);
+                        });
+                } else {
+                    console.log(`Script ${scriptPath} already loaded.`);
+                }
+            });
+        }
+        // 스타일 로드 함수
+        function loadStyles(styles) {
+            styles.forEach(function(stylePath) {
+                if (!$('link[href="' + stylePath + '"]').length) {
+                    $('<link/>', {
+                        rel: 'stylesheet',
+                        type: 'text/css',
+                        href: stylePath
+                    }).appendTo('head');
+                    console.log(`Style ${stylePath} loaded.`);
+                } else {
+                    console.log(`Style ${stylePath} already loaded.`);
+                }
+            });
+        }
 
     </script>
 
