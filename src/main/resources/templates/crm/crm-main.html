@@ -54,7 +54,7 @@
             <span>고객관리</span>
         </a>
 
-        <a class="content-link">
+        <a class="content-link" data-content-id="statistics">
             <i class="fa-solid fa-chart-simple"></i>
             <span>통계</span>
         </a>
@@ -126,6 +126,13 @@
     </script>
     <script>
         /*****
+            *  전역 변수 선언
+            *****/
+        // 실시간 갱신용 인터벌 변수 선언 (상담 관리 페이지 갱신용)
+        if (typeof intervalId === 'undefined') {
+            var intervalId;
+        }
+        /*****
             *  메뉴별 컨텐츠 스크립트/스타일 모듈화
             *  > 메뉴 추가 시 추가 스크립트/스타일 파일을 맵에 추가
             *  > 메뉴 컨텐츠 불러오는 ajax 내에 스크립트/스타일 맵 로드
@@ -133,6 +140,9 @@
         var scriptMap = {
             'callmanagement': [
                 contextPath + '/js/crm/crm-callmanagement.js'
+            ],
+            'statistics': [
+                contextPath + '/js/crm/crm-statistics.js'
             ]
         };
         var styleMap = {
@@ -142,8 +152,12 @@
                 contextPath + '/css/crm/crm-callmanagement/cmg-content-b-chart.css',
                 contextPath + '/css/crm/crm-callmanagement/cmg-content-c.css'
             ],
+            'statistics': [
+                contextPath + '/css/crm/crm-statistics/statistics-chart.css',
+                contextPath + '/css/crm/crm-statistics/statistics-table.css',
+                contextPath + '/css/crm/crm-statistics/statistics-menu.css'
+            ]
         }
-
 
         /******
          * 메뉴 클릭 선택 이벤트
@@ -172,13 +186,8 @@
                     // 기존의 content 부분을 가져온 데이터로 교체
                     $('.content-box').html(data);
 
-                    // 스크립트와 스타일을 모듈화된 방식으로 로드
-                    if (scriptMap[contentId]) {
-                        loadScripts(scriptMap[contentId]);
-                    }
-                    if (styleMap[contentId]) {
-                        loadStyles(styleMap[contentId]);
-                    }
+                    // HTML이 DOM에 완전히 반영된 후 스크립트와 스타일을 로드
+                    loadContentScriptsAndStyles(contentId);
                 },
                 error: function(xhr, status, error) {
                     console.error("Error loading content:", error);
@@ -247,7 +256,7 @@
 
 
         /************
-         * 스크립트/스타일 로드 함수
+         * 스크립트/스타일 로드 함수/ 인터벌 관리
          ************/
         // 스크립트 동적 로드 함수
         function loadScripts(scripts) {
@@ -280,6 +289,29 @@
                 }
             });
         }
+
+        // 스크립트와 스타일을 로드하는 함수 ( htmL이 DOM에 완전히 반영된 후 호출 > 콜백 용)
+        function loadContentScriptsAndStyles(contentId) {
+            // 스크립트 로드
+            if (scriptMap[contentId]) {
+                manageIntervals(); // 이전 인터벌 초기화
+                loadScripts(scriptMap[contentId]);
+            }
+            // 스타일 로드
+            if (styleMap[contentId]) {
+                loadStyles(styleMap[contentId]);
+            }
+        }
+
+        // 상담관리 페이지를 이용하지 않을 경우 상담 관리 인터벌 제거
+        function manageIntervals() {
+            // 이전에 설정된 인터벌이 있으면 삭제
+            if (intervalId) {
+                clearInterval(intervalId);
+                console.log("이전 인터벌 초기화");
+            }
+        }
+
 
     </script>
 

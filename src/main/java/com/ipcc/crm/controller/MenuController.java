@@ -24,6 +24,9 @@ public class MenuController {
             case "callmanagement":
                 contentName = "crm/crm-callmanagement/cmg-callmanagement-content :: cmg-callmanagement-content";
                 break;
+            case "statistics":
+                contentName = "crm/crm-statistics/crm-statistics-content :: crm-statistics-content";
+                break;
             default:
                 return "crm/crm-counsel/crm-counsel-content :: crm-counsel-content";
         }

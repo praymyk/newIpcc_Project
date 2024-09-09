@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>통계-기간별처리 현황 표</title>
+
+    <!-- Chart.js 라이브러리 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery for AJAX -->
+    <!-- Google Fonts for San Francisco alternative -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- css 미리보기용 지정 -->
+    <link rel="stylesheet" href="../../../static/css/crm/crm-statistics/statistics-chart.css">
+
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #F5F5F7;
+            margin: 0;
+            padding: 0;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="statistics-chart" th:fragment="statistics-chart">
+        <div class="statistics-chart-header">
+            <span>기간별 처리 현황</span>
+            <div class="statistics-chart-controller">
+                <a href="#">시간</a>
+                <a href="#">일별</a>
+                <a href="#">월별</a>
+            </div>
+        </div>
+
+        <div class="statistics-chart-wrap">
+            <div class="statistics-chart-box">
+                <canvas id="statisticsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

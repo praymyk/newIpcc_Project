@@ -1,0 +1,52 @@
+.statistics-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 10px;
+}
+
+.statistics-chart {
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.statistics-chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1C1C1E;
+    margin-bottom: 30px;
+}
+
+.statistics-chart-controller {
+    display: flex;
+    gap: 10px;
+}
+
+.statistics-chart-controller a {
+    padding: 5px 12px;
+    border-radius: 12px;
+    background-color: #f0f0f5;
+    color: #007AFF;
+    font-size: 12px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.statistics-chart-controller a:hover {
+    background-color: #d0d4de;
+}
+
+.statistics-chart-wrap {
+    position: relative;
+}
+
+.statistics-chart-box {
+    margin-bottom: 20px;
+}
+
+

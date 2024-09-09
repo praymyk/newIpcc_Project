@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상담 통계 - 콘텐츠</title>
+</head>
+<body>
+    <div th:fragment="crm-statistics-content" class="content">
+        <button id="sts-toggle-btn-hidden"><i class="fa-solid fa-right-left"></i></button>
+        <div class="statistics-menu" th:replace="~{crm/crm-statistics/statistics-menu}">
+            <!--통게 사이드 메뉴-->
+        </div>
+        <div class="statistics-content">
+            <div class="statistics-chart" th:replace="~{crm/crm-statistics/statistics-chart}">
+                <!--통계 상단 그래프-->
+            </div>
+            <div class="statistics-table" th:replace="~{crm/crm-statistics/statistics-table}">
+                <!--통계 하단 표-->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

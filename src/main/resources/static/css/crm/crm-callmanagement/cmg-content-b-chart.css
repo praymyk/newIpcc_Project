@@ -27,8 +27,10 @@
         margin-bottom: 20px;
     }
 
+    /* 막대 차트 전체 스타일 */
     .inCall-Chart-wrap {
         flex: 1;
+        height: 300px;
     }
 
     /* 차트 범례 커스터마이징 */

@@ -4,12 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <!-- Font Awesome JS -->
+    <script src="https://kit.fontawesome.com/22698b3d17.js" crossorigin="anonymous"></script>
+    <!-- css 미리보기용 지정 -->
+    <link rel="stylesheet" href="../../../static/css/crm/crm-statistics/statistics-table.css">
+
 </head>
 <body>
     <div class="statistics-table" th:fragment="statistics-table">
-        <div class=statistics-table-controller"">
-            <span>상세 내용</span>
-            <button>다운로드</button>
+        <div class="statistics-table-controller">
+            <span>통계-상세 내용 표</span>
+            <button>
+                다운로드<i class="fa-solid fa-download"></i>
+            </button>
         </div>
         <div class="statistics-table-wrap">
             <table>
@@ -22,11 +30,14 @@
                         <th class="sortable">통화실패</th>
                     </tr>
                 </thead>
-                <tbody>
-
+                <tbody id="statisticsTableBody">
+                    <tr>
+                        <td>불러올 데이터가 없습니다.</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
 </body>
 </html>

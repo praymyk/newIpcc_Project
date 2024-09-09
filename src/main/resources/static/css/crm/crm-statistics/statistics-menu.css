@@ -1,0 +1,65 @@
+/* 메뉴 컨테이너 */
+.statistics-menu {
+    background-color: white;
+    padding: 20px 10px; /* 세련된 여백 */
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* 화면 전체 높이에 맞춤 */
+    width: 150px; /* 자식 요소에 따라 너비 자동 조정 */
+    transition: transform 0.3s ease;
+}
+
+/* 숨겨진 메뉴 상태 */
+.sts-hidden {
+    display: none;
+}
+
+/* 메뉴 헤더 */
+.statistics-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.statistics-menu-header span {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1C1C1E; /* 다크 그레이 텍스트 */
+    margin-left: 10px;
+}
+
+/* 토글 버튼 */
+#sts-toggle-btn {
+    background-color: #F0F0F5;
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+}
+
+/* 메뉴 항목 */
+.statistics-menu-content{
+    margin-top: 10px;
+}
+
+.statistics-menu-content a {
+    display: block;
+    text-decoration: none;
+    color: #6D6D72; /* Apple 스타일 짙은 회색 링크 */
+    font-size: 13px;
+    transition: background-color 0.3s ease;
+    padding: 8px 15px 8px 15px;
+}
+
+.statistics-menu-content a:hover {
+    background-color: #F0F0F5; /* Apple 스타일의 Hover 효과 */
+    border-radius: 10px; /* Hover 시 둥근 효과 */
+}
+
+/* 버튼 아이콘 스타일 */
+.statistics-menu-header button i {
+    font-size: 14px;
+    color: #1C1C1E;
+}

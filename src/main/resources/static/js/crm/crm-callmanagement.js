@@ -9,7 +9,6 @@ var myBarChart = undefined;
 var myDonutChart2 = undefined;
 var myDonutChart3 = undefined;
 
-
 // 흘니 스타일 색상 팔레트 (파스텔톤)
 if (typeof hulniStyleColors === 'undefined') {
     var hulniStyleColors = [
@@ -31,13 +30,24 @@ $(document).ready(function() {
     barChart_Update();
     donutChart_2_update();
     donutChart_3_update();
-    setIntervals();
+    manageDonutIntervals();// 인터벌 초기화 및 실행
 });
 
-function setIntervals() {
-    setInterval(function() {
+// 실시간 현황 차트 업데이트 함수
+function manageDonutIntervals() {
+    // 이전에 설정된 인터벌이 있으면 삭제
+    if (intervalId) {
+        clearInterval(intervalId);
+        console.log("이전 인터벌 초기화");
+    }
+
+    // 새로운 인터벌 설정 (5초마다 차트 업데이트)
+    intervalId = setInterval(function() {
         donutChart_1_update();
-    console.log("실시간 현황 차트 업데이트");
+        barChart_Update();
+        donutChart_2_update();
+        donutChart_3_update();
+        console.log("실시간 현황 차트 업데이트");
     }, 5000);
 }
 
@@ -279,17 +289,12 @@ function barChart_Update() {
 /****************
 전화상담 현황 도넛 그래프 부분
 *****************/
-// 전역 변수로 도넛 차트를 선언 (이미 선언된 경우 중복 선언하지 않음)
-if (typeof myDonutChart2 === 'undefined') {
-    var myDonutChart2; // let 대신 var를 사용하여 조건부로 선언 가능
-}
-
 //전화상담 현황 (통화성공/포기호) 도넛 차트 생성 함수
 function initDonutChart_2(labels = [], dataValues = [], backgroundColors = []) {
     const ctx2 = document.getElementById('myDonutChart-2').getContext('2d');
 
     // 차트를 초기화하거나 업데이트
-    myDonutChart_2 = new Chart(ctx2, {
+    myDonutChart2 = new Chart(ctx2, {
         type: 'doughnut',
         data: {
             labels: labels,
@@ -346,7 +351,7 @@ function donutChart_2_update() {
         // 차트가 존재하면 데이터를 업데이트
         myDonutChart2.data.labels = labels;
         myDonutChart2.data.datasets[0].data = dataValues;
-        myDonutChart.data.datasets[0].backgroundColor = backgroundColors;
+        myDonutChart2.data.datasets[0].backgroundColor = backgroundColors;
         myDonutChart2.update(); // 차트 갱신
 
     } else {
@@ -484,3 +489,5 @@ document.querySelectorAll('th.sortable').forEach(header => {
         header.classList.toggle('desc', !isDescending);
     });
 });
+
+
