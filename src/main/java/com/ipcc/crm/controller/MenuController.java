@@ -18,13 +18,16 @@ public class MenuController {
         log.info("contentId : " + contentId);
         // 메뉴 선택
         switch (contentId){
-            case "counsel":
+            case "counsel": // 상담 메뉴
                 contentName = "crm/crm-counsel/crm-counsel-content :: crm-counsel-content";
                 break;
-            case "callmanagement":
+            case "callmanagement": // 상담관리 메뉴
                 contentName = "crm/crm-callmanagement/cmg-callmanagement-content :: cmg-callmanagement-content";
                 break;
-            case "statistics":
+            case "management": // 운영 메뉴
+                contentName = "crm/crm-management/crm-management-content :: crm-management-content";
+                break;
+            case "statistics": // 통계 메뉴
                 contentName = "crm/crm-statistics/crm-statistics-content :: crm-statistics-content";
                 break;
             default:

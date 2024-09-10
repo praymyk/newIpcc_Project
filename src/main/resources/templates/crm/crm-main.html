@@ -28,6 +28,7 @@
     <script th:src="@{/js/crm/crm-call-stat.js}" defer></script>
 
     <div class="sidebar">
+        <button id="sts-toggle-btn-hidden" class="sts-hidden"><i class="fa-solid fa-right-left"></i></button>
         <div class="sidebar-logo-box">
             <a class="sidebar-logo-wrap">
                 <i class="fa-solid fa-phone"></i>   
@@ -54,10 +55,16 @@
             <span>고객관리</span>
         </a>
 
+        <a class="content-link" data-content-id="management">
+            <i class="fa-solid fa-user-gear"></i>
+            <span>운영관리</span>
+        </a>
+
         <a class="content-link" data-content-id="statistics">
             <i class="fa-solid fa-chart-simple"></i>
             <span>통계</span>
         </a>
+
         <a class="content-link">
             <i class="fa-solid fa-gear"></i>
             <span>설정</span>
@@ -141,6 +148,9 @@
             'callmanagement': [
                 contextPath + '/js/crm/crm-callmanagement.js'
             ],
+            'management':[
+                contextPath + '/js/crm/crm-management.js'
+            ],
             'statistics': [
                 contextPath + '/js/crm/crm-statistics.js'
             ]
@@ -152,10 +162,13 @@
                 contextPath + '/css/crm/crm-callmanagement/cmg-content-b-chart.css',
                 contextPath + '/css/crm/crm-callmanagement/cmg-content-c.css'
             ],
+            'management': [
+                contextPath + '/css/crm/sub-menu.css'
+            ],
             'statistics': [
                 contextPath + '/css/crm/crm-statistics/statistics-chart.css',
                 contextPath + '/css/crm/crm-statistics/statistics-table.css',
-                contextPath + '/css/crm/crm-statistics/statistics-menu.css'
+                contextPath + '/css/crm/sub-menu.css'
             ]
         }
 
@@ -311,8 +324,6 @@
                 console.log("이전 인터벌 초기화");
             }
         }
-
-
     </script>
 
 </body>

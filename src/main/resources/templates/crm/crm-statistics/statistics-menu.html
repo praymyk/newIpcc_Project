@@ -4,23 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>통계 - 사이드 메뉴</title>
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Google Fonts for San Francisco alternative -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
-    <!-- Font Awesome JS -->
-    <script src="https://kit.fontawesome.com/22698b3d17.js" crossorigin="anonymous"></script>
-    <!-- css 미리보기용 지정 -->
-    <link rel="stylesheet" href="../../../static/css/crm/crm-statistics/statistics-menu.css">
-
 </head>
 <body>
-    <div class="statistics-menu" th:fragment="statistics-menu">
-        <div class="statistics-menu-header">
+    <div class="sub-menu" th:fragment="statistics-menu">
+        <div class="sub-menu-header">
             <span>통계</span>
             <button id="sts-toggle-btn"><i class="fa-solid fa-right-left"></i></button>
         </div>
-        <div class="statistics-menu-content">
+        <div class="sub-menu-content">
             <a href="#">상담원별 콜현황</a>
             <a href="#">대표번호별 콜현황</a>
             <a href="#">기간별 콜현황</a>

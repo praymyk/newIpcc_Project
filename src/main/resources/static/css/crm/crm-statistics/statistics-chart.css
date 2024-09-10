@@ -1,3 +1,11 @@
+.content-nowrap-box {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;         /* 부모 요소가 커지면 함께 커지도록 설정 */
+    flex-shrink: 1;       /* 부모 요소가 작아지면 함께 줄어들도록 설정 */
+    gap: 10px;
+}
+
 .statistics-content {
     display: flex;
     flex-direction: column;
@@ -42,11 +50,19 @@
 }
 
 .statistics-chart-wrap {
-    position: relative;
+    width: 100%;  /* 부모 컨테이너가 화면 너비에 맞게 조정 */
+    max-width: 100%;  /* 부모 컨테이너 최대 너비 제한 */
 }
 
 .statistics-chart-box {
     margin-bottom: 20px;
 }
+
+#statisticsChart {
+    width: 100%;  /* 캔버스 너비를 100%로 설정 */
+    max-width: 100%;  /* 최대 너비를 부모에 맞게 제한 */
+    height: 280px;
+}
+
 
 

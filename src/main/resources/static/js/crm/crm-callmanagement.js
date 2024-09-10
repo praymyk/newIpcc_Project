@@ -47,7 +47,6 @@ function manageDonutIntervals() {
         barChart_Update();
         donutChart_2_update();
         donutChart_3_update();
-        console.log("실시간 현황 차트 업데이트");
     }, 5000);
 }
 
@@ -179,6 +178,9 @@ function initBarChart(labels = [], datasets = []) {
         },
         options: {
             responsive: true,
+            animation: {
+                duration: 0 // 애니메이션 비활성화
+            },
             maintainAspectRatio: false,
             scales: {
                 x: {
@@ -280,9 +282,11 @@ function barChart_Update() {
         myBarChart.data.labels = labels;
         myBarChart.data.datasets = datasets;
         myBarChart.update(); // 차트 갱신
+        console.log("차트 업데이트");
     } else {
         // 차트가 없을 경우 새로 생성
         initBarChart(labels, datasets);
+        console.log("차트 생성");
     }
 }
 

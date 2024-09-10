@@ -24,7 +24,32 @@ body {
     flex-direction: column;
     padding-top: 20px;
     border-right: 1px solid #d1d1d6;
-    boxing-sizing: border-box;
+    box-sizing: border-box;
+    position: sticky ; /* 화면에 고정 */
+    top: 0;          /* 상단에 고정 */
+    left: 0;         /* 왼쪽에 고정 */
+    height: 100vh;   /* 화면 전체 높이 */
+    z-index: 100;    /* 다른 요소보다 위에 표시되도록 설정 */
+}
+
+/* 서브 사이드 메뉴 숨김 토글 버튼 */
+#sts-toggle-btn-hidden{
+    background-color: #FFFFFF;
+    border: 1px solid #d1d1d6;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    position: absolute; /* 화면에 고정 */
+    top: 140px;          /* 상단에 고정 */
+    left: 50px;         /* 왼쪽에 고정 */
+    z-index: 101;    /* 다른 요소보다 위에 표시되도록 설정 */
+}
+
+#sts-toggle-btn-hidden.sts-hidden {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute; /* 요소를 레이아웃에서 제거 */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .sidebar-logo-box {
@@ -93,6 +118,10 @@ body {
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     min-width: 750px;
+    position: sticky ; /* 화면에 고정 */
+    top: 0;          /* 상단에 고정 */
+    left: 0;         /* 왼쪽에 고정 */
+    z-index: 100;    /* 다른 요소보다 위에 표시되도록 설정 */
 }
 
 .agent-status {
@@ -285,10 +314,9 @@ body {
 .content{
     display: flex;
     flex : 1;
-    justify-content: flex-start;
-    flex-direction: row;
     height: auto;
-    margin: 10px 10px 10px 0px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     gap: 10px;
     flex-wrap: wrap; /* 줄바꿈 허용 */
     box-sizing: border-box;
