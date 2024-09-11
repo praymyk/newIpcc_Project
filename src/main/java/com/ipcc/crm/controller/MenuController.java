@@ -19,20 +19,39 @@ public class MenuController {
         // 메뉴 선택
         switch (contentId){
             case "counsel": // 상담 메뉴
-                contentName = "crm/crm-counsel/crm-counsel-content :: crm-counsel-content";
+                contentName = "crm/crm-counsel/counsel-content :: counsel-content";
                 break;
             case "callmanagement": // 상담관리 메뉴
-                contentName = "crm/crm-callmanagement/cmg-callmanagement-content :: cmg-callmanagement-content";
+                contentName = "crm/crm-callmanagement/callmanagement-content :: callmanagement-content";
                 break;
             case "management": // 운영 메뉴
-                contentName = "crm/crm-management/crm-management-content :: crm-management-content";
+                contentName = "crm/crm-management/management-content :: management-content";
                 break;
             case "statistics": // 통계 메뉴
-                contentName = "crm/crm-statistics/crm-statistics-content :: crm-statistics-content";
+                contentName = "crm/crm-statistics/statistics-content :: statistics-content";
                 break;
             default:
-                return "crm/crm-counsel/crm-counsel-content :: crm-counsel-content";
+                return "crm/crm-counsel/counsel-content :: counsel-content";
+        }
+        return contentName;
+    }
+
+    // 서브 메뉴 선택용 메서드
+    @GetMapping("crm/loadSubContent")
+    public String selectSubMenu(@RequestParam("contentId") String contentId){
+
+        String contentName = "";
+
+        log.info("contentId : " + contentId);
+        // 서브 메뉴 선택
+        switch (contentId){
+            case "agent-management": // 상담 메뉴
+                contentName = "crm/crm-management/management-agent";
+                break;
+            default:
+                return "crm/crm-counsel/counsel-content :: counsel-content";
         }
         return contentName;
     }
 }
+

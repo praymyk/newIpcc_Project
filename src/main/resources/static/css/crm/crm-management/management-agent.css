@@ -1,0 +1,184 @@
+.mnt-agent-list {
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex: 3;
+    position: relative; /* 부모에 대한 절대 위치 사용을 위해 */
+}
+
+.mnt-agent-search {
+    margin-bottom: 20px;
+}
+
+.mnt-agent-search input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #d1d1d6;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.agent-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.agent-table th,
+.agent-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #E0E0E0;
+}
+
+.agent-table th {
+    background-color: #F0F0F5;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.agent-table td {
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.agent-item {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.agent-item:hover {
+    background-color: #E0E0E5;
+}
+
+/* 상담원 상세 정보 스타일 */
+.mng-agent-info {
+    background-color: #F8F8F8;
+    display: flex;
+    flex: 1;
+    align-items: flex-start;
+}
+
+.agent-info-card {
+    background-color: #FFFFFF;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    min-width: 400px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.agent-info-card h3 {
+    font-size: 20px;
+    margin: 0 0 20px;
+    color: #333333;
+}
+
+.agent-info-card label {
+    display: block;
+    font-size: 12px;
+    color: #666666;
+    margin-bottom: 5px;
+}
+
+.agt-info-title {
+    display: block; /* 블록 레벨 요소로 설정 */
+    margin: 10px 0px 10px 0px;
+    font-weight: bold;
+    color: #666666;
+    font-size: 14px;
+}
+
+.agent-info-card input,
+.agent-info-card select {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #d1d1d6;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+/* 가로 정렬 */
+.agent-info-card .agt-flex-row {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.agt-flex-row input {
+    width: 100%;
+}
+
+.agt-flex-row>div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+/* 버튼 스타일 */
+.agent-buttons {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: end;
+}
+
+.btn {
+    padding: 12px;
+    font-size: 14px;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 120px;
+    text-align: center;
+}
+
+.btn-save {
+    background-color: #007AFF;
+}
+
+.btn-save:hover {
+    background-color: #0056b3;
+}
+
+.btn-stop {
+    background-color: #FF3B30;
+}
+
+.btn-stop:hover {
+    background-color: #CC2900;
+}
+
+.btn-add {
+    background-color: #28A745 ;
+}
+.btn-add:hover{
+    background-color: #218838 ;
+}
+
+/* 정렬 아이콘 스타일 */
+thead th.sortable::after {
+    content: '▲';
+    font-size: 12px;
+    margin-left: 8px;
+    opacity: 0.5;
+    transform: rotate(0deg);
+    transition: transform 0.2s ease;
+}
+
+thead th.sortable.desc::after {
+    content: '▼';
+    transform: rotate(180deg);
+}

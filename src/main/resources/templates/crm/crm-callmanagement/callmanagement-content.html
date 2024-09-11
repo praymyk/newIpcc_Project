@@ -6,18 +6,18 @@
     <title>상담 관리 메뉴 - 콘텐츠</title>
 </head>
 <body>
-    <div th:fragment="cmg-callmanagement-content" class="content">
+    <div th:fragment="callmanagement-content" class="content">
         <div class="cmg-content">
-            <div class="cmg-content-a" th:replace="~{crm/crm-callmanagement/cmg-content-a :: cmg-content-a}">
+            <div class="cmg-content-a" th:replace="~{crm/crm-callmanagement/content-a :: content-a}">
                 <!-- 실시간 콜 현황 (고객대기/상담원대기/상담 중/)-->
             </div>
-            <div class="cmg-content-b" th:replace="~{crm/crm-callmanagement/cmg-content-b :: cmg-content-b}">
+            <div class="cmg-content-b" th:replace="~{crm/crm-callmanagement/content-b :: content-b}">
                 <!-- 전화 상담 현황 ( 시간별, 인/아웃/콜백/문자 ... )-->
             </div>
-            <div class="cmg-content-b-chart" th:replace="~{crm/crm-callmanagement/cmg-content-b-chart :: cmg-content-b-chart}">
+            <div class="cmg-content-b-chart" th:replace="~{crm/crm-callmanagement/content-b-chart :: content-b-chart}">
                 <!-- 전화 상담 현황 (차트) -->
             </div>
-            <div class="cmg-content-c" th:replace="~{crm/crm-callmanagement/cmg-content-c :: cmg-content-c}">
+            <div class="cmg-content-c" th:replace="~{crm/crm-callmanagement/content-c :: content-c}">
                 <!-- ARS 시나리오별 현황 -->
             </div>
         </div>

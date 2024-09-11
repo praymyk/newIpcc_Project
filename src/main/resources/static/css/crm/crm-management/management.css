@@ -1,0 +1,7 @@
+.content-nowrap-box {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;         /* 부모 요소가 커지면 함께 커지도록 설정 */
+    flex-shrink: 1;       /* 부모 요소가 작아지면 함께 줄어들도록 설정 */
+    gap: 10px;
+}

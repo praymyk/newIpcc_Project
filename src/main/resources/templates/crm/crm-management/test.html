@@ -13,18 +13,19 @@
             margin: 0;
             padding: 0;
             display: flex;
-            height: 100vh;
+            gap: 10px;
         }
 
         .mnt-agent-list {
-            width: 35%;
             background-color: #FFFFFF;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-right: 1px solid #E0E0E0;
+            border-radius: 16px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
-            overflow-y: auto;
-            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            flex: 3;
+            position: relative; /* 부모에 대한 절대 위치 사용을 위해 */
         }
 
         .mnt-agent-search {
@@ -48,15 +49,21 @@
 
         .agent-table th,
         .agent-table td {
-            padding: 12px;
+            padding: 10px;
             text-align: left;
             border-bottom: 1px solid #E0E0E0;
         }
 
         .agent-table th {
             background-color: #F0F0F5;
+            font-size: 14px;
             font-weight: bold;
-            color: #007AFF;
+            cursor: pointer;
+        }
+
+        .agent-table td {
+            font-size: 14px;
+            cursor: pointer;
         }
 
         .agent-item {
@@ -68,43 +75,135 @@
             background-color: #E0E0E5;
         }
 
+        /* 상담원 상세 정보 스타일 */
         .mng-agent-info {
-            width: 65%;
-            padding: 30px;
             background-color: #F8F8F8;
-            overflow-y: auto;
-            height: 100vh;
+            display: flex;
+            flex: 1;
+            align-items: flex-start;
         }
 
-        .info-card {
+        .agent-info-card {
             background-color: #FFFFFF;
-            padding: 20px;
+            padding: 30px;
             border-radius: 16px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            min-width: 400px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
-        .info-card h3 {
-            margin: 0;
+        .agent-info-card h3 {
             font-size: 20px;
+            margin: 0 0 20px;
             color: #333333;
         }
 
-        .info-card p {
-            margin: 10px 0;
-            font-size: 14px;
+        .agent-info-card label {
+            display: block;
+            font-size: 12px;
             color: #666666;
+            margin-bottom: 5px;
         }
 
-        .label {
+        .agt-info-title {
+            display: block; /* 블록 레벨 요소로 설정 */
+            margin: 10px 0px 10px 0px;
             font-weight: bold;
-            color: #333333;
+            color: #666666;
+            font-size: 14px;
+        }
+
+        .agent-info-card input,
+        .agent-info-card select {
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
+            border: 1px solid #d1d1d6;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        /* 가로 정렬 */
+        .agent-info-card .agt-flex-row {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .agt-flex-row input {
+            width: 100%;
+        }
+
+        .agt-flex-row>div {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        /* 버튼 스타일 */
+        .agent-buttons {
+            display: flex;
+            width: 100%;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: end;
+        }
+
+        .btn {
+            padding: 12px;
+            font-size: 14px;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 120px;
+            text-align: center;
+        }
+
+        .btn-save {
+            background-color: #007AFF;
+        }
+
+        .btn-save:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-stop {
+            background-color: #FF3B30;
+        }
+
+        .btn-stop:hover {
+            background-color: #CC2900;
+        }
+
+        .btn-add {
+            background-color: #28A745 ;
+        }
+        .btn-add:hover{
+            background-color: #218838 ;
+        }
+
+        /* 정렬 아이콘 스타일 */
+        thead th.sortable::after {
+            content: '▲';
+            font-size: 12px;
+            margin-left: 8px;
+            opacity: 0.5;
+            transform: rotate(0deg);
+            transition: transform 0.2s ease;
+        }
+
+        thead th.sortable.desc::after {
+            content: '▼';
+            transform: rotate(180deg);
         }
     </style>
 </head>
 
 <body>
-
     <div class="mnt-agent-list">
         <!-- 검색 영역 -->
         <div class="mnt-agent-search">
@@ -115,59 +214,187 @@
         <table class="agent-table" id="agentTable">
             <thead>
                 <tr>
-                    <th>이름</th>
-                    <th>내선</th>
-                    <th>팀명</th>
+                    <th class="sortable">No</th>
+                    <th class="sortable">이름</th>
+                    <th class="sortable">내선</th>
+                    <th class="sortable">상담그룹</th>
+                    <th class="sortable">상담팀</th>
+                    <th class="sortable">권한</th>
+                    <th class="sortable">자동 후처리</th>
+                    <th class="sortable">콜백</th>
+                    <th><input type="checkbox" id="selectAll"></th> <!-- 일괄 설정 열 추가 -->
                 </tr>
             </thead>
-            <tbody>
-                <tr class="agent-item" data-name="김철수" data-extension="1234" data-team="A팀">
+            <tbody id="agentTableBody">
+                <form>
+                <!-- 상담원 리스트 항목들 -->
+             
+                <tr class="agent-item" data-id="1">
+                    <td>1</td>
                     <td>김철수</td>
                     <td>1234</td>
+                    <td>고객 서비스팀</td>
                     <td>A팀</td>
+                    <td>관리자</td>
+                    <td>
+                        <select class="auto-process-select">
+                            <option value="사용">사용</option>
+                            <option value="미사용">미사용</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="callback-select">
+                            <option value="사용">사용</option>
+                            <option value="미사용">미사용</option>
+                        </select>
+                    </td>
+                    <td><input type="checkbox" class="agent-checkbox"></td>
                 </tr>
-                <tr class="agent-item" data-name="박영희" data-extension="5678" data-team="B팀">
-                    <td>박영희</td>
-                    <td>5678</td>
-                    <td>B팀</td>
+
+                <tr class="agent-item" data-id="2">
+                    <td>2</td>
+                    <td>나철수</td>
+                    <td>2345</td>
+                    <td>관리자 팀</td>
+                    <td>팀장</td>
+                    <td>관리자</td>
+                    <td>
+                        <select class="auto-process-select">
+                            <option value="사용">사용</option>
+                            <option value="미사용">미사용</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="callback-select">
+                            <option value="사용">사용</option>
+                            <option value="미사용">미사용</option>
+                        </select>
+                    </td>
+                    <td><input type="checkbox" class="agent-checkbox"></td>
                 </tr>
-                <tr class="agent-item" data-name="이민수" data-extension="9101" data-team="C팀">
-                    <td>이민수</td>
-                    <td>9101</td>
-                    <td>C팀</td>
-                </tr>
+                </form>
                 <!-- 더 많은 상담원 리스트 -->
             </tbody>
         </table>
-    </div>
 
-    <div class="mng-agent-info">
-        <div class="info-card">
-            <h3>상담원 상세 정보</h3>
-            <p><span class="label">아이디:</span> <span id="agentId">kim123</span></p>
-            <p><span class="label">내선:</span> <span id="agentExtension">1234</span></p>
-            <p><span class="label">상담원 이름:</span> <span id="agentName">김철수</span></p>
-            <p><span class="label">상담 그룹명:</span> <span id="agentGroup">고객 서비스팀</span></p>
-            <p><span class="label">팀명:</span> <span id="agentTeam">A팀</span></p>
-            <p><span class="label">권한:</span> 관리자</p>
-            <p><span class="label">CID:</span> 010-1234-5678</p>
-            <p><span class="label">발신통신:</span> KT</p>
-            <p><span class="label">재택 IP:</span> 192.168.1.10</p>
-            <p><span class="label">콜백 사용:</span> 사용</p>
-            <p><span class="label">자동 후처리:</span> 사용</p>
+        <!-- 일괄 설정 버튼 및 상담원 추가 버튼 -->
+        <div class="agent-buttons">
+            <button class="btn btn-save" id="batchApplyBtn">일괄 적용</button>
+            <button class="btn btn-add" id="addAgentBtn">상담원 추가</button>
         </div>
     </div>
 
+    <div class="mng-agent-info">
+        <form>
+            <div class="agent-info-card">
+                <h3>상담원 상세 정보</h3>
+
+                <span class="agt-info-title">기본 정보</span>
+                <label for="agentId">아이디</label>
+                <input type="text" id="agentId" value="kim123">
+
+                <label for="agentExtension">내선</label>
+                <input type="text" id="agentExtension" value="1234">
+
+                <label for="agentName">상담원 이름</label>
+                <input type="text" id="agentName" value="김철수">
+
+                <!-- 상담 그룹 (그룹명과 팀명 가로 정렬) -->
+                <span class="agt-info-title">상담 그룹</span>
+                <div class="agt-flex-row">
+                    <div class="flex-item">
+                        <label for="agentGroup">그룹명</label>
+                        <input type="text" id="agentGroup" value="고객 서비스팀">
+                    </div>
+                    <div class="flex-item">
+                        <label for="agentTeam">팀명</label>
+                        <input type="text" id="agentTeam" value="A팀">
+                    </div>
+                </div>
+
+                <span class="agt-info-title">연결 설정</span>
+                <label for="agentCid">CID</label>
+                <input type="text" id="agentCid" value="010-1234-5678">
+
+                <label for="agentTel">발신통신</label>
+                <input type="text" id="agentTel" value="KT">
+
+                <label for="agentIp">재택 IP</label>
+                <input type="text" id="agentIp" value="192.168.1.10">
+
+                <!-- 부가 기능 (콜백 사용과 자동 후처리 가로 정렬) -->
+                <span class="agt-info-title">부가 기능</span>
+                <div class="agt-flex-row">
+                    <div class="flex-item">
+                        <label for="agentCallback">콜백 사용</label>
+                        <select id="agentCallback">
+                            <option value="사용" selected>사용</option>
+                            <option value="미사용">미사용</option>
+                        </select>
+                    </div>
+                    <div class="flex-item">
+                        <label for="agentAutoProcess">자동 후처리</label>
+                        <select id="agentAutoProcess">
+                            <option value="사용" selected>사용</option>
+                            <option value="미사용">미사용</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 버튼 가로 정렬 -->
+                <div class="agent-buttons">
+                    <button class="btn btn-save" id="agtSaveBtn">저장</button>
+                    <button class="btn btn-stop" id="agtStopBtn">정지</button>
+                </div>
+            </div>
+        </form>
+    </div>
     <script>
-        // 상담원 검색 필터
-        document.getElementById('searchInput').addEventListener('keyup', function() {
+
+    /****************
+     테이블 정렬 기능 ( sort 기능은 DB 조회시 쿼리문으로 해결해야 해서 삭제 해야 할 수 잇음 )
+    클래스 토글만 남겨서 아이콘 전환만 유지할 것.
+    ****************/
+    document.querySelectorAll('th.sortable').forEach(header => {
+        header.addEventListener('click', () => {
+            const table = header.closest('table');
+            const tbody = table.querySelector('tbody');
+            const index = Array.prototype.indexOf.call(header.parentNode.children, header);
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            const isDescending = header.classList.contains('desc');
+
+            // 다른 열의 정렬 상태 초기화
+            table.querySelectorAll('th.sortable').forEach(th => th.classList.remove('desc'));
+
+            // 행 정렬
+            rows.sort((rowA, rowB) => {
+                const cellA = rowA.children[index].innerText;
+                const cellB = rowB.children[index].innerText;
+
+                // 숫자 열의 경우 숫자로 변환
+                const a = isNaN(cellA) ? cellA : parseFloat(cellA);
+                const b = isNaN(cellB) ? cellB : parseFloat(cellB);
+
+                if (a < b) return isDescending ? 1 : -1;
+                if (a > b) return isDescending ? -1 : 1;
+                return 0;
+            });
+
+            // 정렬된 행 추가
+            rows.forEach(row => tbody.appendChild(row));
+
+            // 정렬 상태 업데이트
+            header.classList.toggle('desc', !isDescending);
+        });
+    });
+
+      // 상담원 필터링 기능
+      document.getElementById('searchInput').addEventListener('keyup', function () {
             const searchValue = this.value.toLowerCase();
             const rows = document.querySelectorAll('.agent-item');
-            rows.forEach(function(row) {
-                const name = row.getAttribute('data-name').toLowerCase();
-                const extension = row.getAttribute('data-extension').toLowerCase();
-                const team = row.getAttribute('data-team').toLowerCase();
-                if (name.includes(searchValue) || extension.includes(searchValue) || team.includes(searchValue)) {
+            rows.forEach(function (row) {
+                const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                if (name.includes(searchValue)) {
                     row.style.display = '';
                 } else {
                     row.style.display = 'none';
@@ -175,19 +402,61 @@
             });
         });
 
-        // 상담원 클릭 시 상세 정보 업데이트
-        document.querySelectorAll('.agent-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const name = this.getAttribute('data-name');
-                const extension = this.getAttribute('data-extension');
-                const team = this.getAttribute('data-team');
+        // 상담원 추가 기능
+        document.getElementById('addAgentBtn').addEventListener('click', function () {
+            const newId = document.getElementById('agentTableBody').rows.length + 1;
+            const newRow = `
+                <tr class="agent-item" data-id="${newId}">
+                    <td>${newId}</td>
+                    <td>신규 상담원</td>
+                    <td>0000</td>
+                    <td>신규 그룹</td>
+                    <td>신규 팀</td>
+                    <td>상담원</td>
+                    <td>
+                        <select class="auto-process-select">
+                            <option value="사용">사용</option>
+                            <option value="미사용">미사용</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="callback-select">
+                            <option value="사용">사용</option>
+                            <option value="미사용">미사용</option>
+                        </select>
+                    </td>
+                    <td><input type="checkbox" class="agent-checkbox"></td>
+                </tr>`;
+            document.getElementById('agentTableBody').insertAdjacentHTML('beforeend', newRow);
+        });
 
-                document.getElementById('agentName').textContent = name;
-                document.getElementById('agentExtension').textContent = extension;
-                document.getElementById('agentTeam').textContent = team;
-                document.getElementById('agentId').textContent = name.toLowerCase() + '123'; // 가상의 ID
+        // 모두 선택/해제 기능
+        document.getElementById('selectAll').addEventListener('change', function () {
+            const checkboxes = document.querySelectorAll('.agent-checkbox');
+            checkboxes.forEach(function (checkbox) {
+                checkbox.checked = document.getElementById('selectAll').checked;
             });
         });
+
+// 일괄 적용 버튼 기능
+document.getElementById('batchApplyBtn').addEventListener('click', function () {
+    const selectedAgents = document.querySelectorAll('.agent-checkbox:checked');
+
+    selectedAgents.forEach(function (agentCheckbox) {
+        const row = agentCheckbox.closest('tr');  // 체크된 상담원의 행을 가져옴
+
+        // 각 상담원의 auto-process-select와 callback-select 값을 가져옴
+        const autoProcessValue = row.querySelector('.auto-process-select').value;
+        const callbackValue = row.querySelector('.callback-select').value;
+
+        // 처리 로직 - 각 상담원의 select 값을 개별적으로 처리
+        console.log(`상담원 ID: ${row.dataset.id}, 자동 후처리: ${autoProcessValue}, 콜백: ${callbackValue}`);
+        
+        // 여기에서 값을 서버로 전송하거나 추가 로직을 처리할 수 있음
+    });
+
+    alert('일괄 적용 완료!');
+});
     </script>
 
 </body>

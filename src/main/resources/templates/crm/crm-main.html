@@ -16,10 +16,10 @@
     <link rel="stylesheet" th:href="@{/css/crm/crm-main.css}">
 
     <!-- 전화 상담 css 스타일 -->
-    <link rel="stylesheet" th:href="@{/css/crm/crm-counsel/crm-call-stat.css}">
-    <link rel="stylesheet" th:href="@{/css/crm/crm-counsel/crm-counsel-log.css}">
-    <link rel="stylesheet" th:href="@{/css/crm/crm-counsel/crm-cust-info.css}">
-    <link rel="stylesheet" th:href="@{/css/crm/crm-counsel/crm-cust-info-search.css}">
+    <link rel="stylesheet" th:href="@{/css/crm/crm-counsel/call-stat.css}">
+    <link rel="stylesheet" th:href="@{/css/crm/crm-counsel/counsel-log.css}">
+    <link rel="stylesheet" th:href="@{/css/crm/crm-counsel/cust-info.css}">
+    <link rel="stylesheet" th:href="@{/css/crm/crm-counsel/cust-info-search.css}">
 
 </head>
 <body>
@@ -149,7 +149,8 @@
                 contextPath + '/js/crm/crm-callmanagement.js'
             ],
             'management':[
-                contextPath + '/js/crm/crm-management.js'
+                contextPath + '/js/crm/crm-management.js',
+                contextPath + '/js/crm/crm-management-agent.js'
             ],
             'statistics': [
                 contextPath + '/js/crm/crm-statistics.js'
@@ -157,13 +158,15 @@
         };
         var styleMap = {
             'callmanagement': [
-                contextPath + '/css/crm/crm-callmanagement/cmg-content-a.css',
-                contextPath + '/css/crm/crm-callmanagement/cmg-content-b.css',
-                contextPath + '/css/crm/crm-callmanagement/cmg-content-b-chart.css',
-                contextPath + '/css/crm/crm-callmanagement/cmg-content-c.css'
+                contextPath + '/css/crm/crm-callmanagement/content-a.css',
+                contextPath + '/css/crm/crm-callmanagement/content-b.css',
+                contextPath + '/css/crm/crm-callmanagement/content-b-chart.css',
+                contextPath + '/css/crm/crm-callmanagement/content-c.css'
             ],
             'management': [
-                contextPath + '/css/crm/sub-menu.css'
+                contextPath + '/css/crm/sub-menu.css',
+                contextPath + '/css/crm/crm-management/management.css',
+                contextPath + '/css/crm/crm-management/management-agent.css'
             ],
             'statistics': [
                 contextPath + '/css/crm/crm-statistics/statistics-chart.css',
