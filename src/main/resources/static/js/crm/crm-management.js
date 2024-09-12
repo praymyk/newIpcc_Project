@@ -2,6 +2,8 @@ $(document).ready(function() {
     /************
     * 통계 메뉴 토글 기능
     **************/
+    $('*').off();  // jQuery를 사용하여 모든 이벤트 해제
+
     // sts-toggle-btn 클릭 시 sts-hidden 클래스 부여
     $('#sts-toggle-btn').on('click', function() {
         $('.sub-menu').addClass('sts-hidden'); // .sub-menu에 sts-hidden 클래스 추가
@@ -81,9 +83,7 @@ $(document).ready(function() {
             success: function(data) {
                 // 기존의 content 부분을 가져온 데이터로 교체
                $('.management-content').html(data);
-                console.log("Content loaded successfully:", data);
-                // HTML이 DOM에 완전히 반영된 후 스크립트와 스타일을 로드
-                // loadContentScriptsAndStyles(contentId);
+               loadContentScriptsAndStyles(contentId);
             },
             error: function(xhr, status, error) {
                 console.error("Error loading content:", error);

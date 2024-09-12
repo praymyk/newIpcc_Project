@@ -6,7 +6,15 @@
     <title>상담 관리 메뉴 - 콘텐츠</title>
 </head>
 <body>
-    <div th:fragment="callmanagement-content" class="content">
+    <div th:fragment="content" class="content" id="content">
+        <!-- 필요한 CSS와 JS를 명시 -->
+        <link rel="stylesheet" th:href="@{/css/crm/crm-callmanagement/content-a.css}">
+        <link rel="stylesheet" th:href="@{/css/crm/crm-callmanagement/content-b.css}">
+        <link rel="stylesheet" th:href="@{/css/crm/crm-callmanagement/content-b-chart.css}">
+        <link rel="stylesheet" th:href="@{/css/crm/crm-callmanagement/content-c.css}">
+
+        <script th:src="@{/js/crm/crm-callmanagement.js}"></script>
+
         <div class="cmg-content">
             <div class="cmg-content-a" th:replace="~{crm/crm-callmanagement/content-a :: content-a}">
                 <!-- 실시간 콜 현황 (고객대기/상담원대기/상담 중/)-->

@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -74,7 +75,14 @@ public class LoginController {
 
     // 로그인 성공 후 crm 메인 페이지 이동
     @GetMapping("/crm/main")
-    public String crmMain() {
+    public String crmMain(Model model) {
+
+        // 기본 콘텐츠 설정
+        String contentView;
+        contentView = "crm/crm-counsel/counsel-content";
+
+        model.addAttribute("contentName", contentView);
+
         return "crm/crm-main";
     }
 

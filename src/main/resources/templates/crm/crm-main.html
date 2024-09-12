@@ -122,7 +122,7 @@
             </div>
         </div>
 
-        <div class="content-box" >
+        <div id="content" class="content-box" th:replace="${contentName} :: content">
             <!-- th:replace 이용 메뉴별 콘텐츠 전환 -->
         </div>
     </div>
@@ -182,6 +182,7 @@
             event.preventDefault(); // 링크 기본 동작 방지
 
             var contentId = $(this).data('content-id');
+            var newUrl = contentId;
 
             // 선택한 메뉴에 active class 부여 (스타일 적용 및 선택 메뉴 구분)
             if ($(this).hasClass('active')) {
@@ -192,23 +193,38 @@
             $('.content-link').removeClass('active');
             $(this).addClass('active');
 
-            $.ajax({
-                url: 'loadContent',
-                method: 'GET',
-                data: {
-                    contentId: contentId
-                },
-                success: function(data) {
-                    // 기존의 content 부분을 가져온 데이터로 교체
-                    $('.content-box').html(data);
+            // AJAX로 컨텐츠 로드
+            loadContent(contentId, newUrl);
+        });
 
-                    // HTML이 DOM에 완전히 반영된 후 스크립트와 스타일을 로드
-                    loadContentScriptsAndStyles(contentId);
+        // AJAX로 콘텐츠를 로드하는 함수
+        function loadContent(contentId, newUrl) {
+            $.ajax({
+                url: 'loadContent', // AJAX 요청 처리 엔드포인트
+                method: 'GET',
+                data: {contentId: contentId},
+                success: function (data) {
+                    // 반환된 HTML로 content 영역 갱신
+                    $('#content').replaceWith(data);
+                    loadContentScriptsAndStyles(contentId)
+                    // URL 변경 (페이지 새로고침 없음)
+                    history.pushState({contentId: contentId}, '', newUrl);
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.error("Error loading content:", error);
                 }
             });
+        }
+
+        // 브라우저 뒤로/앞으로 가기 이벤트 처리
+        window.addEventListener('popstate', function(event) {
+            if (event.state && event.state.contentId) {
+                // 뒤로/앞으로 이동 시 저장된 state에서 contentId를 가져옴
+                var contentId = event.state.contentId;
+
+                // 해당 contentId로 다시 컨텐츠를 로드
+                loadContent(contentId, window.location.pathname);
+            }
         });
 
         /************
@@ -306,7 +322,7 @@
             });
         }
 
-        // 스크립트와 스타일을 로드하는 함수 ( htmL이 DOM에 완전히 반영된 후 호출 > 콜백 용)
+        // 스크립트와 스타일을 로드하는 함수 ( html이 DOM에 완전히 반영된 후 호출 > 콜백 용)
         function loadContentScriptsAndStyles(contentId) {
             // 스크립트 로드
             if (scriptMap[contentId]) {

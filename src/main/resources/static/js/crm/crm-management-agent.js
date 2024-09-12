@@ -1,6 +1,10 @@
 $(document).ready(function() {
+
+    console.log("상담원 관리 페이지 스크립트 로딩 완료");
+
     // 상담원 필터링 기능
     document.getElementById('searchInput').addEventListener('keyup', function () {
+       console.log('검색어 입력됨');
         const searchValue = this.value.toLowerCase();
         const rows = document.querySelectorAll('.agent-item');
         rows.forEach(function (row) {
@@ -15,6 +19,7 @@ $(document).ready(function() {
 
     // 상담원 추가 기능
     document.getElementById('addAgentBtn').addEventListener('click', function () {
+        console.log('상담원 추가 버튼 클릭됨');
         const newId = document.getElementById('agentTableBody').rows.length + 1;
         const newRow = `
             <tr class="agent-item" data-id="${newId}">

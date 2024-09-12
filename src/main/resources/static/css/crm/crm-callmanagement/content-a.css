@@ -85,6 +85,10 @@
             height: 300px;
             margin-bottom: 20px;
         }
+        #myDonutChart{
+            width: 70%;
+            height: 70%;
+        }
 
         /* 범례 컨테이너 */
         .legend-container {

@@ -117,6 +117,13 @@ ARS 인입 현황 차트 스타일 */
 .arsDonutChart-box {
     height: 300px;
     margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#arsDonutChart{
+    height: 70% !important;
+    width: 70% !important;
 }
 
 .arsLegend-container {

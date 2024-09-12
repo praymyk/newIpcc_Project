@@ -6,7 +6,15 @@
     <title>상담 통계 - 콘텐츠</title>
 </head>
 <body>
-    <div th:fragment="statistics-content" class="content">
+    <div th:fragment="content" class="content" id="content">
+
+        <!-- 필요한 CSS와 JS를 명시 -->
+        <link rel="stylesheet" th:href="@{/css/crm/sub-menu.css}">
+        <link rel="stylesheet" th:href="@{/css/crm/crm-statistics/statistics-chart.css}">
+        <link rel="stylesheet" th:href="@{/css/crm/crm-statistics/statistics-table.css}">
+
+        <script th:src="@{/js/crm/crm-statistics.js}"></script>
+
         <div class="content-nowrap-box">
             <div class="sub-menu" th:replace="~{crm/crm-statistics/statistics-menu}">
                 <!--통게 사이드 메뉴-->
