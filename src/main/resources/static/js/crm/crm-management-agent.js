@@ -1,76 +1,63 @@
-$(document).ready(function() {
+// 자동 후처리 일괄 제어
+$('#toggleAutoProcess').on('click', function () {
+    const isChecked = $('.after-process').first().is(':checked'); // 첫 번째 체크박스 상태 확인
+    $('.after-process').prop('checked', !isChecked); // 모든 자동 후처리 체크박스 상태 변경
+});
 
-    console.log("상담원 관리 페이지 스크립트 로딩 완료");
+// 콜백 일괄 제어
+$('#toggleCallback').on('click', function () {
+    const isChecked = $('.callback-process').first().is(':checked'); // 첫 번째 체크박스 상태 확인
+    $('.callback-process').prop('checked', !isChecked); // 모든 콜백 체크박스 상태 변경
+});
 
-    // 상담원 필터링 기능
-    document.getElementById('searchInput').addEventListener('keyup', function () {
-       console.log('검색어 입력됨');
-        const searchValue = this.value.toLowerCase();
-        const rows = document.querySelectorAll('.agent-item');
-        rows.forEach(function (row) {
-            const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-            if (name.includes(searchValue)) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
+// 상담원 필터링 기능
+document.getElementById('searchInput').addEventListener('keyup', function () {
+console.log('검색어 입력됨');
+    const searchValue = this.value.toLowerCase();
+    const rows = document.querySelectorAll('.agent-item');
+    rows.forEach(function (row) {
+        const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        if (name.includes(searchValue)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
     });
+});
 
-    // 상담원 추가 기능
-    document.getElementById('addAgentBtn').addEventListener('click', function () {
-        console.log('상담원 추가 버튼 클릭됨');
-        const newId = document.getElementById('agentTableBody').rows.length + 1;
-        const newRow = `
-            <tr class="agent-item" data-id="${newId}">
-                <td>${newId}</td>
-                <td>신규 상담원</td>
-                <td>0000</td>
-                <td>신규 그룹</td>
-                <td>신규 팀</td>
-                <td>상담원</td>
-                <td>
-                    <select class="auto-process-select">
-                        <option value="사용">사용</option>
-                        <option value="미사용">미사용</option>
-                    </select>
-                </td>
-                <td>
-                    <select class="callback-select">
-                        <option value="사용">사용</option>
-                        <option value="미사용">미사용</option>
-                    </select>
-                </td>
-                <td><input type="checkbox" class="agent-checkbox"></td>
-            </tr>`;
-        document.getElementById('agentTableBody').insertAdjacentHTML('beforeend', newRow);
-    });
+/****************
+ 테이블 정렬 기능 ( sort 기능은 DB 조회시 쿼리문으로 해결해야 해서 삭제 해야 할 수 잇음 )
+클래스 토글만 남겨서 아이콘 전환만 유지할 것.
+****************/
+document.querySelectorAll('th.sortable').forEach(header => {
+    header.addEventListener('click', () => {
+        const table = header.closest('table');
+        const tbody = table.querySelector('tbody');
+        const index = Array.prototype.indexOf.call(header.parentNode.children, header);
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const isDescending = header.classList.contains('desc');
 
-    // 모두 선택/해제 기능
-    document.getElementById('selectAll').addEventListener('change', function () {
-        const checkboxes = document.querySelectorAll('.agent-checkbox');
-        checkboxes.forEach(function (checkbox) {
-            checkbox.checked = document.getElementById('selectAll').checked;
-        });
-    });
+        // 다른 열의 정렬 상태 초기화
+        table.querySelectorAll('th.sortable').forEach(th => th.classList.remove('desc'));
 
-    // 일괄 적용 버튼 기능
-    document.getElementById('batchApplyBtn').addEventListener('click', function () {
-        const selectedAgents = document.querySelectorAll('.agent-checkbox:checked');
+        // 행 정렬
+        rows.sort((rowA, rowB) => {
+            const cellA = rowA.children[index].innerText;
+            const cellB = rowB.children[index].innerText;
 
-        selectedAgents.forEach(function (agentCheckbox) {
-            const row = agentCheckbox.closest('tr');  // 체크된 상담원의 행을 가져옴
+            // 숫자 열의 경우 숫자로 변환
+            const a = isNaN(cellA) ? cellA : parseFloat(cellA);
+            const b = isNaN(cellB) ? cellB : parseFloat(cellB);
 
-            // 각 상담원의 auto-process-select와 callback-select 값을 가져옴
-            const autoProcessValue = row.querySelector('.auto-process-select').value;
-            const callbackValue = row.querySelector('.callback-select').value;
-
-            // 처리 로직 - 각 상담원의 select 값을 개별적으로 처리
-            console.log(`상담원 ID: ${row.dataset.id}, 자동 후처리: ${autoProcessValue}, 콜백: ${callbackValue}`);
-            
-            // 여기에서 값을 서버로 전송하거나 추가 로직을 처리할 수 있음
+            if (a < b) return isDescending ? 1 : -1;
+            if (a > b) return isDescending ? -1 : 1;
+            return 0;
         });
 
-        alert('일괄 적용 완료!');
+        // 정렬된 행 추가
+        rows.forEach(row => tbody.appendChild(row));
+
+        // 정렬 상태 업데이트
+        header.classList.toggle('desc', !isDescending);
     });
 });

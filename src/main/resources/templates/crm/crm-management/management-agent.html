@@ -12,25 +12,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
     <!-- Font Awesome JS -->
     <script src="https://kit.fontawesome.com/22698b3d17.js" crossorigin="anonymous"></script>
+
     <!-- css 미리보기용 지정 -->
-    <link rel="stylesheet" href="../../../static/css/crm/crm-management/management-agent.css">
-    <style>
-        /* 공통 애플 스타일 */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #F8F8F8;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            gap: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="../../../static/css/crm/crm-management/management.css">
+    <script src="../../../static/js/crm/crm-management-agent.js" defer></script>
+
 </head>
 
 <body>
-
     <div class="management-content" th:fragment="management-agent">
-        <div class="mnt-agent-list">
+        <!--management-agent 스크립트-->
+        <script th:src="@{/js/crm/crm-management-agent.js}" defer></script>
+
+        <div class="management-list">
             <!-- 상담원 리스트 헤더 -->
             <h3>상담원 리스트</h3>
 
@@ -49,9 +43,9 @@
                         <th class="sortable">상담그룹</th>
                         <th class="sortable">상담팀</th>
                         <th class="sortable">권한</th>
-                        <th class="sortable">자동 후처리</th>
-                        <th class="sortable">콜백</th>
-                        <th><input type="checkbox" id="selectAll"></th> <!-- 일괄 설정 열 추가 -->
+                        <!-- 자동 후처리와 콜백 제어 가능 -->
+                        <th class="sortable" >자동 후처리 <i class="fas fa-sync-alt" id="toggleAutoProcess"></i></th>
+                        <th class="sortable" >콜백 <i class="fas fa-sync-alt" id="toggleCallback"></i></th>
                     </tr>
                 </thead>
                 <tbody id="agentTableBody">
@@ -66,18 +60,17 @@
                         <td>A팀</td>
                         <td>관리자</td>
                         <td>
-                            <select class="auto-process-select">
-                                <option value="사용">사용</option>
-                                <option value="미사용">미사용</option>
-                            </select>
+                            <label class="management-switch">
+                                <input type="checkbox" class="after-process">
+                                <span class="management-slider"></span>
+                            </label>
                         </td>
                         <td>
-                            <select class="callback-select">
-                                <option value="사용">사용</option>
-                                <option value="미사용">미사용</option>
-                            </select>
+                            <label class="management-switch">
+                                <input type="checkbox" class="callback-process">
+                                <span class="management-slider"></span>
+                            </label>
                         </td>
-                        <td><input type="checkbox" class="agent-checkbox"></td>
                     </tr>
 
                     <tr class="agent-item" data-id="2">
@@ -88,94 +81,90 @@
                         <td>팀장</td>
                         <td>관리자</td>
                         <td>
-                            <select class="auto-process-select">
-                                <option value="사용">사용</option>
-                                <option value="미사용">미사용</option>
-                            </select>
+                            <label class="management-switch">
+                                <input type="checkbox" class="after-process">
+                                <span class="management-slider"></span>
+                            </label>
                         </td>
                         <td>
-                            <select class="callback-select">
-                                <option value="사용">사용</option>
-                                <option value="미사용">미사용</option>
-                            </select>
+                            <label class="management-switch">
+                                <input type="checkbox" class="callback-process">
+                                <span class="management-slider"></span>
+                            </label>
                         </td>
-                        <td><input type="checkbox" class="agent-checkbox"></td>
                     </tr>
                     </form>
                     <!-- 더 많은 상담원 리스트 -->
                 </tbody>
             </table>
 
-            <!-- 일괄 설정 버튼 및 상담원 추가 버튼 -->
-            <div class="agent-buttons">
-                <button class="btn btn-save" id="batchApplyBtn">일괄 적용</button>
-                <button class="btn btn-add" id="addAgentBtn">상담원 추가</button>
-            </div>
         </div>
 
-        <div class="mng-agent-info">
+        <div class="management-detail">
             <form>
-                <div class="agent-info-card">
-                    <h3>상담원 상세 정보</h3>
-
-                    <span class="agt-info-title">기본 정보</span>
+                <h3>상담원 상세 정보</h3>
+                <h4>기본 정보</h4>
+                <div class="detail-box">
                     <label for="agentId">아이디</label>
                     <input type="text" id="agentId" value="kim123">
-
+                </div>
+                <div class="detail-box">
                     <label for="agentExtension">내선</label>
                     <input type="text" id="agentExtension" value="1234">
-
+                </div>
+                <div class="detail-box">
                     <label for="agentName">상담원 이름</label>
                     <input type="text" id="agentName" value="김철수">
-
-                    <!-- 상담 그룹 (그룹명과 팀명 가로 정렬) -->
-                    <span class="agt-info-title">상담 그룹</span>
-                    <div class="agt-flex-row">
-                        <div class="flex-item">
-                            <label for="agentGroup">그룹명</label>
-                            <input type="text" id="agentGroup" value="고객 서비스팀">
-                        </div>
-                        <div class="flex-item">
-                            <label for="agentTeam">팀명</label>
-                            <input type="text" id="agentTeam" value="A팀">
-                        </div>
-                    </div>
-
-                    <span class="agt-info-title">연결 설정</span>
+                </div>
+                <!-- 상담 그룹 (그룹명과 팀명 가로 정렬) -->
+                <h4>
+                    상담 그룹
+                </h4>
+                <div class="detail-box">
                     <label for="agentCid">CID</label>
                     <input type="text" id="agentCid" value="010-1234-5678">
+                </div>
+                <div class="detail-box">
+                    <label for="agentGroup">그룹명</label>
+                    <input type="text" id="agentGroup" value="고객 서비스팀">
+                </div>
+                <div class="detail-box">
+                    <label for="agentTeam">팀명</label>
+                    <input type="text" id="agentTeam" value="A팀">
+                </div>
 
+                <h4>연결 설정</h4>
+                <div class="detail-box">
                     <label for="agentTel">발신통신</label>
                     <input type="text" id="agentTel" value="KT">
-
+                </div>
+                <div class="detail-box">
                     <label for="agentIp">재택 IP</label>
                     <input type="text" id="agentIp" value="192.168.1.10">
-
-                    <!-- 부가 기능 (콜백 사용과 자동 후처리 가로 정렬) -->
-                    <span class="agt-info-title">부가 기능</span>
-                    <div class="agt-flex-row">
-                        <div class="flex-item">
-                            <label for="agentCallback">콜백 사용</label>
-                            <select id="agentCallback">
-                                <option value="사용" selected>사용</option>
-                                <option value="미사용">미사용</option>
-                            </select>
-                        </div>
-                        <div class="flex-item">
-                            <label for="agentAutoProcess">자동 후처리</label>
-                            <select id="agentAutoProcess">
-                                <option value="사용" selected>사용</option>
-                                <option value="미사용">미사용</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- 버튼 가로 정렬 -->
-                    <div class="agent-buttons">
-                        <button class="btn btn-save" id="agtSaveBtn">저장</button>
-                        <button class="btn btn-stop" id="agtStopBtn">정지</button>
-                    </div>
                 </div>
+
+                <!-- 부가 기능 (콜백 사용과 자동 후처리 가로 정렬) -->
+                <h4>부가 기능</h4>
+                <div class="detail-box"> 
+                    <label for="agentCallback">콜백 사용</label>
+                    <label class="management-switch">
+                        <input type="checkbox" id="callBackStatus">
+                        <span class="management-slider"></span>
+                    </label>
+                </div>
+                <div class="detail-box">
+                    <label for="agentAutoProcess">자동 후처리</label>
+                    <label class="management-switch">
+                        <input type="checkbox" id="afterStatus">
+                        <span class="management-slider"></span>
+                    </label>
+                </div>
+
+                <div class="button-box">
+                    <button type="button" id="saveBtn">저장</button>
+                    <button type="button" class="delete-btn">정지</button>
+                </div>
+        
             </form>
         </div>
     </div>

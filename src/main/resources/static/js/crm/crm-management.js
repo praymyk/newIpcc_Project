@@ -1,9 +1,7 @@
-$(document).ready(function() {
+
     /************
     * 통계 메뉴 토글 기능
     **************/
-    $('*').off();  // jQuery를 사용하여 모든 이벤트 해제
-
     // sts-toggle-btn 클릭 시 sts-hidden 클래스 부여
     $('#sts-toggle-btn').on('click', function() {
         $('.sub-menu').addClass('sts-hidden'); // .sub-menu에 sts-hidden 클래스 추가
@@ -49,30 +47,29 @@ $(document).ready(function() {
 
             // 정렬된 행 추가
             rows.forEach(row => tbody.appendChild(row));
-
             // 정렬 상태 업데이트
             header.classList.toggle('desc', !isDescending);
         });
     });
 
-
     /************
      서브 메뉴 클릭 이벤트
          **************/
-
     $(document).on('click', '.sub-content-link', function(event){
         event.preventDefault(); // 링크 기본 동작 방지
 
         var contentId = $(this).data('content-id');
+        console.log("contentId:", contentId);
 
         // 선택한 메뉴에 active class 부여 (스타일 적용 및 선택 메뉴 구분)
-        if ($(this).hasClass('active')) {
+        if ($(this).hasClass('sub-active')) {
             // 이미 선택된 메뉴라면 추가 작업을 하지 않음
             console.log("Same menu clicked, no action taken.");
+            return; // 클릭 이벤트 종료
         }
         // 메뉴가 변경된 경우, 모든 메뉴에서 'active' 클래스를 제거하고 현재 메뉴에 추가
-        $('.content-link').removeClass('active');
-        $(this).addClass('active');
+        $('.sub-content-link').removeClass('sub-active');
+        $(this).addClass('sub-active');
 
         $.ajax({
             url: 'loadSubContent',
@@ -82,8 +79,7 @@ $(document).ready(function() {
             },
             success: function(data) {
                 // 기존의 content 부분을 가져온 데이터로 교체
-               $('.management-content').html(data);
-               loadContentScriptsAndStyles(contentId);
+                $('.management-content').replaceWith(data);
             },
             error: function(xhr, status, error) {
                 console.error("Error loading content:", error);
@@ -91,6 +87,6 @@ $(document).ready(function() {
         });
     });
 
-});
+
 
 

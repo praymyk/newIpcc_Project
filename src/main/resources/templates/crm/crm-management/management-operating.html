@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>운영 - 근무시간</title>
+        
+        <!-- input:text flatpickr 스타일 -->
+        <link rel="stylesheet" href="../../../static/css/flatpickr.min.css">
+        <script src="../../../static/js/flatpickr.min.js"></script>
+        <!-- jQuery -->
+        <script src="../../../static/js/jquery-3.7.1.min.js"></script>
+ 
+    <link rel="stylesheet" href="../../../static/css/crm/crm-management/management-operating.css">
+    <script src="../../../static/js/crm/crm-management-operating.js"></script>
+
+
+</head>
+
+<body>
+<div class="management-content" id="management-operating" th:fragment="management-operating">
+        <!-- management-operating 스크립트-->
+        <script th:src="@{/js/crm/crm-management-operating.js}" defer></script>
+        <script th:src="@{/js/flatpickr.min.js}" defer></script>
+
+        <!-- 근무 설정 리스트 -->
+        <div class="management-list">
+            <h2>근무 시간 리스트</h2>
+            <table id="workTable">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>근무이름</th>
+                        <th>근무시간</th>
+                        <th>점심시간</th>
+                        <th>공휴일</th>
+                    </tr>
+                </thead>
+                <tbody id="workTableBody"></tbody>
+            </table>
+        </div>
+
+        <!-- 근무 시간 설정 -->
+        <div class="management-detail">
+            <form>
+                <h2>근무 시간 설정</h2>
+                <h3>기본 시간 설정</h3>
+                <div class="detail-box">
+                    <label>업체코드</label>
+                    <input type="text" id="ccode" placeholder="업체코드">
+                </div>
+                <div class="detail-box">
+                    <label>근무이름</label>
+                    <input type="text" id="workName" placeholder="근무이름">
+                </div>
+                <div class="detail-box">
+                    <label>근무시간</label>
+                    <input type="text" id="work-start" class="flatpickr-input" placeholder="시작 시간">
+                    <input type="text" id="work-end" class="flatpickr-input" placeholder="종료 시간">
+                </div>
+                <div class="detail-box">
+                    <label>점심시간</label>
+                    <input type="text" id="lunch-start" class="flatpickr-input" placeholder="시작 시간">
+                    <input type="text" id="lunch-end" class="flatpickr-input" placeholder="종료 시간">
+                </div>
+
+                <h3>요일별 시간 설정</h3>
+                <div class="detail-box-wrap">
+                    <div class="detail-box">
+                        <label>월요일</label>
+                        <input type="text" id="monday-start" class="flatpickr-input" placeholder="시작 시간">
+                        <input type="text" id="monday-end" class="flatpickr-input" placeholder="종료 시간">
+                    </div>
+                    <div class="detail-box">
+                        <label>화요일</label>
+                        <input type="text" id="tuesday-start" class="flatpickr-input" placeholder="시작 시간">
+                        <input type="text" id="tuesday-end" class="flatpickr-input" placeholder="종료 시간">
+                    </div>
+                    <div class="detail-box">
+                        <label>수요일</label>
+                        <input type="text" id="wednesday-start" class="flatpickr-input" placeholder="시작 시간">
+                        <input type="text" id="wednesday-end" class="flatpickr-input" placeholder="종료 시간">
+                    </div>
+                    <div class="detail-box">
+                        <label>목요일</label>
+                        <input type="text" id="thursday-start" class="flatpickr-input" placeholder="시작 시간">
+                        <input type="text" id="thursday-end" class="flatpickr-input" placeholder="종료 시간">
+                    </div>
+                    <div class="detail-box">
+                        <label>금요일</label>
+                        <input type="text" id="friday-start" class="flatpickr-input" placeholder="시작 시간">
+                        <input type="text" id="friday-end" class="flatpickr-input" placeholder="종료 시간">
+                    </div>
+                    <div class="detail-box">
+                        <label>토요일</label>
+                        <input type="text" id="saturday-start" class="flatpickr-input" placeholder="시작 시간">
+                        <input type="text" id="saturday-end" class="flatpickr-input" placeholder="종료 시간">
+                    </div>
+                    <div class="detail-box">
+                        <label>일요일</label>
+                        <input type="text" id="sunday-start" class="flatpickr-input" placeholder="시작 시간">
+                        <input type="text" id="sunday-end" class="flatpickr-input" placeholder="종료 시간">
+                    </div>
+                    <div class="detail-box">
+                        <label>공휴일</label>
+                        <input type="text" id="holidays-start" class="flatpickr-input" placeholder="시작 시간">
+                        <input type="text" id="holidays-end" class="flatpickr-input" placeholder="종료 시간">
+                    </div>                    
+                </div>
+
+                <div class="button-box">
+                    <button type="button" id="saveBtn">저장</button>
+                    <button type="button" class="delete-btn">삭제</button>
+                </div>
+            </form>
+        </div>
+        
+
+    </div>
+</body>
+</html>

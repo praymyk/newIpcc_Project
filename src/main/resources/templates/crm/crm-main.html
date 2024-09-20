@@ -139,41 +139,17 @@
         if (typeof intervalId === 'undefined') {
             var intervalId;
         }
-        /*****
-            *  메뉴별 컨텐츠 스크립트/스타일 모듈화
-            *  > 메뉴 추가 시 추가 스크립트/스타일 파일을 맵에 추가
-            *  > 메뉴 컨텐츠 불러오는 ajax 내에 스크립트/스타일 맵 로드
-            *****/
-        var scriptMap = {
-            'callmanagement': [
-                contextPath + '/js/crm/crm-callmanagement.js'
-            ],
-            'management':[
-                contextPath + '/js/crm/crm-management.js',
-                contextPath + '/js/crm/crm-management-agent.js'
-            ],
-            'statistics': [
-                contextPath + '/js/crm/crm-statistics.js'
-            ]
-        };
-        var styleMap = {
-            'callmanagement': [
-                contextPath + '/css/crm/crm-callmanagement/content-a.css',
-                contextPath + '/css/crm/crm-callmanagement/content-b.css',
-                contextPath + '/css/crm/crm-callmanagement/content-b-chart.css',
-                contextPath + '/css/crm/crm-callmanagement/content-c.css'
-            ],
-            'management': [
-                contextPath + '/css/crm/sub-menu.css',
-                contextPath + '/css/crm/crm-management/management.css',
-                contextPath + '/css/crm/crm-management/management-agent.css'
-            ],
-            'statistics': [
-                contextPath + '/css/crm/crm-statistics/statistics-chart.css',
-                contextPath + '/css/crm/crm-statistics/statistics-table.css',
-                contextPath + '/css/crm/sub-menu.css'
-            ]
-        }
+
+        // 페이지 새로 고침 시 URL과 메뉴를 일치시키기 위한 스크립트
+        $(document).ready(function() {
+            var path = window.location.pathname;    // 경로
+            var contentId = path.split('/').pop(); // 마지막 경로 요소
+            console.log("contentId:", contentId);
+            // 모든 요소에서 'active' 클래스를 제거
+            $('.content-link').removeClass('active');
+            // contentId와 일치하는 요소에 'active' 클래스 부여
+            $('.content-link[data-content-id="' + contentId + '"]').addClass('active');
+        });
 
         /******
          * 메뉴 클릭 선택 이벤트
@@ -186,8 +162,9 @@
 
             // 선택한 메뉴에 active class 부여 (스타일 적용 및 선택 메뉴 구분)
             if ($(this).hasClass('active')) {
-                // 이미 선택된 메뉴라면 추가 작업을 하지 않음
-                console.log("Same menu clicked, no action taken.");
+                // 이미 선택된 메뉴라면 AJAX 요청을 하고 새로 고침
+                console.log("Same menu clicked, refreshing the page.");
+                return;  // 더 이상의 작업을 하지 않음
             }
             // 메뉴가 변경된 경우, 모든 메뉴에서 'active' 클래스를 제거하고 현재 메뉴에 추가
             $('.content-link').removeClass('active');
@@ -206,7 +183,7 @@
                 success: function (data) {
                     // 반환된 HTML로 content 영역 갱신
                     $('#content').replaceWith(data);
-                    loadContentScriptsAndStyles(contentId)
+                    manageIntervals();
                     // URL 변경 (페이지 새로고침 없음)
                     history.pushState({contentId: contentId}, '', newUrl);
                 },
@@ -224,6 +201,11 @@
 
                 // 해당 contentId로 다시 컨텐츠를 로드
                 loadContent(contentId, window.location.pathname);
+
+                // 모든 요소에서 'active' 클래스를 제거
+                $('.content-link').removeClass('active');
+                // contentId와 일치하는 요소에 'active' 클래스 부여
+                $('.content-link[data-content-id="' + contentId + '"]').addClass('active');
             }
         });
 
@@ -287,60 +269,13 @@
         updateStatus("waiting");
 
 
-        /************
-         * 스크립트/스타일 로드 함수/ 인터벌 관리
-         ************/
-        // 스크립트 동적 로드 함수
-        function loadScripts(scripts) {
-            scripts.forEach(function(scriptPath) {
-                if (!$('script[src="' + scriptPath + '"]').length) {
-                    $.getScript(scriptPath)
-                        .done(function(script, textStatus) {
-                            console.log(`Script ${scriptPath} loaded.`);
-                        })
-                        .fail(function(jqxhr, settings, exception) {
-                            console.error(`Failed to load script ${scriptPath}: `, exception);
-                        });
-                } else {
-                    console.log(`Script ${scriptPath} already loaded.`);
-                }
-            });
-        }
-        // 스타일 로드 함수
-        function loadStyles(styles) {
-            styles.forEach(function(stylePath) {
-                if (!$('link[href="' + stylePath + '"]').length) {
-                    $('<link/>', {
-                        rel: 'stylesheet',
-                        type: 'text/css',
-                        href: stylePath
-                    }).appendTo('head');
-                    console.log(`Style ${stylePath} loaded.`);
-                } else {
-                    console.log(`Style ${stylePath} already loaded.`);
-                }
-            });
-        }
-
-        // 스크립트와 스타일을 로드하는 함수 ( html이 DOM에 완전히 반영된 후 호출 > 콜백 용)
-        function loadContentScriptsAndStyles(contentId) {
-            // 스크립트 로드
-            if (scriptMap[contentId]) {
-                manageIntervals(); // 이전 인터벌 초기화
-                loadScripts(scriptMap[contentId]);
-            }
-            // 스타일 로드
-            if (styleMap[contentId]) {
-                loadStyles(styleMap[contentId]);
-            }
-        }
-
         // 상담관리 페이지를 이용하지 않을 경우 상담 관리 인터벌 제거
         function manageIntervals() {
             // 이전에 설정된 인터벌이 있으면 삭제
+            console.log("메뉴 전환 시 인터벌 관리 :" + intervalId);
             if (intervalId) {
                 clearInterval(intervalId);
-                console.log("이전 인터벌 초기화");
+                console.log("메뉴 전환 시 인터벌 초기화");
             }
         }
     </script>

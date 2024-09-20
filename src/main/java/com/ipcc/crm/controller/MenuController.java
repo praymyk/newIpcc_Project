@@ -47,10 +47,8 @@ public class MenuController {
     // 메뉴 선택 후 선택 페이지 로드
     @GetMapping("crm/{contentName}")
     public String selectMenu(@PathVariable("contentName") String contentName, Model model){
-        log.info("왜 안들어옴?");
         String contentView;
 
-        log.info("contentName : " + contentName);
         // 메뉴 선택
         switch (contentName){
             case "main":
@@ -89,6 +87,12 @@ public class MenuController {
         switch (contentId){
             case "agent-management": // 상담 메뉴
                 contentName = "crm/crm-management/management-agent :: management-agent";
+                break;
+            case "operating-management": // 상담관리 메뉴
+                contentName = "crm/crm-management/management-operating :: management-operating";
+                break;
+            case "holiday-management": // 운영 메뉴
+                contentName = "crm/crm-management/management-holiday :: management-holiday";
                 break;
             default:
                 return "crm/crm-counsel/counsel-content :: counsel-content";

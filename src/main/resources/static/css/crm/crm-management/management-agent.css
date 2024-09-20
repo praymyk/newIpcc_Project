@@ -1,174 +1,83 @@
-.mnt-agent-list {
-    background-color: #FFFFFF;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
+.content-nowrap-box {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-grow: 1;         /* 부모 요소가 커지면 함께 커지도록 설정 */
+    flex-shrink: 1;       /* 부모 요소가 작아지면 함께 줄어들도록 설정 */
+    gap: 10px;
+}
+
+.management-content {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;         /* 부모 요소가 커지면 함께 커지도록 설정 */
+    flex-shrink: 1;       /* 부모 요소가 작아지면 함께 줄어들도록 설정 */
+    gap: 10px;
+}
+
+/* 기본 스타일 */
+.management-content h2, .management-content h3, .management-content h4 {
+    font-weight: 600;
+}
+
+.management-content {
+    display: flex;
+    gap: 10px;
+}
+
+.management-list, 
+.management-detail {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.management-list {
     flex: 3;
-    position: relative; /* 부모에 대한 절대 위치 사용을 위해 */
+}
+.management-detail{
+    flex: 1;
 }
 
+/* 상담원 검색 영역 */
 .mnt-agent-search {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
 }
 
-.mnt-agent-search input {
-    width: 100%;
-    padding: 10px;
+.mnt-agent-search input[type="text"] {
+    width: 300px;
+    padding: 10px 15px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     font-size: 14px;
-    border-radius: 8px;
-    border: 1px solid #d1d1d6;
-    box-sizing: border-box;
-    outline: none;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-.agent-table {
+.mnt-agent-search input[type="text"]:focus {
+    outline: none;
+    border-color: #007aff;
+    box-shadow: 0 0 10px rgba(0, 122, 255, 0.3);
+}
+
+.detail-box {
+    display: flex;
+    margin-bottom: 10px;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.management-list table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.agent-table th,
-.agent-table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #E0E0E0;
-}
-
-.agent-table th {
-    background-color: #F0F0F5;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.agent-table td {
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.agent-item {
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.agent-item:hover {
-    background-color: #E0E0E5;
-}
-
-/* 상담원 상세 정보 스타일 */
-.mng-agent-info {
-    background-color: #F8F8F8;
-    display: flex;
-    flex: 1;
-    align-items: flex-start;
-}
-
-.agent-info-card {
-    background-color: #FFFFFF;
-    padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    min-width: 400px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.agent-info-card h3 {
-    font-size: 20px;
-    margin: 0 0 20px;
-    color: #333333;
-}
-
-.agent-info-card label {
-    display: block;
-    font-size: 12px;
-    color: #666666;
-    margin-bottom: 5px;
-}
-
-.agt-info-title {
-    display: block; /* 블록 레벨 요소로 설정 */
-    margin: 10px 0px 10px 0px;
-    font-weight: bold;
-    color: #666666;
-    font-size: 14px;
-}
-
-.agent-info-card input,
-.agent-info-card select {
-    width: 100%;
-    padding: 12px;
-    font-size: 14px;
-    border: 1px solid #d1d1d6;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-}
-
-/* 가로 정렬 */
-.agent-info-card .agt-flex-row {
-    display: flex;
-    gap: 10px;
-    justify-content: space-between;
-}
-
-.agt-flex-row input {
-    width: 100%;
-}
-
-.agt-flex-row>div {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
-/* 버튼 스타일 */
-.agent-buttons {
-    display: flex;
-    width: 100%;
-    gap: 10px;
-    margin-top: 20px;
-    justify-content: end;
-}
-
-.btn {
-    padding: 12px;
-    font-size: 14px;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 120px;
-    text-align: center;
-}
-
-.btn-save {
-    background-color: #007AFF;
-}
-
-.btn-save:hover {
-    background-color: #0056b3;
-}
-
-.btn-stop {
-    background-color: #FF3B30;
-}
-
-.btn-stop:hover {
-    background-color: #CC2900;
-}
-
-.btn-add {
-    background-color: #28A745 ;
-}
-.btn-add:hover{
-    background-color: #218838 ;
-}
-
-/* 정렬 아이콘 스타일 */
+/*
+    테이블 sort 스타일
+*/
 thead th.sortable::after {
     content: '▲';
     font-size: 12px;
@@ -181,4 +90,138 @@ thead th.sortable::after {
 thead th.sortable.desc::after {
     content: '▼';
     transform: rotate(180deg);
+}
+
+.management-list table th, .management-list table td {
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+    text-align: left;
+}
+
+.management-list th.sortable i {
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.management-list th.sortable i:hover {
+    border-radius: 50%;
+    background-color: rgba(0, 122, 255, 0.1); /* Apple의 블루 컬러를 희미하게 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 일괄 변경 아이콘 추가 */
+.management-list th.sortable i {
+    margin-left: 5px;
+    font-size: 12px;
+    color: #007aff;
+}
+
+.management-list table tr {
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.management-list tbody tr:hover {
+    background-color: rgba(0, 122, 255, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.management-detail input[type="time"], 
+.management-detail input[type="text"],
+.management-detail input[type="date"] {
+    min-width: 120px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 12px;
+    transition: border 0.3s ease;
+    height: 20px;
+}
+
+.flatpickr-input:hover {
+    border-color: #007aff;
+}
+
+.flatpickr-input:focus {
+    outline: none;
+    border-color: #007aff;
+    box-shadow: 0 0 5px rgba(0, 122, 255, 0.5);
+}
+
+.button-box {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+.management-detail button {
+    background-color: #007aff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.management-detail button:hover {
+    background-color: #005bb5;
+}
+
+.management-detail button.delete-btn {
+    background-color: #ff3b30;
+}
+
+.management-detail button.delete-btn:hover {
+    background-color: #d32f2f;
+}
+
+/* 스위치 스타일 */
+.management-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 25px;
+}
+
+.management-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.management-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.management-slider:before {
+    position: absolute;
+    content: "";
+    height: 19px;
+    width: 19px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .management-slider {
+    background-color: #007aff;
+}
+
+input:checked + .management-slider:before {
+    transform: translateX(24px);
 }

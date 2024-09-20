@@ -22,7 +22,7 @@ function getBackgroundColors(dataValues) {
     차트 데이터는 updateStatistics 함수를 호출하여 업데이트 > 차트와 테이블 동시에 업데이트
     추후 ajax 연동 해서 labels와 data 값 받아서 넣어야 함
     const dummyData 형태면 됨
-    ****************/
+****************/
 $(document).ready(function() {
     const dummyData = {
         labels: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'], // x축 시간 데이터

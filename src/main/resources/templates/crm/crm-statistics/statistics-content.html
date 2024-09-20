@@ -16,14 +16,14 @@
         <script th:src="@{/js/crm/crm-statistics.js}"></script>
 
         <div class="content-nowrap-box">
-            <div class="sub-menu" th:replace="~{crm/crm-statistics/statistics-menu}">
+            <div class="sub-menu" th:replace="~{crm/crm-statistics/statistics-menu :: statistics-menu}">
                 <!--통게 사이드 메뉴-->
             </div>
             <div class="statistics-content">
-                <div class="statistics-chart" th:replace="~{crm/crm-statistics/statistics-chart}">
+                <div class="statistics-chart" th:replace="~{crm/crm-statistics/statistics-chart :: statistics-chart}">
                     <!--통계 상단 그래프-->
                 </div>
-                <div class="statistics-table" th:replace="~{crm/crm-statistics/statistics-table}">
+                <div class="statistics-table" th:replace="~{crm/crm-statistics/statistics-table :: statistics-table}">
                     <!--통계 하단 표-->
                 </div>
             </div>

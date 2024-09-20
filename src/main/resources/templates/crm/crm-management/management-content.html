@@ -11,16 +11,17 @@
         <!-- 필요한 CSS와 JS를 명시 -->
         <link rel="stylesheet" th:href="@{/css/crm/sub-menu.css}">
         <link rel="stylesheet" th:href="@{/css/crm/crm-management/management.css}">
-        <link rel="stylesheet" th:href="@{/css/crm/crm-management/management-agent.css}">
+
+        <!-- flatpickr 스크립트 -->
+        <link rel="stylesheet" th:href="@{/css/flatpickr.min.css}">
 
         <script th:src="@{/js/crm/crm-management.js}"></script>
-        <script th:src="@{/js/crm/crm-management-agent.js}"></script>
 
         <div class="content-nowrap-box">
             <div class="management-menu" th:replace="~{crm/crm-management/management-menu :: management-menu}">
                 <!--운영 사이드 메뉴-->
             </div>
-            <div class="management-content">
+            <div class="management-content" th:replace="~{crm/crm-management/management-agent :: management-agent}">
                 <!--운영 콘텐츠-->
             </div>
         </div>

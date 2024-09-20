@@ -65,3 +65,9 @@
     font-size: 14px;
     color: #1C1C1E;
 }
+
+/* 메뉴 선택 시스타일 */
+.sub-active {
+    background-color: #F0F0F5; /* Apple 스타일의 Hover 효과 */
+    border-radius: 10px; /* Hover 시 둥근 효과 */
+}
