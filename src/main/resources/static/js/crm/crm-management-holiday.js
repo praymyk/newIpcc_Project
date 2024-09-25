@@ -30,3 +30,10 @@ $('#holiTableBody').on('click', '.new-entry', function() {
     $('#holiStatus').val(false);
     
 });
+
+document.querySelectorAll('th.sortable').forEach(header => {
+    header.addEventListener('click', () => {
+        // 정렬 상태 업데이트
+        header.classList.toggle('desc');
+    });
+});

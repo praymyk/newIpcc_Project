@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>운영 - 대표번호</title>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Google Fonts for San Francisco alternative -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome JS -->
+    <script src="https://kit.fontawesome.com/22698b3d17.js" crossorigin="anonymous"></script>
+
+    <!-- css 미리보기용 지정 -->
+    <link rel="stylesheet" href="../../../static/css/crm/crm-management/management.css">
+    <script src="../../../static/js/crm/crm-management-trunk.js" defer></script>
+
+</head>
+
+<body>
+    <div class="management-content" th:fragment="management-trunk">
+        <!--management-agent 스크립트-->
+        <script th:src="@{/js/crm/crm-management-trunk.js}" defer></script>
+
+        <div class="management-list">
+            <!-- 대표번호 리스트 헤더 -->
+            <h3>상담원 리스트</h3>
+
+            <!-- 대표번호 리스트 -->
+            <table class="trunk-table" id="trunkTable">
+                <thead>
+                    <tr>
+                        <th class="sortable">No</th>
+                        <th class="sortable">국선코드</th>
+                        <th class="sortable">DID번호</th>
+                        <th class="sortable">전화번호</th>
+                        <th class="sortable">인입코드</th>
+                        <th class="sortable">인입분기</th>
+                        <th class="sortable">국선명</th>
+                    </tr>
+                </thead>
+                <tbody id="trunkTableBody">
+                    <form>
+                    <!-- 상담원 리스트 항목들 -->
+                    </form>
+                    <!-- 더 많은 상담원 리스트 -->
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="management-detail">
+            <form>
+                <h3>대표번호 상세 정보</h3>
+                <h4>기본 정보</h4>
+                <div class="detail-box">
+                    <input type="hidden" id="ccode" value="">
+                    <label for="trunkCode">국선코드</label>
+                    <input type="text" id="trunkCode" value="T_" oninput="enforcePrefix('trunkCode', 'T_')">
+                </div>
+                <div class="detail-box">
+                    <label for="did">DID 번호</label>
+                    <input type="text" id="did" value="">
+                </div>
+                <div class="detail-box">
+                    <label for="tel">전화번호</label>
+                    <input type="text" id="tel" value="">
+                </div>
+                <div class="detail-box">
+                    <label for="ingress">인입코드</label>
+                    <input type="text" id="ingress" value="I_" oninput="enforcePrefix('ingress', 'I_')">
+                </div>
+
+                <div class="detail-box routing">
+                    <label for="routing">인입분기</label>
+                    <select name="routing-category" id="routing-category">
+                        <option value=""></option>
+                    </select>
+                    <select name="category-name" id="category-name">
+                        <option value=""></option>
+                    </select>
+                </div>
+
+                <div class="detail-box">
+                    <label for="trunkNum">표시번호</label>
+                    <input type="text" id="trunkNum" value="">
+                </div>
+                <div class="detail-box">
+                    <label for="trunkName">국선명</label>
+                    <input type="text" id="trunkName" value="">
+                </div>
+
+
+                <div class="button-box">
+                    <button type="button" id="saveBtn">저장</button>
+                    <button type="button" class="delete-btn">정지</button>
+                </div>
+        
+            </form>
+        </div>
+
+        <script>
+
+            // 국선코드와 인입 코드 앞자리 고정용 스크립트
+            function enforcePrefix(id, prefix) {
+                const input = document.getElementById(id);
+                // 입력 값에서 prefix가 빠지지 않도록 강제
+                if (!input.value.startsWith(prefix)) {
+                    input.value = prefix;
+                }
+            }
+
+
+        </script>
+    </div>
+
+</body>
+</html>

@@ -94,6 +94,10 @@ public class MenuController {
             case "holiday-management": // 운영 메뉴
                 contentName = "crm/crm-management/management-holiday :: management-holiday";
                 break;
+            case "ivr-management": // 통계 메뉴
+                contentName = "crm/crm-management/management-ivr :: management-ivr";
+                break;
+
             default:
                 return "crm/crm-counsel/counsel-content :: counsel-content";
         }

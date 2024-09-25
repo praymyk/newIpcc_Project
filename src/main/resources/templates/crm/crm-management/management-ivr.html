@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IVR 트리 편집</title>
+
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- Google Fonts for San Francisco alternative -->
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+        <!-- Font Awesome JS -->
+        <script src="https://kit.fontawesome.com/22698b3d17.js" crossorigin="anonymous"></script>
+    
+        <!-- css 미리보기용 지정 -->
+        <link rel="stylesheet" href="../../../static/css/crm/crm-management/management.css">
+        <script src="../../../static/js/crm/crm-management-ivr.js" defer></script>
+
+<body>
+    <div class="management-content" id="management-ivr" th:fragment="management-ivr">
+        <!--ivr 콜트리용 스크립트-->
+        <script th:src="@{/js/crm/crm-management-ivr.js}" defer></script>
+
+        <!-- IVR 설정 리스트 -->
+        <div class="management-list">
+            <h2>IVR 리스트</h2>
+        <table id="ivr_table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>IVR 이름</th>
+                    <th>IVR 종류</th>
+                    <th>IVR 연결</th>
+                </tr>
+            </thead>
+            <tbody id="ivr_table_body">
+                <!-- IVR 리스트가 동적으로 추가될 부분 -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 우측 편집 패널 -->
+    <div class="management-detail">
+        <form>
+            <h2>IVR 정보</h2>
+            <div class="detail-box">
+                <label>사용업체</label>
+                <input type="text" id="ccode" placeholder="업체코드" readonly>
+            </div>
+            <div class="detail-box">
+                <label>IVR트리-그룹</label>
+                <div>
+                    <select id="ivr_group">
+                        <option>IVR_SET1</option>
+                    </select>
+                </div>
+            </div>
+            <div class="detail-box">
+                <label>IVR 이름</label>
+                <input type="text" id="ivrName" placeholder="테스트">
+            </div>
+            <div class="detail-box">
+                <label>IVR 종류</label>
+                <select id="ivr_type">
+                    <option value="음성안내">음성안내</option>
+                    <option value="디짓입력">디짓입력</option>
+                </select>
+            </div>
+            <div class="detail-box">
+                <label>음성 등록</label>
+                <input type="text" id="ivr_message">
+            </div>
+
+            <!-- 음성안내 타입에만 보여줄 필드 -->
+            <div id="ivr-chain-field" class="hidden">
+                <label>연결된 IVR (음성안내일 경우):</label>
+                <input type="text" id="ivr_chain">
+            </div>
+
+            <!-- 디짓 입력 타입에만 보여줄 필드 -->
+            <div id="digit-fields" class="hidden">
+                <label>디짓 입력</label>
+                <div id="digit-entries">
+                    <!-- 디짓 입력 필드가 동적으로 추가될 부분 -->
+                </div>
+                <button id="add-digit" onclick="addDigit(event)">디짓 추가</button>
+            </div>
+
+            <div class="button-box">
+                <button type="button" id="saveBtn">저장</button>
+                <button type="button" class="delete-btn">삭제</button>
+            </div>
+        </form>
+    </div>  
+
+
+</div>
+
+</body>
+</html>

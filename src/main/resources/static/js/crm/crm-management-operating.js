@@ -137,3 +137,15 @@ $('#workTableBody').on('click', '.new-entry', function() {
     $('#sunday-start').val('');
     $('#sunday-end').val('');
 });
+
+
+/****************
+ 테이블 정렬 기능 ( sort 기능은 DB 조회시 쿼리문으로 해결해야 해서 삭제 해야 할 수 잇음 )
+ 클래스 토글만 남겨서 아이콘 전환만 유지할 것.
+ ****************/
+document.querySelectorAll('th.sortable').forEach(header => {
+    header.addEventListener('click', () => {
+        // 정렬 상태 업데이트
+        header.classList.toggle('desc');
+    });
+});

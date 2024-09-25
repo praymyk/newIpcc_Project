@@ -25,39 +25,39 @@ console.log('검색어 입력됨');
     });
 });
 
+// "신규 등록" 항목 추가
+$('#agentTableBody').append(`
+    <tr class="new-entry" style="cursor: pointer;">
+        <td colspan="8" style="text-align: center; color: #007aff;">+ 신규 등록</td>
+    </tr>
+`);
+
+// 신규 등록 클릭 시 신규 등록 양식 폼 설정
+$('#agentTableBody').on('click', '.new-entry', function() {
+    // 업체코드와 근무 이름은 신규 등록 시 기본 값 넣어 주기
+    $('#ccode').val('신규');
+    $('#agentId').val('신규');
+    $('#agentExtension').val('');
+    $('#agentName').val('신규');
+
+    $('#agentCid').val('신규');
+    $('#agentGroup').val('신규');
+    $('#agentTeam').val('신규');
+    $('#agentTel').val('신규');
+    $('#agentIp').val('신규');
+
+    $('#callBackStatus').val(false);
+    $('#afterStatus').val(false);
+
+});
+
 /****************
  테이블 정렬 기능 ( sort 기능은 DB 조회시 쿼리문으로 해결해야 해서 삭제 해야 할 수 잇음 )
-클래스 토글만 남겨서 아이콘 전환만 유지할 것.
-****************/
+ 클래스 토글만 남겨서 아이콘 전환만 유지할 것.
+ ****************/
 document.querySelectorAll('th.sortable').forEach(header => {
     header.addEventListener('click', () => {
-        const table = header.closest('table');
-        const tbody = table.querySelector('tbody');
-        const index = Array.prototype.indexOf.call(header.parentNode.children, header);
-        const rows = Array.from(tbody.querySelectorAll('tr'));
-        const isDescending = header.classList.contains('desc');
-
-        // 다른 열의 정렬 상태 초기화
-        table.querySelectorAll('th.sortable').forEach(th => th.classList.remove('desc'));
-
-        // 행 정렬
-        rows.sort((rowA, rowB) => {
-            const cellA = rowA.children[index].innerText;
-            const cellB = rowB.children[index].innerText;
-
-            // 숫자 열의 경우 숫자로 변환
-            const a = isNaN(cellA) ? cellA : parseFloat(cellA);
-            const b = isNaN(cellB) ? cellB : parseFloat(cellB);
-
-            if (a < b) return isDescending ? 1 : -1;
-            if (a > b) return isDescending ? -1 : 1;
-            return 0;
-        });
-
-        // 정렬된 행 추가
-        rows.forEach(row => tbody.appendChild(row));
-
         // 정렬 상태 업데이트
-        header.classList.toggle('desc', !isDescending);
+        header.classList.toggle('desc');
     });
 });

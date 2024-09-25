@@ -122,7 +122,7 @@
             </div>
         </div>
 
-        <div id="content" class="content-box" th:replace="${contentName} :: content">
+        <div id="content" class="content-box" th:replace="~{${contentName} :: content}">
             <!-- th:replace 이용 메뉴별 콘텐츠 전환 -->
         </div>
     </div>
