@@ -52,120 +52,86 @@
                     <form>
                     <!-- 상담원 리스트 항목들 -->
 
-                    <tr class="agent-item" data-id="1">
-                        <td>1</td>
-                        <td>김철수</td>
-                        <td>1234</td>
-                        <td>고객 서비스팀</td>
-                        <td>A팀</td>
-                        <td>관리자</td>
-                        <td>
-                            <label class="management-switch">
-                                <input type="checkbox" class="after-process">
-                                <span class="management-slider"></span>
-                            </label>
-                        </td>
-                        <td>
-                            <label class="management-switch">
-                                <input type="checkbox" class="callback-process">
-                                <span class="management-slider"></span>
-                            </label>
-                        </td>
-                    </tr>
-
-                    <tr class="agent-item" data-id="2">
-                        <td>2</td>
-                        <td>나철수</td>
-                        <td>2345</td>
-                        <td>관리자 팀</td>
-                        <td>팀장</td>
-                        <td>관리자</td>
-                        <td>
-                            <label class="management-switch">
-                                <input type="checkbox" class="after-process">
-                                <span class="management-slider"></span>
-                            </label>
-                        </td>
-                        <td>
-                            <label class="management-switch">
-                                <input type="checkbox" class="callback-process">
-                                <span class="management-slider"></span>
-                            </label>
-                        </td>
-                    </tr>
                     </form>
-                    <!-- 더 많은 상담원 리스트 -->
                 </tbody>
             </table>
 
         </div>
 
         <div class="management-detail">
-            <form>
+            <form id="agentForm">
                 <h3>상담원 상세 정보</h3>
                 <h4>기본 정보</h4>
                 <div class="detail-box">
-                    <input type="hidden" id="ccode" value="">
-                    <label for="agentId">아이디</label>
-                    <input type="text" id="agentId" value="kim123">
+                    <input type="hidden" id="custId" name="custId" value="">
+                    <input type="hidden" id="agtNo" name="agtNo" value="">
+                    <label for="agtId">아이디</label>
+                    <input type="text" id="agtId"  name="agtId" value="">
                 </div>
                 <div class="detail-box">
-                    <label for="agentExtension">내선</label>
-                    <input type="text" id="agentExtension" value="1234">
+                    <label for="agtPw">비밀번호</label>
+                    <input type="text" id="agtPw"  name="agtPw" value="">
                 </div>
                 <div class="detail-box">
-                    <label for="agentName">상담원 이름</label>
-                    <input type="text" id="agentName" value="김철수">
+                    <label for="agtExt">내선</label>
+                    <input type="text" id="agtExt" name="agtExt" value="">
+                </div>
+                <div class="detail-box">
+                    <label for="agtName">상담원 이름</label>
+                    <input type="text" id="agtName" name="agtName" value="">
                 </div>
                 <!-- 상담 그룹 (그룹명과 팀명 가로 정렬) -->
                 <h4>
                     상담 그룹
                 </h4>
                 <div class="detail-box">
-                    <label for="agentCid">CID</label>
-                    <input type="text" id="agentCid" value="010-1234-5678">
+                    <label for="agtGroup">그룹명</label>
+                    <input type="text" id="agtGroup" name="agtGroup" value="고객 서비스팀">
                 </div>
                 <div class="detail-box">
-                    <label for="agentGroup">그룹명</label>
-                    <input type="text" id="agentGroup" value="고객 서비스팀">
-                </div>
-                <div class="detail-box">
-                    <label for="agentTeam">팀명</label>
-                    <input type="text" id="agentTeam" value="A팀">
+                    <label for="agtTeam">팀명</label>
+                    <input type="text" id="agtTeam" name="agtTeam" value="A팀">
                 </div>
 
                 <h4>연결 설정</h4>
                 <div class="detail-box">
-                    <label for="agentTel">발신통신</label>
-                    <input type="text" id="agentTel" value="KT">
+                    <label for="agtTel">발신통신</label>
+                    <input type="text" id="agtTel" name="agtTel" value="KT">
                 </div>
                 <div class="detail-box">
-                    <label for="agentIp">재택 IP</label>
-                    <input type="text" id="agentIp" value="192.168.1.10">
+                    <label for="agtIp">재택 IP</label>
+                    <input type="text" id="agtIp" name="agtIp" value="192.168.1.10">
                 </div>
 
                 <!-- 부가 기능 (콜백 사용과 자동 후처리 가로 정렬) -->
                 <h4>부가 기능</h4>
-                <div class="detail-box"> 
-                    <label for="agentCallback">콜백 사용</label>
+                <div class="detail-box">
+                    <label for="agtAuth">관리 권한</label>
                     <label class="management-switch">
-                        <input type="checkbox" id="callBackStatus">
+                        <input type="checkbox" id="agtAuth" name="agtAuth" value="true">
                         <span class="management-slider"></span>
                     </label>
                 </div>
                 <div class="detail-box">
-                    <label for="agentAutoProcess">자동 후처리</label>
+                    <label for="useCallBack">콜백 사용</label>
                     <label class="management-switch">
-                        <input type="checkbox" id="afterStatus">
+                        <input type="checkbox" id="useCallBack" name="useCallBack" value="true">
+                        <span class="management-slider"></span>
+                    </label>
+                </div>
+                <div class="detail-box">
+                    <label for="useAfter">자동 후처리</label>
+                    <label class="management-switch">
+                        <input type="checkbox" id="useAfter" name="useAfter" value="true">
                         <span class="management-slider"></span>
                     </label>
                 </div>
 
                 <div class="button-box">
-                    <button type="button" id="saveBtn">저장</button>
+                    <button type="submit" id="saveBtn">저장</button>
                     <button type="button" class="delete-btn">정지</button>
                 </div>
-        
+
             </form>
         </div>
     </div>

@@ -63,8 +63,10 @@ public class LoginController {
 
         // 2. 상담원 인증 정보와 회사 코드가 일치하면 crm 메인 페이지로 리다이렉트 + 세션에 상담원 정보 저장
         if(loginAgent != null) {
-            session.setAttribute("loginAgent", loginAgent);
+
             // 세션에 상담원 정보 저장
+            session.setAttribute("loginAgent", loginAgent);
+
             return "redirect:crm/main";
         }
         // 3. 일치하지 않으면 로그인 페이지로 리다이렉트
@@ -85,7 +87,6 @@ public class LoginController {
 
         return "crm/crm-main";
     }
-
 
     @GetMapping("/crm/alogout")
     public String crmLogout(HttpSession session) {

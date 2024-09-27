@@ -127,9 +127,13 @@
         </div>
     </div>
 
-    <!--ContexPath를 자바스크립트로 전달-->
+    <!-- crm 페이지 전체에서 사용할 변수 선언 -->
     <script th:inline="javascript">
+        // @contextPath 주소 설정을 위한 contextPath 변수 선언
+        // @sessionCustId 세션에서 로그인 상담원의 custId(업체코드)를 가져옴
         var contextPath = /*[[@{/}]]*/ '';  // 타임리프가 컨텍스트 경로를 서버에서 삽입
+        var sessionCustId =  [[${session.loginAgent.custId}]];
+
     </script>
     <script>
         /*****
@@ -160,6 +164,7 @@
             var contentId = $(this).data('content-id');
             var newUrl = contentId;
 
+            console.log("sessionCustId : " + sessionCustId);
             // 선택한 메뉴에 active class 부여 (스타일 적용 및 선택 메뉴 구분)
             if ($(this).hasClass('active')) {
                 // 이미 선택된 메뉴라면 AJAX 요청을 하고 새로 고침

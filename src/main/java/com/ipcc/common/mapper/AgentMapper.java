@@ -14,10 +14,12 @@ import java.util.List;
 @Mapper
 public interface AgentMapper {
     // 상담원 목록 조회
-    List<AgentAuth> selectAgentList();
+    List<AgentAuth> selectAgentList(String custId);
 
     // 상담원 등록
-    int insertAgent(AgentAuth agentAuth);
+    int addAgent(Agent agent);
+    // 신규 상담원 ID 등록
+    int updateAgentId(Agent agent);
 
     // 상담원 조회
     Agent selectAgent(Agent agent);
@@ -45,4 +47,7 @@ public interface AgentMapper {
 
     // 금일 통화량 통계 (모니터링)
     TodayCallStatus selectTodayCallStatus(String ccode);
+
+    // 상담원 정보 업데이트
+    int updateAgent(Agent agent);
 }

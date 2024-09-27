@@ -40,8 +40,11 @@ public class ExcelController {
         // 엑셀 파일 내부에 Sheet 를 하나 생성합니다 (엑셀 파일 하나에는 여러 Sheet가 있을 수 있습니다)
         Sheet sheet = workbook.createSheet("상담원 목록");
 
+        // 임시 업체코드
+        String custId="test";
+        
         // 엑셀 렌더링에 필요한 DTO를 가져옵니다
-        List<AgentAuth> agentagentList = agentService.selectAgentList();
+        List<AgentAuth> agentagentList = agentService.selectAgentList(custId);
 
         // 헤더를 생성합니다
         int rowIndex = 0;
@@ -92,7 +95,8 @@ public class ExcelController {
     @GetMapping("/agentList/ExcelDownload")
     public void downloadAgentInfo2(HttpServletResponse response){
 
-        excelUtils.AgentAuthExcelDownload(agentService.selectAgentList(), response);
+        String custId = "test";
+        excelUtils.AgentAuthExcelDownload(agentService.selectAgentList(custId), response);
 
 
     }

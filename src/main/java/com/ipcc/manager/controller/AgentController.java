@@ -27,12 +27,9 @@ public class AgentController {
     // 상담원 목록 조회
     @GetMapping("/agentList")
     @ResponseBody
-    public List<AgentAuth> getAgentList(Agent agent)  {
-        log.info("agent : " + agent);
+    public List<AgentAuth> getAgentList(String custId)  {
 
-        List<AgentAuth> agentList = agentService.selectAgentList();
-
-        log.info("agentList : " + agentList);
+        List<AgentAuth> agentList = agentService.selectAgentList(custId);
 
         return agentList;
     }
@@ -41,6 +38,7 @@ public class AgentController {
     @GetMapping("/agentStatus")
     @ResponseBody
     public List<AgentMon> getAgentStatus(Agent agent) {
+        log.info("잘들어옴?");
         List<AgentMon> agentStatus = agentService.selectAgentStatus(agent);
 
         return agentStatus;
@@ -63,15 +61,14 @@ public class AgentController {
     }
 
 
-
     // 상담원 등록
     @PostMapping("/save")
     public String addAgent() {
         try {
             // 상담원 등록 로직
-            AgentAuth agentAuth = new AgentAuth("auth1001", "userpass", "1001password", "1001");
 
-            int result = agentService.addAgent(agentAuth);
+
+            // int result = agentService.addAgent(agent);
 
             // 리다이렉트 로직
             return "redirect:/manager/agent";

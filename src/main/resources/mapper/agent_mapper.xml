@@ -12,11 +12,25 @@
         <result property="agentName" column="username"/>
     </resultMap>
 
+    <!-- 상담원 정보 테이블 -->
     <resultMap id="Agent" type="Agent">
-        <id property="agentId" column="id"/>
-        <result property="agentName" column="name"/>
-        <result property="agentPw" column="password"/>
-        <result property="ccode" column="ccode"/>
+        <!-- ID 필드 (PK) -->
+        <id property="agtNo" column="AGT_NO"/>
+        <!-- 상담원 정보 매핑 -->
+        <result property="agtId" column="AGT_ID"/>
+        <result property="custId" column="CUST_ID"/>
+        <result property="agtPw" column="AGT_PW"/>
+        <result property="agtExt" column="AGT_EXT"/>
+        <result property="agtName" column="AGT_NAME"/>
+        <result property="agtGroup" column="AGT_GROUP"/>
+        <result property="agtTeam" column="AGT_TEAM"/>
+        <result property="agtAuth" column="AGT_AUTH"/>
+        <result property="phonePw" column="PHONE_PW"/>
+        <result property="enrollDate" column="ENROLL_DATE"/>
+        <result property="unrollDate" column="UNROLL_DATE"/>
+        <result property="useAfter" column="USE_AFTER"/>
+        <result property="useCallBack" column="USE_CALLBACK"/>
+        <result property="state" column="STATE"/>
     </resultMap>
 
     <!-- 상담원 이벤트 로그 -->
@@ -53,11 +67,6 @@
         <result property="resetTime" column="RESET_TIME"/>
     </resultMap>
 
-    <!-- 상담원 리스트 조회 -->
-    <select id="selectAgentList" resultMap="AgentAuth">
-        SELECT *
-        FROM ps_auths;
-    </select>
     <!-- 상담원 상태 조회 (모니터링) -->
     <select id="selectAgentStatus" parameterType="Agent" resultMap="AgentMon" >
         SELECT *
@@ -65,27 +74,72 @@
         WHERE CUST_ID = #{ccode};
     </select>
 
-    <!-- 상담원 등록 -->
-    <insert id="insertAgent" parameterType="AgentAuth">
-        INSERT INTO ps_auths(id, auth_type, password, username)
-        VALUES (#{agentId}, #{authType}, #{agentPw}, #{agentName});
-    </insert>
-
-    <!-- 상담원 조회 -->
-    <select id="selectAgent" parameterType="Agent" resultMap="Agent">
-        SELECT *
-        FROM agent
-        WHERE id = #{agentId} and password = #{agentPw} and ccode = #{ccode};
-    </select>
-    
     <!-- 현재 상담원 상태 조회 -->
     <select id="currentAgentEvent" parameterType="String" resultMap="AgentEventLog">
         SELECT *
         FROM agent_log
         WHERE AGENT_EXT = #{agentExt}
-        AND TIME_END IS NULL
+          AND TIME_END IS NULL
         ORDER BY TIME_START DESC
-        LIMIT 1;
+            LIMIT 1;
+    </select>
+
+    <!-- 상담원 리스트 조회 (상담원 관리 메뉴)-->
+    <select id="selectAgentList" parameterType="String" resultMap="Agent">
+        SELECT *
+        FROM crm_agent
+        WHERE CUST_ID = #{custId};
+    </select>
+
+    <!-- 상담원 등록 -->
+    <insert id="addAgent" parameterType="Agent" useGeneratedKeys="true" keyProperty="agtNo">
+        INSERT INTO crm_agent(AGT_ID,
+                              CUST_ID,
+                              AGT_PW,
+                              AGT_EXT,
+                              AGT_NAME,
+                              AGT_GROUP,
+                              AGT_TEAM,
+                              AGT_AUTH,
+                              USE_AFTER,
+                              USE_CALLBACK)
+        VALUES (#{agtId},
+                #{custId},
+                #{agtPw},
+                #{agtExt},
+                #{agtName},
+                #{agtGroup},
+                #{agtTeam},
+                #{agtAuth},
+                #{useAfter},
+                #{useCallBack});
+    </insert>
+    <update id="updateAgentId" parameterType="Agent">
+        UPDATE crm_agent
+        SET AGT_ID = #{agtId}
+        WHERE AGT_NO = #{agtNo};
+    </update>
+
+    <!-- 상담원 정보 수정용 -->
+    <update id="updateAgent" parameterType="Agent">
+        UPDATE crm_agent
+        SET AGT_ID = #{agtId},
+            AGT_PW = #{agtPw},
+            AGT_EXT = #{agtExt},
+            AGT_NAME = #{agtName},
+            AGT_GROUP = #{agtGroup},
+            AGT_TEAM = #{agtTeam},
+            AGT_AUTH = #{agtAuth},
+            USE_AFTER = #{useAfter},
+            USE_CALLBACK = #{useCallBack}
+        WHERE AGT_NO = #{agtNo};
+    </update>
+
+    <!-- 상담원 조회 (로그인 용)-->
+    <select id="selectAgent" parameterType="Agent" resultMap="Agent">
+        SELECT *
+        FROM crm_agent
+        WHERE AGT_ID = #{agtId} and AGT_PW = #{agtPw} and CUST_ID = #{custId};
     </select>
 
     <!-- 상담원 로그인/아웃 이벤트 등록 -->

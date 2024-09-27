@@ -80,6 +80,18 @@
             flex: 1;
         }
 
+        .call-chart-spanWrap{
+            display: flex;
+            justify-content: start;
+            width: 100%;
+        }
+
+        .cmg-call-chart span {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333333;
+        }
+
         /* 차트 canvas는 부모 요소의 크기를 따라감 */
         .myDonutChart-box {
             height: 300px;

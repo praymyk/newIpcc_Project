@@ -10,20 +10,6 @@
     <!-- css 미리보기용 지정 -->
     <link rel="stylesheet" href="../../../static/css/crm/crm-callmanagement/content-a.css">
 
-    <style>
-        /* 전체 배경 및 폰트 설정 */
-        body {
-            background-color: #F9F9F9;
-            font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            color: #333333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-    </style>
 </head>
 <body>
     <div class="cmg-content-a" th:fragment="content-a">
@@ -51,6 +37,9 @@
             </div>
 
             <div class="cmg-call-chart">
+                <div class="call-chart-spanWrap">
+                    <span>전화 연결 현황</span>
+                </div>
                 <div class="myDonutChart-box">
                     <canvas id="myDonutChart"></canvas>
                 </div>

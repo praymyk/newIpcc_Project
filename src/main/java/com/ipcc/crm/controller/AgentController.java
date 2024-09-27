@@ -1,5 +1,6 @@
 package com.ipcc.crm.controller;
 
+import com.ipcc.common.model.dto.agent.Agent;
 import com.ipcc.common.model.dto.agent.AgentEventLog;
 import com.ipcc.manager.model.dto.agent.AgentMon;
 import com.ipcc.crm.service.AgentService;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller("crmAgentController")
-@RequestMapping("/crm/agent")
+@RequestMapping("/crm")
 public class AgentController {
 
     @Autowired
@@ -22,9 +23,9 @@ public class AgentController {
     }
 
     // 현재 상담원 상태 조회용 메서드
-    @PostMapping("/getCurrentStatus")
+    @PostMapping("agent/getCurrentStatus")
     @ResponseBody
-    public ResponseEntity<?> getAgentStatus(@RequestParam("agentExt") String agentExt){
+    public ResponseEntity<?> getAgentStatus(@RequestParam("agentExt") String agentExt) {
         // 상담원 상태 조회
         if(agentExt == null || agentExt.equals("")){
             return ResponseEntity.badRequest().build();
@@ -34,7 +35,7 @@ public class AgentController {
     }
 
     // 상담원 이벤트 업데이트 용 메서드
-    @PostMapping("/updateAgentStatusLog")
+    @PostMapping("agent/updateAgentStatusLog")
     @ResponseBody
     public String updateAgentStatusLog(AgentEventLog agentEventLog) {
 
@@ -56,7 +57,7 @@ public class AgentController {
     }
 
     // 상담원 로그인 상태 업데이트 용 메소드
-    @PostMapping("/updateAgentLoginStatus")
+    @PostMapping("agent/updateAgentLoginStatus")
     @ResponseBody
     public String updateAgentLoginStatus(AgentEventLog agentEventLog, @RequestParam("currentStatus") String currentStatus) {
         log.info("currentStatus: {}", currentStatus);
@@ -88,7 +89,7 @@ public class AgentController {
     }
 
     // 상담원 로그아웃 상태 업데이트 용 메소드
-    @PostMapping("/updateAgentLogoutStatus")
+    @PostMapping("agent/updateAgentLogoutStatus")
     @ResponseBody
     public String updateAgentLogOutStatus(AgentEventLog agentEventLog) {
 
@@ -103,5 +104,45 @@ public class AgentController {
 
         int result = agentService.insertAgentLogOutEvent(agentEventLog, agentMon);
         return (result > 0) ? "상담원 상태종료 업데이트 성공" : "상담원 상태 종료 업데이트 실패";
+    }
+
+    // 운영관리 - 상담원 관리 - 상담원 상세 정보 저장용 메소드
+    @PostMapping("management/addAgentInfo")
+    @ResponseBody
+    public String saveAgentInfo(@RequestBody Agent agent) {
+        // 1 . input checkbox 값 테이블 컬럼에 맞게 변환
+        // 관리자 권한 0: 일반, 1: 관리자
+        agent.setAgtAuth("true".equals(agent.getAgtAuth()) ? "1" : "0");
+        // 콜백 사용 여부 Y: 사용, N: 미사용
+        agent.setUseCallBack("true".equals(agent.getUseCallBack()) ? "Y" : "N");
+        // 자동 후처리 사용 여부 Y: 사용, N: 미사용
+        agent.setUseAfter("true".equals(agent.getUseAfter()) ? "Y" : "N");
+
+        try {
+            agentService.saveAgentWithId(agent);
+            return "상담원 상세 정보 저장 성공";
+        } catch (Exception e) {
+            log.error("상담원 저장 실패", e);
+            return "상담원 상세 정보 저장 실패";
+        }
+    }
+
+    // 운영관리 - 상담원 관리 - 상담원 상세 정보 수정용 메소드
+    @PostMapping("management/updateAgentInfo")
+    @ResponseBody
+    public String updateAgentInfo(@RequestBody Agent agent){
+
+        // 1 . input checkbox 값 테이블 컬럼에 맞게 변환
+        // 관리자 권한 0: 일반, 1: 관리자
+        agent.setAgtAuth("true".equals(agent.getAgtAuth()) ? "1" : "0");
+        // 콜백 사용 여부 Y: 사용, N: 미사용
+        agent.setUseCallBack("true".equals(agent.getUseCallBack()) ? "Y" : "N");
+        // 자동 후처리 사용 여부 Y: 사용, N: 미사용
+        agent.setUseAfter("true".equals(agent.getUseAfter()) ? "Y" : "N");
+
+        // 2. 상담원 상세 정보 저장 - 상담원 테이블에 기존 정보 업데이트
+        int result = agentService.updateAgent(agent);
+
+        return "상담원 상세 정보 수정 성공";
     }
 }

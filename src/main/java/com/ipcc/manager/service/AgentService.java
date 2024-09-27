@@ -22,8 +22,8 @@ public class AgentService {
     }
 
     // 상담원 목록 조회
-    public List<AgentAuth> selectAgentList() {
-        return agentMapper.selectAgentList();
+    public List<AgentAuth> selectAgentList(String agent) {
+        return agentMapper.selectAgentList(agent);
     }
 
     // 상담원 상태 조회 (모니터링)
@@ -37,8 +37,8 @@ public class AgentService {
     }
 
     // 상담원 등록
-    public int addAgent(AgentAuth agentAuth) {
-        return agentMapper.insertAgent(agentAuth);
+    public int addAgent(Agent agent) {
+        return agentMapper.addAgent(agent);
     }
 
     // 상담원 현황 통계 (모니터링) 조회

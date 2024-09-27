@@ -97,6 +97,9 @@ public class MenuController {
             case "ivr-management": // 통계 메뉴
                 contentName = "crm/crm-management/management-ivr :: management-ivr";
                 break;
+            case "trunk-management": // 통계 메뉴
+                contentName = "crm/crm-management/management-trunk :: management-trunk";
+                break;
 
             default:
                 return "crm/crm-counsel/counsel-content :: counsel-content";
