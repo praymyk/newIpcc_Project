@@ -2,10 +2,13 @@ package com.ipcc.manager.controller;
 
 import com.ipcc.common.annotation.ExcelColumn;
 import com.ipcc.common.excel.ExcelUtils;
+import com.ipcc.common.model.dto.agent.Agent;
 import com.ipcc.common.model.dto.agent.AgentAuth;
+import com.ipcc.common.model.dto.page.PageResponse;
 import com.ipcc.manager.service.AgentService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -40,11 +43,20 @@ public class ExcelController {
         // 엑셀 파일 내부에 Sheet 를 하나 생성합니다 (엑셀 파일 하나에는 여러 Sheet가 있을 수 있습니다)
         Sheet sheet = workbook.createSheet("상담원 목록");
 
-        // 임시 업체코드
+        // 임시 업체 코드 및 검색, 정렬 조건
         String custId="test";
+        String searchKeyword = "";
+        String orderBy = "agentId";
+        String orderDirection = "ASC";
+        int pageNumber = 0;
+        int pageSize = 100;
         
         // 엑셀 렌더링에 필요한 DTO를 가져옵니다
-        List<AgentAuth> agentagentList = agentService.selectAgentList(custId);
+        List<Agent> agentList = agentService.selectAgentList(
+                 custId,
+                 searchKeyword,
+                 orderBy,
+                 orderDirection);
 
         // 헤더를 생성합니다
         int rowIndex = 0;
@@ -66,20 +78,20 @@ public class ExcelController {
         }
 
         // 바디에 데이터를 넣어줍니다
-        for (AgentAuth dto : agentagentList) {
+        for (Agent dto : agentList) {
             Row bodyRow = sheet.createRow(rowIndex++);
 
             Cell bodyCell1 = bodyRow.createCell(0);
-            bodyCell1.setCellValue(dto.getAgentId());
+            bodyCell1.setCellValue(dto.getAgtNo());
 
             Cell bodyCell2 = bodyRow.createCell(1);
-            bodyCell2.setCellValue(dto.getAuthType());
+            bodyCell2.setCellValue(dto.getAgtGroup());
 
             Cell bodyCell3 = bodyRow.createCell(2);
-            bodyCell3.setCellValue(dto.getAgentPw());
+            bodyCell3.setCellValue(dto.getAgtPw());
 
             Cell bodyCell4 = bodyRow.createCell(3);
-            bodyCell4.setCellValue(dto.getAgentName());
+            bodyCell4.setCellValue(dto.getAgtName());
         }
 
         // HTTP 응답 헤더 설정
@@ -96,7 +108,7 @@ public class ExcelController {
     public void downloadAgentInfo2(HttpServletResponse response){
 
         String custId = "test";
-        excelUtils.AgentAuthExcelDownload(agentService.selectAgentList(custId), response);
+       // excelUtils.AgentAuthExcelDownload(agentService.selectAgentList(custId), response);
 
 
     }

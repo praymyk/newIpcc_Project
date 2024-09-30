@@ -84,11 +84,58 @@
             LIMIT 1;
     </select>
 
-    <!-- 상담원 리스트 조회 (상담원 관리 메뉴)-->
-    <select id="selectAgentList" parameterType="String" resultMap="Agent">
+    <!-- 상담원 리스트 조회 (상담원 관리 메뉴) -->
+    <select id="selectAgentListByCursor" resultMap="Agent">
         SELECT *
         FROM crm_agent
-        WHERE CUST_ID = #{custId};
+        WHERE CUST_ID = #{custId}
+
+        <!-- 검색어가 있을 경우 -->
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (AGT_NAME LIKE CONCAT('%', #{searchKeyword}, '%')
+            OR AGT_EXT LIKE CONCAT('%', #{searchKeyword}, '%'))
+        </if>
+
+        <!-- 커서 기반 페이징: 커서 이후 데이터를 제한하여 가져오기 -->
+        <if test="lastId != null">
+            AND AGT_NO > #{lastId}  <!-- 커서 이후 데이터 가져오기 -->
+        </if>
+
+        <!-- 정렬 기준 적용 -->
+        ORDER BY
+        <choose>
+            <!-- 검색 조건이 없을 경우 AGT_NO 기본 오름차순 정렬 -->
+            <when test="orderBy == null or orderBy == ''">
+                AGT_NO ASC
+            </when>
+            <!-- 검색 조건이 있을 경우 선택한 필드로 정렬 -->
+            <when test="orderBy == 'agtName'"> AGT_NAME </when>
+            <when test="orderBy == 'agtExt'"> AGT_EXT </when>
+            <when test="orderBy == 'agtGroup'"> AGT_GROUP </when>
+            <when test="orderBy == 'agtTeam'"> AGT_TEAM </when>
+            <when test="orderBy == 'agtAuth'"> AGT_AUTH </when>
+            <when test="orderBy == 'useAfter'"> USE_AFTER </when>
+            <when test="orderBy == 'useCallBack'"> USE_CALLBACK </when>
+            <otherwise> AGT_NO </otherwise>  <!-- 기본적으로 AGT_NO 사용 -->
+        </choose>
+
+        <!-- 오름차순 또는 내림차순 적용 -->
+        <choose>
+            <when test="orderDirection != null and orderDirection == 'ASC'"> ASC </when>
+            <otherwise> DESC </otherwise> <!-- 기본값은 내림차순 -->
+        </choose>
+
+        LIMIT #{limit}
+    </select>
+    <!-- 상담원 리스트 숫자 조회 (카운팅용) -->
+    <select id="countAgentList" resultType="int">
+        SELECT COUNT(*)
+        FROM crm_agent
+        WHERE CUST_ID = #{custId}
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (AGT_NAME LIKE CONCAT('%', #{searchKeyword}, '%')
+            OR AGT_EXT LIKE CONCAT('%', #{searchKeyword}, '%'))
+        </if>
     </select>
 
     <!-- 상담원 등록 -->

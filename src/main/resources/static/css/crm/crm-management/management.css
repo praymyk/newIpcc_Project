@@ -79,7 +79,7 @@
 /*
     테이블 sort 스타일
 */
-thead th.sortable::after {
+thead th.sortable.asc::after {
     content: '▲';
     font-size: 12px;
     margin-left: 8px;
@@ -90,7 +90,11 @@ thead th.sortable::after {
 
 thead th.sortable.desc::after {
     content: '▼';
+    font-size: 12px;
+    margin-left: 8px;
+    opacity: 0.5;
     transform: rotate(180deg);
+    transition: transform 0.2s ease;
 }
 
 .management-list table th, .management-list table td {
@@ -293,4 +297,41 @@ input:checked + .management-slider:before {
 
 #routing-category {
     min-width: 50px;
+}
+
+/**
+* 페이징 스타일
+*/
+/* 페이징 버튼 기본 스타일 */
+.paging-box {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.paging-box button {
+    border: 1px solid #ddd;
+    background-color: white;
+    color: black;
+    padding: 10px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.paging-box button.active {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.paging-box button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.paging-box button:disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
 }

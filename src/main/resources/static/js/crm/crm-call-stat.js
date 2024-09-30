@@ -1,3 +1,4 @@
+//crm-call-stat.js
 // 선택한 카테고리가 active 상태가 되도록 하는 스크립트
 const callStatCategoryItems = document.querySelectorAll('.call-stat-category-item');
 

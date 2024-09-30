@@ -2,6 +2,7 @@ package com.ipcc.crm.controller;
 
 import com.ipcc.common.model.dto.agent.Agent;
 import com.ipcc.common.model.dto.agent.AgentEventLog;
+import com.ipcc.common.model.dto.page.PageResponse;
 import com.ipcc.manager.model.dto.agent.AgentMon;
 import com.ipcc.crm.service.AgentService;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @Controller("crmAgentController")
@@ -104,6 +107,53 @@ public class AgentController {
 
         int result = agentService.insertAgentLogOutEvent(agentEventLog, agentMon);
         return (result > 0) ? "상담원 상태종료 업데이트 성공" : "상담원 상태 종료 업데이트 실패";
+    }
+
+    // 운영관리 - 상담원 관리 - 상담원 리스트 조회용 메소드
+    @GetMapping("/management/agentList")
+    @ResponseBody
+    public List<Agent> getAgentList(
+            @RequestParam String custId,
+            @RequestParam(required = false) String searchKeyword,
+            @RequestParam(required = false, defaultValue = "agtName") String orderBy,
+            @RequestParam(required = false, defaultValue = "ASC") String orderDirection ) {
+
+        // 서비스 호출 (검색어, 정렬 조건, 페이징 처리)
+        List<Agent> agentList = agentService.selectAgentList(
+                custId,
+                searchKeyword,
+                orderBy,
+                orderDirection);
+
+        return agentList;
+    }
+
+
+    // 운영관리 - 상담원 관리 - 상담원 리스트 조회용 메소드
+    @GetMapping("/management/agentList2")
+    @ResponseBody
+    public PageResponse<Agent> getAgentListByCursor(
+            @RequestParam String custId,
+            @RequestParam(required = false) String searchKeyword,
+            @RequestParam(required = false) String orderBy,
+            @RequestParam(required = false) String orderDirection,
+            @RequestParam(required = false) Long lastId,   // 커서 값 (이전 페이지의 마지막 ID)
+            @RequestParam(required = false, defaultValue = "10") int limit, // 페이지당 표시할 항목 수
+            @RequestParam(required = false, defaultValue = "1") int pageNumber){ // 페이지 번호)
+
+        // 페이지 번호에 따른 커서를 계산하여 데이터를 조회
+        Long cursor = lastId == null ? calculateCursor(pageNumber, limit) : lastId;
+        List<Agent> agentList = agentService.selectAgentListByCursor(custId, searchKeyword, orderBy, orderDirection, cursor , limit);
+
+        boolean hasNext = agentList.size() == limit; // 다음 페이지가 있는지 확인
+        Long nextCursor = hasNext ? Long.valueOf(agentList.get(agentList.size() - 1).getAgtNo()) : null; // 다음 커서값 설정
+
+        return new PageResponse<>(agentList, nextCursor, hasNext, pageNumber, limit);
+    }
+    // 커서를 계산하는 함수
+    private Long calculateCursor(int pageNumber, int limit) {
+
+        return (long) (pageNumber - 1) * limit;
     }
 
     // 운영관리 - 상담원 관리 - 상담원 상세 정보 저장용 메소드

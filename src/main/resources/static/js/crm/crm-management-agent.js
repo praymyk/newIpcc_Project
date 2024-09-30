@@ -1,48 +1,132 @@
+//crm-management-agent.js
 // 페이지 로드 시 상담원 리스트 조회
-$(document).ready(function () {
-    console.log('crm-management-agent.js');
-    getAgentList();
-});
+
+// 상담원 리스트 조회 시 기본 정렬 기준 및 방향
+var currentOrderBy = 'agtNo';  // 기본 정렬 기준 (이름)
+var currentOrderDirection = 'ASC'; // 기본 정렬 방향 (오름차순)
+var searchKeyword = ''; // 검색어 초기화
+var currentPage = 2;
+var hasNextPage = true;
+
+// 상담원 리스트 조회
+getAgentList(searchKeyword, currentOrderBy, currentOrderDirection, 1);
 
 // 자동 후처리 일괄 제어
 $('#toggleAutoProcess').on('click', function () {
     const isChecked = $('.after-process').first().is(':checked'); // 첫 번째 체크박스 상태 확인
     $('.after-process').prop('checked', !isChecked); // 모든 자동 후처리 체크박스 상태 변경
 });
-
 // 콜백 일괄 제어
 $('#toggleCallback').on('click', function () {
     const isChecked = $('.callback-process').first().is(':checked'); // 첫 번째 체크박스 상태 확인
     $('.callback-process').prop('checked', !isChecked); // 모든 콜백 체크박스 상태 변경
 });
 
-// 상담원 검색어 입력
-document.getElementById('searchInput').addEventListener('keyup', function () {
-    var searchKeyword = this.value.toLowerCase();
+// 검색어 입력 시마다 검색을 수행하는 이벤트 핸들러
+$('#searchInput').on('input', function() {
+    searchKeyword = $(this).val();  // 검색어를 가져옴
+    getAgentList(searchKeyword, currentOrderBy, currentOrderDirection, 1); // 검색 및 정렬된 리스트 요청
+});
+// 테이블 헤더 클릭 시 정렬을 수행하는 이벤트 핸들러
+$('.sortable').on('click', function() {
+    var column = $(this).text().trim();  // 클릭한 컬럼을 기준으로 정렬
+    var orderBy;
+
+    // 컬럼명에 따라 서버에서 사용할 필드명을 설정
+    switch (column) {
+        case '이름':
+            orderBy = 'agtName';
+            break;
+        case '내선':
+            orderBy = 'agtExt';
+            break;
+        case '상담그룹':
+            orderBy = 'agtGroup';
+            break;
+        case '상담팀':
+            orderBy = 'agtTeam';
+            break;
+        case '권한':
+            orderBy = 'agtAuth';
+            break;
+        case '자동 후처리':
+            orderBy = 'useAfter';
+            break;
+        case '콜백':
+            orderBy = 'useCallBack';
+            break;
+        default:
+            orderBy = 'agtNo'; // 기본값
+    }
+    // 오름차순/내림차순 토글
+    currentOrderDirection = (currentOrderBy === orderBy && currentOrderDirection === 'ASC') ? 'DESC' : 'ASC';
+    currentOrderBy = orderBy;
+    // 검색어와 함께 정렬된 리스트 요청
+    searchKeyword = $('#searchInput').val();
+    getAgentList(searchKeyword, currentOrderBy, currentOrderDirection, 1);
 });
 
+
+
 /*******
- 상담원 리스트 조회 기능
-     ********/
-function getAgentList(searchKeyword) {
+상담원 리스트 조회 기능
+********/
+function getAgentList(searchKeyword,
+                      currentOrderBy,
+                      currentOrderDirection,
+                      pageNumber) {
+
+    if (!hasNextPage) return; // 다음 페이지가 없으면 더 이상 요청하지 않음
+
     $.ajax({
         type: 'GET',
-        url: '/Ipcc/manager/agent/agentList', // manager/controller/AgentController.java
+        url: '/Ipcc/crm/management/agentList2',
         data: {
-            custId: 'meta',
-            searchKeyword: searchKeyword
+            custId: sessionCustId, // crm-main.js 에서 세션으로 받아온 값 사용
+            searchKeyword: searchKeyword,
+            orderBy: currentOrderBy,
+            orderDirection: currentOrderDirection,
+            pageNumber: pageNumber,  // 페이지 번호 추가
+            pageSize: 10             // 페이지당 표시 항목 수
         },
         success: function (response) {
-            // 객체 형태로 받아서 테이블 렌더 함수에 사용
-            var agentList = response;
+            // 응답에서 커서와 다음 페이지 여부를 받아옴
+            currentPage = response.currentPage;
+            hasNextPage = response.hasNext;
 
+            console.log("currentPage:", currentPage);
+            console.log("hasNextPage:", hasNextPage);
+
+            var agentList = response.dataList;
+            // 객체 형태로 받아서 테이블 렌더 함수에 사용
             agentTable(agentList);
+            updatePagination(response); // 페이징 UI 업데이트
         },
         error: function (error) {
             console.log(error);
         }
     });
 };
+
+// 페이징 UI 업데이트 함수
+function updatePagination(response) {
+    const paginationBox = document.querySelector('.paging-box');
+    paginationBox.innerHTML = '';
+    console.log("작동함?");
+    console.log("currentPage:", currentPage);
+    console.log("hasNextPage:", hasNextPage);
+
+    // 페이지 번호 기반 페이징 버튼 생성
+    for (let i = 1; i <= response.totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        pageButton.onclick = () => getAgentList(searchKeyword, currentOrderBy, currentOrderDirection, i);
+        if (i === response.currentPage) {
+            pageButton.classList.add('active');
+        }
+        paginationBox.appendChild(pageButton);
+    }
+}
 
 // 테이블에 상담원 노드 데이터를 표시
 function agentTable(agentList) {
@@ -120,7 +204,8 @@ function addAgentInfo(formData) {
             // 성공 콜백
             alert('상담원 정보가 성공적으로 저장되었습니다.');
             // 추가적인 처리 (리스트 갱신)
-            getAgentList();
+            getAgentList(searchKeyword, currentOrderBy, currentOrderDirection, pageNumber, pageSize);
+            console.log(agentList);
         },
         error: function (xhr, status, error) {
             // 실패 콜백
@@ -167,7 +252,7 @@ function updateAgentInfo() {
         data: JSON.stringify(formData),
         success: function(response) {
             alert('상담원 정보가 성공적으로 수정되었습니다.');
-            getAgentList();
+            getAgentList(searchKeyword, currentOrderBy, currentOrderDirection, pageNumber, pageSize);
         },
         error: function(xhr, status, error) {
             // 실패 콜백
@@ -176,35 +261,6 @@ function updateAgentInfo() {
         }
     });
 }
-
-
-
-
-/****************
- 테이블 정렬 기능 ( sort 기능은 DB 조회시 쿼리문으로 해결해야 해서 삭제 해야 할 수 잇음 )
- 클래스 토글만 남겨서 아이콘 전환만 유지할 것.
- ****************/
-document.querySelectorAll('th.sortable').forEach(header => {
-    header.addEventListener('click', () => {
-        // 정렬 상태 업데이트
-        header.classList.toggle('desc');
-        getAgentList();
-
-        $('#custId').val(custId);  // 세션에서 가져온 값 사용
-        $('#agtId').val(custId);
-        $('#agtExt').val('미할당');
-        $('#agtName').val('신규');
-
-        $('#agentCid').val('미할당');
-        $('#agtGroup').val('');
-        $('#agtTeam').val('');
-        $('#agentTel').val('');
-        $('#agentIp').val('신규');
-
-        $('#callBackStatus').val(false);
-        $('#afterStatus').val(false);
-    });
-});
 
 // 노드 클릭 시 상세 정보 표시
 function showNodeDetails(node) {

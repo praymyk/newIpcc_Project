@@ -9,25 +9,13 @@
         </encoder>
     </appender>
 
-    <appender name="console-infolog" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <charset>UTF-8</charset>
-            <Pattern>%d %5p %m%n</Pattern>
-        </encoder>
-    </appender>
-
-    <!-- Logger for specific JDBC loggers -->
-    <logger name="jdbc.sqlonly" level="INFO">
-        <appender-ref ref="console-infolog" />
-    </logger>
-
-    <logger name="jdbc.resultsettable" level="INFO">
-        <appender-ref ref="console-infolog" />
-    </logger>
-
-    <!-- Disable specific JDBC logs -->
-    <logger name="jdbc.resultset" level="ERROR"/>
-    <logger name="jdbc.audit" level="ERROR"/>
+    <!-- JDBC 관련 로그 억제 -->
+    <logger name="jdbc.sqltiming" level="ERROR" />
+    <logger name="jdbc.sqlonly" level="ERROR" />
+    <logger name="jdbc.resultset" level="ERROR" />
+    <logger name="jdbc.resultsettable" level="ERROR" />
+    <logger name="jdbc.audit" level="ERROR" />
+    <logger name="jdbc" level="ERROR" /> <!-- 모든 jdbc.* 로그 레벨 제어 -->
 
     <!-- Root Logger -->
     <root level="INFO">

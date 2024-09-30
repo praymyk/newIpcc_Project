@@ -1,4 +1,4 @@
-
+    // crm-management.js
     /************
     * 통계 메뉴 토글 기능
     **************/
@@ -12,45 +12,37 @@
     $('#sts-toggle-btn-hidden').on('click', function() {
         $('.sub-menu').removeClass('sts-hidden'); // .sub-menu에서 sts-hidden 클래스 제거
         $('#sts-toggle-btn-hidden').addClass('sts-hidden'); // 버튼 숨기도록 sts-hidden 추가
-        console.log("눌림");
     });
 
-
     /****************
-     테이블 정렬 기능 ( sort 기능은 DB 조회시 쿼리문으로 해결해야 해서 삭제 해야 할 수 잇음 )
-    클래스 토글만 남겨서 아이콘 전환만 유지할 것.
+     테이블 정렬 기능
+        토클 css 애니메이션 추가 (db 조회는 각 설정 화면의 js에서 처리)
     ****************/
     document.querySelectorAll('th.sortable').forEach(header => {
         header.addEventListener('click', () => {
-            const table = header.closest('table');
-            const tbody = table.querySelector('tbody');
-            const index = Array.prototype.indexOf.call(header.parentNode.children, header);
-            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            // 클릭된 헤더의 기존 상태 확인 (desc가 있으면 내림차순 상태)
             const isDescending = header.classList.contains('desc');
-
-            // 다른 열의 정렬 상태 초기화
-            table.querySelectorAll('th.sortable').forEach(th => th.classList.remove('desc'));
-
-            // 행 정렬
-            rows.sort((rowA, rowB) => {
-                const cellA = rowA.children[index].innerText;
-                const cellB = rowB.children[index].innerText;
-
-                // 숫자 열의 경우 숫자로 변환
-                const a = isNaN(cellA) ? cellA : parseFloat(cellA);
-                const b = isNaN(cellB) ? cellB : parseFloat(cellB);
-
-                if (a < b) return isDescending ? 1 : -1;
-                if (a > b) return isDescending ? -1 : 1;
-                return 0;
+            const isAscending = header.classList.contains('asc');
+            // 모든 헤더에서 'desc' 및 'asc' 클래스 제거
+            document.querySelectorAll('th.sortable').forEach(th => {
+                th.classList.remove('desc', 'asc');
             });
 
-            // 정렬된 행 추가
-            rows.forEach(row => tbody.appendChild(row));
-            // 정렬 상태 업데이트
-            header.classList.toggle('desc', !isDescending);
+            // 상태에 따라 desc 또는 asc 클래스를 토글
+            if (isDescending) {
+                header.classList.remove('desc');
+                header.classList.add('asc');  // 내림차순에서 오름차순으로 변경
+            } else if (isAscending) {
+                header.classList.remove('asc');
+                header.classList.add('desc'); // 오름차순에서 내림차순으로 변경
+            } else {
+                header.classList.add('desc'); // 기본적으로 내림차순으로 시작
+            }
         });
     });
+
+
 
     /************
      서브 메뉴 클릭 이벤트

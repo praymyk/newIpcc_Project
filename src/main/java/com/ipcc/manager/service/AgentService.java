@@ -1,9 +1,9 @@
 package com.ipcc.manager.service;
 
+import com.ipcc.common.model.dto.page.PageResponse;
 import com.ipcc.manager.model.dto.agent.AgentListStatus;
 import com.ipcc.common.mapper.AgentMapper;
 import com.ipcc.common.model.dto.agent.Agent;
-import com.ipcc.common.model.dto.agent.AgentAuth;
 import com.ipcc.manager.model.dto.agent.AgentMon;
 import com.ipcc.manager.model.dto.agent.TodayCallStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +22,17 @@ public class AgentService {
     }
 
     // 상담원 목록 조회
-    public List<AgentAuth> selectAgentList(String agent) {
-        return agentMapper.selectAgentList(agent);
+    public List<Agent> selectAgentList(
+            String custId,
+            String searchKeyword,
+            String orderBy,
+            String orderDirection) {
+
+        return agentMapper.selectAgentList(
+                custId,
+                searchKeyword,
+                orderBy,
+                orderDirection);
     }
 
     // 상담원 상태 조회 (모니터링)

@@ -3,6 +3,7 @@ package com.ipcc.common.mapper;
 import com.ipcc.common.model.dto.agent.Agent;
 import com.ipcc.common.model.dto.agent.AgentAuth;
 import com.ipcc.common.model.dto.agent.AgentEventLog;
+import com.ipcc.common.model.dto.page.PageResponse;
 import com.ipcc.manager.model.dto.agent.AgentListStatus;
 import com.ipcc.manager.model.dto.agent.AgentMon;
 import com.ipcc.manager.model.dto.agent.TodayCallStatus;
@@ -13,8 +14,22 @@ import java.util.List;
 
 @Mapper
 public interface AgentMapper {
-    // 상담원 목록 조회
-    List<AgentAuth> selectAgentList(String custId);
+    // 상담원 목록 조회 검색 + 정렬 + 페이징
+    List<Agent> selectAgentList(String custId,
+                                        String searchKeyword,
+                                        String orderBy,
+                                        String orderDirection);
+
+    // Cursor 기반 상담원 목록 조회
+    List<Agent> selectAgentListByCursor(String custId,
+                                        String searchKeyword,
+                                        String orderBy,
+                                        String orderDirection,
+                                        Long lastId,
+                                        int limit);
+
+    // 상담원 리스트 페이징 처리를 위한 카운팅
+    int countAgentList(String custId, String searchKeyword);
 
     // 상담원 등록
     int addAgent(Agent agent);
@@ -50,4 +65,6 @@ public interface AgentMapper {
 
     // 상담원 정보 업데이트
     int updateAgent(Agent agent);
+
+
 }

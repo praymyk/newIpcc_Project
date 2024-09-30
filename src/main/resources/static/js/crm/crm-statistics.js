@@ -1,3 +1,4 @@
+//crm-statistics.js
 var myStatisticsChart = undefined;
 
 // 색상 팔레트 배열 정의

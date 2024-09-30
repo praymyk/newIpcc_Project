@@ -8,6 +8,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("crmAgentService")
 public class AgentService {
 
@@ -66,6 +68,19 @@ public class AgentService {
         return agentMapper.currentAgentEvent(agentExt);
     }
 
+
+    // 운영관리 - 상담원 리스트 조회 (검색 + 정렬 + 페이징)
+    public List<Agent> selectAgentList(String custId,
+                                               String searchKeyword,
+                                               String orderBy,
+                                               String orderDirection) {
+
+        // 전체 아이템 수 조회
+        int totalItems = agentMapper.countAgentList(custId, searchKeyword);
+
+        return agentMapper.selectAgentList(custId, searchKeyword, orderBy, orderDirection);
+    }
+
     @Transactional // 트랜잭션을 적용하여 두 작업을 원자적으로 처리
     public void saveAgentWithId(Agent agent) {
         // 1. 상담원 정보 INSERT
@@ -90,6 +105,17 @@ public class AgentService {
     @Transactional
     public int updateAgent(Agent agent) {
         return agentMapper.updateAgent(agent);
+    }
+
+
+    // Cusror 기반 상담원 리스트 조회
+    public List<Agent> selectAgentListByCursor(String custId,
+                                               String searchKeyword,
+                                               String orderBy,
+                                               String orderDirection,
+                                               Long lastId,
+                                               int limit) {
+        return agentMapper.selectAgentListByCursor(custId, searchKeyword, orderBy, orderDirection, lastId, limit);
     }
 }
 

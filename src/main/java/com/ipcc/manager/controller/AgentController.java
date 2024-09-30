@@ -24,16 +24,6 @@ public class AgentController {
         this.agentService = agentService;
     }
 
-    // 상담원 목록 조회
-    @GetMapping("/agentList")
-    @ResponseBody
-    public List<AgentAuth> getAgentList(String custId)  {
-
-        List<AgentAuth> agentList = agentService.selectAgentList(custId);
-
-        return agentList;
-    }
-
     // 상담원 상태 조회 (모니터링)
     @GetMapping("/agentStatus")
     @ResponseBody
