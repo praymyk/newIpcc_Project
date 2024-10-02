@@ -73,12 +73,13 @@ public class AgentService {
     public List<Agent> selectAgentList(String custId,
                                                String searchKeyword,
                                                String orderBy,
-                                               String orderDirection) {
-
-        // 전체 아이템 수 조회
-        int totalItems = agentMapper.countAgentList(custId, searchKeyword);
-
-        return agentMapper.selectAgentList(custId, searchKeyword, orderBy, orderDirection);
+                                               String orderDirection,
+                                               int offset,
+                                               int pageSize) {
+        return agentMapper.selectAgentList(custId, searchKeyword, orderBy, orderDirection, offset, pageSize);
+    }
+    public int countAgentList(String custId, String searchKeyword) {
+        return agentMapper.countAgentList(custId, searchKeyword);
     }
 
     @Transactional // 트랜잭션을 적용하여 두 작업을 원자적으로 처리
@@ -107,15 +108,5 @@ public class AgentService {
         return agentMapper.updateAgent(agent);
     }
 
-
-    // Cusror 기반 상담원 리스트 조회
-    public List<Agent> selectAgentListByCursor(String custId,
-                                               String searchKeyword,
-                                               String orderBy,
-                                               String orderDirection,
-                                               Long lastId,
-                                               int limit) {
-        return agentMapper.selectAgentListByCursor(custId, searchKeyword, orderBy, orderDirection, lastId, limit);
-    }
 }
 

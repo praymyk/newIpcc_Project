@@ -85,7 +85,7 @@
     </select>
 
     <!-- 상담원 리스트 조회 (상담원 관리 메뉴) -->
-    <select id="selectAgentListByCursor" resultMap="Agent">
+    <select id="selectAgentList" resultMap="Agent">
         SELECT *
         FROM crm_agent
         WHERE CUST_ID = #{custId}
@@ -94,11 +94,6 @@
         <if test="searchKeyword != null and searchKeyword != ''">
             AND (AGT_NAME LIKE CONCAT('%', #{searchKeyword}, '%')
             OR AGT_EXT LIKE CONCAT('%', #{searchKeyword}, '%'))
-        </if>
-
-        <!-- 커서 기반 페이징: 커서 이후 데이터를 제한하여 가져오기 -->
-        <if test="lastId != null">
-            AND AGT_NO > #{lastId}  <!-- 커서 이후 데이터 가져오기 -->
         </if>
 
         <!-- 정렬 기준 적용 -->
@@ -124,8 +119,7 @@
             <when test="orderDirection != null and orderDirection == 'ASC'"> ASC </when>
             <otherwise> DESC </otherwise> <!-- 기본값은 내림차순 -->
         </choose>
-
-        LIMIT #{limit}
+        LIMIT #{pageSize} OFFSET #{offset}
     </select>
     <!-- 상담원 리스트 숫자 조회 (카운팅용) -->
     <select id="countAgentList" resultType="int">

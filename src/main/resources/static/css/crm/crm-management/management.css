@@ -79,6 +79,10 @@
 /*
     테이블 sort 스타일
 */
+.sortable {
+    cursor: pointer;
+}
+
 thead th.sortable.asc::after {
     content: '▲';
     font-size: 12px;

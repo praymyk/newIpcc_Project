@@ -1,4 +1,4 @@
-package com.ipcc.config;
+package com.ipcc.crm.config;
 
 import com.ipcc.common.websocket.MyWebSocketHandler;
 import lombok.extern.slf4j.Slf4j;

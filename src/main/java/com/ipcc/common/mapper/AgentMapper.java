@@ -18,15 +18,9 @@ public interface AgentMapper {
     List<Agent> selectAgentList(String custId,
                                         String searchKeyword,
                                         String orderBy,
-                                        String orderDirection);
-
-    // Cursor 기반 상담원 목록 조회
-    List<Agent> selectAgentListByCursor(String custId,
-                                        String searchKeyword,
-                                        String orderBy,
                                         String orderDirection,
-                                        Long lastId,
-                                        int limit);
+                                        int offset,
+                                        int pageSize);
 
     // 상담원 리스트 페이징 처리를 위한 카운팅
     int countAgentList(String custId, String searchKeyword);
@@ -65,6 +59,4 @@ public interface AgentMapper {
 
     // 상담원 정보 업데이트
     int updateAgent(Agent agent);
-
-
 }

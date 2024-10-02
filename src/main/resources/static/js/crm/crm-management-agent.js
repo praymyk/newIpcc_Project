@@ -3,10 +3,9 @@
 
 // 상담원 리스트 조회 시 기본 정렬 기준 및 방향
 var currentOrderBy = 'agtNo';  // 기본 정렬 기준 (이름)
-var currentOrderDirection = 'ASC'; // 기본 정렬 방향 (오름차순)
+var currentOrderDirection = 'DESC'; // 기본 정렬 방향 (오름차순)
 var searchKeyword = ''; // 검색어 초기화
-var currentPage = 2;
-var hasNextPage = true;
+var pageSize = 10; // 페이지 크기
 
 // 상담원 리스트 조회
 getAgentList(searchKeyword, currentOrderBy, currentOrderDirection, 1);
@@ -59,7 +58,8 @@ $('.sortable').on('click', function() {
             orderBy = 'agtNo'; // 기본값
     }
     // 오름차순/내림차순 토글
-    currentOrderDirection = (currentOrderBy === orderBy && currentOrderDirection === 'ASC') ? 'DESC' : 'ASC';
+    currentOrderDirection = (currentOrderBy === orderBy && currentOrderDirection === 'DESC') ? 'ASC' : 'DESC';
+    console.log(currentOrderDirection);
     currentOrderBy = orderBy;
     // 검색어와 함께 정렬된 리스트 요청
     searchKeyword = $('#searchInput').val();
@@ -76,57 +76,32 @@ function getAgentList(searchKeyword,
                       currentOrderDirection,
                       pageNumber) {
 
-    if (!hasNextPage) return; // 다음 페이지가 없으면 더 이상 요청하지 않음
-
     $.ajax({
         type: 'GET',
-        url: '/Ipcc/crm/management/agentList2',
+        url: '/Ipcc/crm/management/agentList',
         data: {
-            custId: sessionCustId, // crm-main.js 에서 세션으로 받아온 값 사용
-            searchKeyword: searchKeyword,
-            orderBy: currentOrderBy,
-            orderDirection: currentOrderDirection,
+            custId: sessionCustId, // 고객사 코드 : crm-main.js 에서 세션으로 받아온 값 사용
+            searchKeyword: searchKeyword, // 검색어
+            orderBy: currentOrderBy, // 정렬 기준
+            orderDirection: currentOrderDirection, // 정렬 방향
             pageNumber: pageNumber,  // 페이지 번호 추가
-            pageSize: 10             // 페이지당 표시 항목 수
+            pageSize: pageSize // 페이지 크기 추가
         },
         success: function (response) {
-            // 응답에서 커서와 다음 페이지 여부를 받아옴
-            currentPage = response.currentPage;
-            hasNextPage = response.hasNext;
-
-            console.log("currentPage:", currentPage);
-            console.log("hasNextPage:", hasNextPage);
-
-            var agentList = response.dataList;
-            // 객체 형태로 받아서 테이블 렌더 함수에 사용
+            // 객체 형태로 받아서 테이블 렌더 함수에 사
+            var agentList = response.dataList
             agentTable(agentList);
-            updatePagination(response); // 페이징 UI 업데이트
+            console.log(response);
+            var currentPage = response.currentPage;
+            var totalPages = response.totalPages;
+            updatePagination(totalPages, currentPage);
+
         },
         error: function (error) {
             console.log(error);
         }
     });
 };
-
-// 페이징 UI 업데이트 함수
-function updatePagination(response) {
-    const paginationBox = document.querySelector('.paging-box');
-    paginationBox.innerHTML = '';
-    console.log("작동함?");
-    console.log("currentPage:", currentPage);
-    console.log("hasNextPage:", hasNextPage);
-
-    // 페이지 번호 기반 페이징 버튼 생성
-    for (let i = 1; i <= response.totalPages; i++) {
-        const pageButton = document.createElement('button');
-        pageButton.textContent = i;
-        pageButton.onclick = () => getAgentList(searchKeyword, currentOrderBy, currentOrderDirection, i);
-        if (i === response.currentPage) {
-            pageButton.classList.add('active');
-        }
-        paginationBox.appendChild(pageButton);
-    }
-}
 
 // 테이블에 상담원 노드 데이터를 표시
 function agentTable(agentList) {
@@ -172,6 +147,37 @@ function agentTable(agentList) {
             <td colspan="8" style="text-align: center; color: #007aff;">+ 신규 등록</td>
         </tr>
     `);
+}
+
+// 페이지네이션 업데이트 함수
+function updatePagination(totalPages, currentPage) {
+    const paginationBox = document.querySelector('.paging-box');
+    paginationBox.innerHTML = ''; // 기존 페이징 버튼 제거
+
+    // 왼쪽 화살표
+    const prevButton = document.createElement('button');
+    prevButton.textContent = '«';
+    prevButton.classList.add('arrow');
+    prevButton.disabled = currentPage === 1;
+    prevButton.onclick = () => getAgentList(searchKeyword, currentOrderBy, currentOrderDirection, currentPage - 1);
+    paginationBox.appendChild(prevButton);
+
+    // 페이지 번호 버튼
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        pageButton.classList.add(i === currentPage ? 'active' : '');
+        pageButton.onclick = () => getAgentList(searchKeyword, currentOrderBy, currentOrderDirection, i);
+        paginationBox.appendChild(pageButton);
+    }
+
+    // 오른쪽 화살표
+    const nextButton = document.createElement('button');
+    nextButton.textContent = '»';
+    nextButton.classList.add('arrow');
+    nextButton.disabled = currentPage === totalPages;
+    nextButton.onclick = () => getAgentList(searchKeyword, currentOrderBy, currentOrderDirection, currentPage + 1);
+    paginationBox.appendChild(nextButton);
 }
 
 /*

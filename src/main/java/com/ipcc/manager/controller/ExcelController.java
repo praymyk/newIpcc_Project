@@ -48,7 +48,7 @@ public class ExcelController {
         String searchKeyword = "";
         String orderBy = "agentId";
         String orderDirection = "ASC";
-        int pageNumber = 0;
+        int offset = 1;
         int pageSize = 100;
         
         // 엑셀 렌더링에 필요한 DTO를 가져옵니다
@@ -56,7 +56,9 @@ public class ExcelController {
                  custId,
                  searchKeyword,
                  orderBy,
-                 orderDirection);
+                 orderDirection,
+                 offset,
+                 pageSize);
 
         // 헤더를 생성합니다
         int rowIndex = 0;

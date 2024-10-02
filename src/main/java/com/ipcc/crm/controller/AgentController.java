@@ -112,48 +112,32 @@ public class AgentController {
     // 운영관리 - 상담원 관리 - 상담원 리스트 조회용 메소드
     @GetMapping("/management/agentList")
     @ResponseBody
-    public List<Agent> getAgentList(
+    public PageResponse<Agent> getAgentList(
             @RequestParam String custId,
             @RequestParam(required = false) String searchKeyword,
             @RequestParam(required = false, defaultValue = "agtName") String orderBy,
-            @RequestParam(required = false, defaultValue = "ASC") String orderDirection ) {
+            @RequestParam(required = false, defaultValue = "ASC") String orderDirection,
+            @RequestParam(required = false, defaultValue = "1") int pageNumber,
+            @RequestParam(required = false, defaultValue = "10") int pageSize) {
+
+        // 페이지네이션을 위한 offset 계산
+        int offset = (pageNumber - 1) * pageSize;
+        // 전체 데이터 개수 조회
+        int totalItems = agentService.countAgentList(custId, searchKeyword);
+        // 총 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
 
         // 서비스 호출 (검색어, 정렬 조건, 페이징 처리)
         List<Agent> agentList = agentService.selectAgentList(
                 custId,
                 searchKeyword,
                 orderBy,
-                orderDirection);
+                orderDirection,
+                offset,
+                pageSize);
 
-        return agentList;
-    }
-
-
-    // 운영관리 - 상담원 관리 - 상담원 리스트 조회용 메소드
-    @GetMapping("/management/agentList2")
-    @ResponseBody
-    public PageResponse<Agent> getAgentListByCursor(
-            @RequestParam String custId,
-            @RequestParam(required = false) String searchKeyword,
-            @RequestParam(required = false) String orderBy,
-            @RequestParam(required = false) String orderDirection,
-            @RequestParam(required = false) Long lastId,   // 커서 값 (이전 페이지의 마지막 ID)
-            @RequestParam(required = false, defaultValue = "10") int limit, // 페이지당 표시할 항목 수
-            @RequestParam(required = false, defaultValue = "1") int pageNumber){ // 페이지 번호)
-
-        // 페이지 번호에 따른 커서를 계산하여 데이터를 조회
-        Long cursor = lastId == null ? calculateCursor(pageNumber, limit) : lastId;
-        List<Agent> agentList = agentService.selectAgentListByCursor(custId, searchKeyword, orderBy, orderDirection, cursor , limit);
-
-        boolean hasNext = agentList.size() == limit; // 다음 페이지가 있는지 확인
-        Long nextCursor = hasNext ? Long.valueOf(agentList.get(agentList.size() - 1).getAgtNo()) : null; // 다음 커서값 설정
-
-        return new PageResponse<>(agentList, nextCursor, hasNext, pageNumber, limit);
-    }
-    // 커서를 계산하는 함수
-    private Long calculateCursor(int pageNumber, int limit) {
-
-        return (long) (pageNumber - 1) * limit;
+        // 페이지 응답 객체 생성
+        return new PageResponse<>(agentList, totalItems, totalPages, pageNumber, pageSize);
     }
 
     // 운영관리 - 상담원 관리 - 상담원 상세 정보 저장용 메소드

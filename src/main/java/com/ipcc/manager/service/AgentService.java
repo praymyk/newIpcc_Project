@@ -1,6 +1,5 @@
 package com.ipcc.manager.service;
 
-import com.ipcc.common.model.dto.page.PageResponse;
 import com.ipcc.manager.model.dto.agent.AgentListStatus;
 import com.ipcc.common.mapper.AgentMapper;
 import com.ipcc.common.model.dto.agent.Agent;
@@ -26,13 +25,17 @@ public class AgentService {
             String custId,
             String searchKeyword,
             String orderBy,
-            String orderDirection) {
+            String orderDirection,
+            int offset,
+            int pageSize) {
 
         return agentMapper.selectAgentList(
                 custId,
                 searchKeyword,
                 orderBy,
-                orderDirection);
+                orderDirection,
+                offset,
+                pageSize);
     }
 
     // 상담원 상태 조회 (모니터링)
