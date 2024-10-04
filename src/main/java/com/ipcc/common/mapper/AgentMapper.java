@@ -59,4 +59,10 @@ public interface AgentMapper {
 
     // 상담원 정보 업데이트
     int updateAgent(Agent agent);
+
+    // 상담원 상태 토글(정지/재개)
+    int toggleAgentState(Agent agent);
+
+    // 상담원 리스트 부가기능 조정
+    int updateAgentList(List<String> agtNos, String field, String value);
 }

@@ -177,6 +177,41 @@ public class AgentController {
         // 2. 상담원 상세 정보 저장 - 상담원 테이블에 기존 정보 업데이트
         int result = agentService.updateAgent(agent);
 
-        return "상담원 상세 정보 수정 성공";
+        if( result > 0){
+            return "상담원 상세 정보 수정 성공";
+        } else {
+            return "상담원 상세 정보 수정 실패";
+        }
+
+    }
+
+    // 운영관리 - 상담원 관리 - 상담원 정지 상태 업데이트용 메소드
+    @PostMapping("management/toggleAgentState")
+    @ResponseBody
+    public String toggleAgentState(@ModelAttribute Agent agent){
+
+        log.info("agent: {}", agent);
+        int result = agentService.toggleAgentState(agent);
+
+        if(result > 0) {
+            return "상담원 상태 업데이트 성공";
+        } else {
+            return "상담원 상태 업데이트 실패";
+        }
+    }
+
+    // 운영관리 - 상담원 관리 - 상담원 리스트에서 부가기능 제어용 메소드
+    @PostMapping("management/updateAgentList")
+    @ResponseBody
+    public String updateAgentList(
+            @RequestParam List<String> agtNos,
+            @RequestParam String field,
+            @RequestParam String value) {
+        log.info("agentId: {}, field: {}, value: {}", agtNos, field, value);
+        String dbField = field.equals("useCallBack") ? "USE_CALLBACK" : "USE_AFTER";
+
+        int result = agentService.updateAgentList(agtNos, dbField, value);
+
+        return "상담원 리스트 업데이트 성공";
     }
 }

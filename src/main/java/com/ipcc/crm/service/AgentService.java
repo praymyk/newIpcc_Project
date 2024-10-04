@@ -108,5 +108,15 @@ public class AgentService {
         return agentMapper.updateAgent(agent);
     }
 
+    // 운영관리 - 상담원 상태 토글 기능 (정지/재개)
+    @Transactional
+    public int toggleAgentState(Agent agent) {
+        return agentMapper.toggleAgentState(agent);
+    }
+
+    // 운영관리 - 상담원 리스트 부가 기능 조정
+    public int updateAgentList(List<String> agtNos, String field, String value) {
+        return agentMapper.updateAgentList(agtNos, field, value);
+    }
 }
 

@@ -175,6 +175,26 @@
             USE_CALLBACK = #{useCallBack}
         WHERE AGT_NO = #{agtNo};
     </update>
+    <!-- 상담원 상태 전환용 (정지/해제) -->
+    <update id="toggleAgentState" parameterType="Agent">
+        UPDATE crm_agent
+        SET STATE = CASE
+                        WHEN STATE = 'N' THEN 'Y'
+                        ELSE 'N'
+            END,
+            AGT_EXT = "미할당"
+        WHERE AGT_ID = #{agtId};
+    </update>
+    <!-- 상담원 리스트 부가기능 조정 -->
+    <update id="updateAgentList">
+        UPDATE crm_agent
+        SET ${field} = #{value}
+        WHERE AGT_NO IN
+        <foreach item="id" collection="agtNos" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
 
     <!-- 상담원 조회 (로그인 용)-->
     <select id="selectAgent" parameterType="Agent" resultMap="Agent">
