@@ -174,15 +174,18 @@ public class AgentController {
         // 자동 후처리 사용 여부 Y: 사용, N: 미사용
         agent.setUseAfter("true".equals(agent.getUseAfter()) ? "Y" : "N");
 
-        // 2. 상담원 상세 정보 저장 - 상담원 테이블에 기존 정보 업데이트
-        int result = agentService.updateAgent(agent);
-
-        if( result > 0){
-            return "상담원 상세 정보 수정 성공";
-        } else {
-            return "상담원 상세 정보 수정 실패";
+        // 2. 내선 번호 입력 검사
+        // 2-1. 입력된 내선 번호가 존재할 경우
+        if(agent.getAgtExt() != null && agent.getAgtExt().matches("^[0-9]*$")){
+            // 동일 내선번호가 존재할 경우 에러 메시지 리턴
+            if(agentService.checkAgentExt(agent) > 0){
+                return "동일 내선번호가 존재합니다.";
+            }
+            // 2-2. 동일 내선번호가 존재하지 않을 경우 내선번호 등록(ps_endpoints, ps_aors, ps_auths 테이블에도 내선번호 등록)
+            return (agentService.insertAgentExt(agent) >= 1) ? "상담원 상세 정보 수정 성공" : "상담원 상세 정보 수정 실패";
         }
-
+        // 3. 입력 내선 번호가 없거나 유효한 형식이 아니 경우 내선번호 등록 없이 상담원 정보만 업데이트
+        return ( agentService.updateAgent(agent) >0 ) ? "상담원 정보가 업데이트 됐습니다. 내선번호를 등록해 주세요." : "상담원 상세 정보 수정 실패";
     }
 
     // 운영관리 - 상담원 관리 - 상담원 정지 상태 업데이트용 메소드

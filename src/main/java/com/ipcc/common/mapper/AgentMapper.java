@@ -65,4 +65,12 @@ public interface AgentMapper {
 
     // 상담원 리스트 부가기능 조정
     int updateAgentList(List<String> agtNos, String field, String value);
+
+    // 상담원 정보 업데이트 시 내선번호 중복 검사
+    int checkAgentExt(Agent agent);
+
+    // 상담원 정보 업데이트 시 내선번호 등록용
+    int insertEndpoint(String agtExt);
+    int insertAors(String agtExt);
+    int insertAuths(String agtExt);
 }

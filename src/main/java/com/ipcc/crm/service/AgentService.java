@@ -118,5 +118,30 @@ public class AgentService {
     public int updateAgentList(List<String> agtNos, String field, String value) {
         return agentMapper.updateAgentList(agtNos, field, value);
     }
+
+    // 운영관리 - 상담원 정보 업데이트 시 내선 번호 중복 확인
+    public int checkAgentExt(Agent agent) {
+        return agentMapper.checkAgentExt(agent);
+    }
+
+    // 운영관리 - 상담원 정보 업데이트 시 내선 번호 등록 (ps_endpoints, ps_aors, ps_auths 테이블에도 내선 번호 등록 필요)
+    @Transactional
+    public int insertAgentExt(Agent agent) {
+        try {
+            return agentMapper.insertEndpoint(agent.getAgtExt())
+                    + agentMapper.insertAors(agent.getAgtExt())
+                    + agentMapper.insertAuths(agent.getAgtExt())
+                    + agentMapper.updateAgent(agent);
+
+        } catch (Exception e) {
+            // 예외가 발생했을 때 로그를 남기고 트랜잭션을 롤백합니다.
+            System.err.println("Transaction failed: " + e.getMessage());
+            e.printStackTrace();
+
+            // 트랜잭션 롤백을 위해 명시적으로 RuntimeException을 던집니다.
+            throw new RuntimeException("Transaction rolled back due to an error", e);
+        }
+    }
+
 }
 

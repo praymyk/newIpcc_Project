@@ -175,6 +175,47 @@
             USE_CALLBACK = #{useCallBack}
         WHERE AGT_NO = #{agtNo};
     </update>
+    <!-- 상담원 정보 업데이트 시 내선 번호 중복 검사 -->
+    <select id="checkAgentExt" parameterType="String" resultType="int">
+        SELECT COUNT(*)
+        FROM crm_agent
+        WHERE AGT_EXT = #{agtExt}
+        AND AGT_NO != #{agtNo};
+    </select>
+    <!-- Endpoints 내선번호 등록 -->
+    <insert id="insertEndpoint" parameterType="String">
+        INSERT INTO asterisk.ps_endpoints (id, aors, auth, outbound_auth, callerid)
+        SELECT #{agtExt}, #{agtExt}, #{agtExt}, #{agtExt}, #{agtExt}
+        FROM dual
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM asterisk.ps_endpoints
+            WHERE id = #{agtExt}
+        );
+    </insert>
+    <!--ps_aors 내선번호 등록 -->
+    <insert id="insertAors" parameterType="String">
+        INSERT INTO asterisk.ps_aors (id)
+        SELECT #{agtExt}
+        FROM dual
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM asterisk.ps_aors
+            WHERE id = #{agtExt}
+        );
+    </insert>
+    <!--ps_auth 내선번호 등록 -->
+    <insert id="insertAuths" parameterType="String">
+        INSERT INTO asterisk.ps_auths (id, username)
+        SELECT #{agtExt}, #{agtExt}
+        FROM dual
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM asterisk.ps_auths
+            WHERE id = #{agtExt}
+        );
+    </insert>
+
     <!-- 상담원 상태 전환용 (정지/해제) -->
     <update id="toggleAgentState" parameterType="Agent">
         UPDATE crm_agent
@@ -250,6 +291,7 @@
                                  TIME_START = VALUES(TIME_START),
                                  DIV_LOGIN = VALUES(DIV_LOGIN)
     </insert>
+
     
     <!-- 상담원 현황(모니터링) 조회용 select-->
     <select id="selectAgentListStatus" parameterType="String" resultType="com.ipcc.manager.model.dto.agent.AgentListStatus">

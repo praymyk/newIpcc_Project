@@ -32,6 +32,8 @@ $('#toggleAutoProcess').on('click', function (event) {
 
     // AJAX로 일괄 상태 업데이트 요청
     updateAgentList(agentIds, 'useAfter', status);
+
+    clearDetails();
 });
 
 // 콜백 일괄 제어
@@ -51,9 +53,9 @@ $('#toggleCallback').on('click', function (event) {
 
     // AJAX로 일괄 상태 업데이트 요청
     updateAgentList(agentIds, 'useCallBack', status);
+
+    clearDetails();
 });
-
-
 
 /*******
 * 검색 및 정렬 기능
@@ -192,6 +194,7 @@ function agentTable(agentList) {
         afterCheckbox.addEventListener('change', function() {
             const isChecked = this.checked ? 'Y' : 'N';
             updateAgentList(node.agtNo, 'useAfter', isChecked);
+            isChecked === "N" ? $('#useAfter').prop('checked', false) : $('#useAfter').prop('checked', true);
         });
 
         // callback-process 체크박스 클릭 시 값 업데이트
@@ -199,6 +202,7 @@ function agentTable(agentList) {
         callbackCheckbox.addEventListener('change', function() {
             const isChecked = this.checked ? 'Y' : 'N';
             updateAgentList(node.agtNo, 'useCallBack', isChecked);
+            isChecked === "N" ? $('#useCallBack').prop('checked', false) : $('#useCallBack').prop('checked', true);
         });
 
 
@@ -327,7 +331,7 @@ function updateAgentInfo(currentPage) {
         contentType: 'application/json',
         data: JSON.stringify(formData),
         success: function(response) {
-            alert('상담원 정보가 성공적으로 수정되었습니다.');
+            alert(response);
             getAgentList(searchKeyword, currentOrderBy, currentOrderDirection, currentPage);
         },
         error: function(xhr, status, error) {
@@ -356,6 +360,7 @@ function updateAgentList(agtNos, field, value) {
         },
         success: function(response) {
             console.log('상태 업데이트 성공:', response);
+            getAgentList(searchKeyword, currentOrderBy, currentOrderDirection, currentPage);
         },
         error: function(error) {
             console.log('상태 업데이트 실패:', error);
@@ -376,8 +381,8 @@ function showNodeDetails(node) {
     $('#agtTeam').val(node.agtTeam);
     // 체크박스 상태
     node.agtAuth === "0" ? $('#agtAuth').prop('checked', false) : $('#agtAuth').prop('checked', true);
-    node.useAfter === "N" ? $('#useCallBack').prop('checked', false) : $('#useCallBack').prop('checked', true);
-    node.useCallBack === "N" ? $('#useAfter').prop('checked', false) : $('#useAfter').prop('checked', true);
+    node.useAfter === "N" ? $('#useAfter').prop('checked', false) : $('#useAfter').prop('checked', true);
+    node.useCallBack === "N" ? $('#useCallBack').prop('checked', false) : $('#useCallBack').prop('checked', true);
 
     if(node.state === 'N') {
         $('#toggleStatusBtn')
@@ -391,6 +396,23 @@ function showNodeDetails(node) {
             .addClass('stop-btn');  // '정지' 스타일 추가
     }
 }
+
+// 일괄 변경 후 상세 정보 초기화
+function clearDetails() {
+    $('#agtNo').val('');
+    $('#custId').val('');
+    $('#agtId').val('');
+    $('#agtPw').val('');
+    $('#agtExt').val('');
+    $('#agtName').val('');
+    $('#agtGroup').val('');
+    $('#agtTeam').val('');
+
+    $('#agtAuth').prop('checked', false);
+    $('#useAfter').prop('checked', false);
+    $('#useCallBack').prop('checked', false);
+}
+
 
 /************
  * 상담원 정지/복구 토글 기능
