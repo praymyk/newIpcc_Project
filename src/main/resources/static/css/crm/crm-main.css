@@ -138,20 +138,32 @@ body {
     transition: background-color 0.3s ease;
 }
 
-.agent-status.waiting {
+.agent-status.Ready {
     background-color: #d1eaff;
     color: #007aff;
 }
 
-.agent-status.away {
+.agent-status.Rest {
     background-color: #fef0c7;
     color: #ff9500;
 }
 
-.agent-status.processing {
+.agent-status.Processing {
     background-color: #ffd1d1;
     color: #ff3b30;
 }
+
+.agent-status.Preparing {
+    background-color: #f0f0f0;
+    color: #6c757d;
+}
+
+.agent-status.OnCall {
+    background-color: #e6f7d4 ;
+    color: #28a745 ;
+}
+
+
 
 #status-icon {
     font-size: 16px;
@@ -269,8 +281,13 @@ body {
     color: #3a3a3c;
     padding: 0;
     height: 100%;
-    width: 120px;
+    width: 150px;
     appearance: none;
+    outline: none; /* 포커스 시 기본 테두리 강조 제거 */
+}
+
+#dropdown-icon{
+    cursor: pointer;
 }
 
 #call-number {

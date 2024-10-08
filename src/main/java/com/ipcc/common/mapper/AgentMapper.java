@@ -1,9 +1,7 @@
 package com.ipcc.common.mapper;
 
 import com.ipcc.common.model.dto.agent.Agent;
-import com.ipcc.common.model.dto.agent.AgentAuth;
 import com.ipcc.common.model.dto.agent.AgentEventLog;
-import com.ipcc.common.model.dto.page.PageResponse;
 import com.ipcc.manager.model.dto.agent.AgentListStatus;
 import com.ipcc.manager.model.dto.agent.AgentMon;
 import com.ipcc.manager.model.dto.agent.TodayCallStatus;
