@@ -6,7 +6,7 @@
       <synchronize>true</synchronize>
       <imported>true</imported>
       <remarks>$PROJECT_DIR$/src/main/resources/application.properties</remarks>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://45.115.154.39:3306/asterisk</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
@@ -17,10 +17,11 @@
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
     <data-source source="LOCAL" name="asterisk@103.55.190.109" uuid="f35ca581-3ab9-46e7-95df-144b2262d2f2">
+      <driver-ref>net.sf.log4jdbc.sql.jdbcapi.DriverSpy</driver-ref>
+      <synchronize>true</synchronize>
       <imported>true</imported>
       <configured-by-url>true</configured-by-url>
       <remarks>$PROJECT_DIR$/src/main/resources/application.properties</remarks>
-      <jdbc-driver>net.sf.log4jdbc.sql.jdbcapi.DriverSpy</jdbc-driver>
       <jdbc-url>jdbc:log4jdbc:mysql://103.55.190.109:3306/asterisk?serverTimezone=Asia/Seoul</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />

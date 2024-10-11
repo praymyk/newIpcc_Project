@@ -1,4 +1,4 @@
-package com.ipcc.crm.config;
+package com.ipcc.common.config;
 
 import com.ipcc.common.websocket.MyWebSocketHandler;
 import org.apache.ibatis.executor.Executor;

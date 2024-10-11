@@ -67,6 +67,8 @@ public class LoginController {
             // 세션에 상담원 정보 저장
             session.setAttribute("loginAgent", loginAgent);
 
+            // 뷰에 표시할 상담원 정보 저장
+
             return "redirect:crm/main";
         }
         // 3. 일치하지 않으면 로그인 페이지로 리다이렉트

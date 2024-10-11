@@ -41,17 +41,25 @@
     align-items: center;
     margin-bottom: 20px;
     border-radius: 10px;
-    overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* 내부 요소들이 부모의 경계에 맞춰지도록 설정 */
 }
 
 .cust-info-searchbar input[type="text"] {
     flex: 1;
     padding: 10px;
-    border: none;
+    border: 1px solid transparent;
     font-size: 14px;
     color: #333;
     box-sizing: border-box;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.cust-info-searchbar input[type="text"]:focus {
+    border-color: #007aff;
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
+    outline: none;
 }
 
 .cust-info-searchBtn {
@@ -64,7 +72,9 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* 버튼에 그림자 추가 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .cust-info-searchBtn i {

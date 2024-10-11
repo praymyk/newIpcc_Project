@@ -1,4 +1,4 @@
-package com.ipcc.common.mapper;
+package com.ipcc.common.mapper.primary;
 
 import com.ipcc.common.model.dto.agent.Agent;
 import com.ipcc.common.model.dto.agent.AgentEventLog;
@@ -67,8 +67,4 @@ public interface AgentMapper {
     // 상담원 정보 업데이트 시 내선번호 중복 검사
     int checkAgentExt(Agent agent);
 
-    // 상담원 정보 업데이트 시 내선번호 등록용
-    int insertEndpoint(String agtExt);
-    int insertAors(String agtExt);
-    int insertAuths(String agtExt);
 }

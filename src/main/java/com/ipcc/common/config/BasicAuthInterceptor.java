@@ -1,4 +1,4 @@
-package com.ipcc.crm.config;
+package com.ipcc.common.config;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

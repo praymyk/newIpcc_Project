@@ -1,6 +1,7 @@
 package com.ipcc.crm.service;
 
-import com.ipcc.common.mapper.AgentMapper;
+import com.ipcc.common.mapper.primary.AgentMapper;
+import com.ipcc.common.mapper.secondary.SecondaryAgentMapper;
 import com.ipcc.common.model.dto.agent.Agent;
 import com.ipcc.common.model.dto.agent.AgentEventLog;
 import com.ipcc.manager.model.dto.agent.AgentMon;
@@ -14,10 +15,12 @@ import java.util.List;
 public class AgentService {
 
     private final AgentMapper agentMapper;
+    private final SecondaryAgentMapper secondaryAgentMapper;
 
     @Autowired
-    public AgentService(AgentMapper agentMapper) {
+    public AgentService(AgentMapper agentMapper, SecondaryAgentMapper secondaryAgentMapper) {
         this.agentMapper = agentMapper;
+        this.secondaryAgentMapper = secondaryAgentMapper;
     }
 
     // 상담원 로그인 이벤트 등록용 메서드
@@ -128,9 +131,9 @@ public class AgentService {
     @Transactional
     public int insertAgentExt(Agent agent) {
         try {
-            return agentMapper.insertEndpoint(agent.getAgtExt())
-                    + agentMapper.insertAors(agent.getAgtExt())
-                    + agentMapper.insertAuths(agent.getAgtExt())
+            return secondaryAgentMapper.insertEndpoint(agent.getAgtExt())
+                    + secondaryAgentMapper.insertAors(agent.getAgtExt())
+                    + secondaryAgentMapper.insertAuths(agent.getAgtExt())
                     + agentMapper.updateAgent(agent);
 
         } catch (Exception e) {

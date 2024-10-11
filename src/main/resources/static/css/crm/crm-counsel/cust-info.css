@@ -75,13 +75,46 @@
 .cust-info-table table {
     font-size: 14px;
     width: 100%;
+    display: inline-table; /* 테이블이 내용에 맞게 크기를 조정하도록 설정 */
     border-collapse: collapse;
+    table-layout: auto; /* 셀의 내용에 따라 열 너비가 결정되도록 설정 */
 }
 
 .cust-info-table td {
     padding: 12px;
     border-bottom: 1px solid #e2e2e7;
     color: #333;
+    white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
+}
+
+/* title-td는 내용의 길이에 맞춰 자동 크기로 설정 */
+.cust-info-table .title-td {
+    width: 1%; /* 가능한 가장 작은 너비를 설정 */
+    white-space: nowrap; /* 줄바꿈 없이 내용을 한 줄로 유지 */
+}
+
+.cust-info-table input,
+.cust-info-table select{
+    padding: 10px 12px;
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+
+    color: #333; /* 기본 텍스트 색상 */
+    /* 포커스 시 스타일 */
+    transition: border-color 0.3s, box-shadow 0.3s; /* 부드러운 전환 효과 */
+}
+
+.cust-info-table input:focus,
+.cust-info-table select:focus {
+    border-color: #007aff;
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
+    outline: none;
+}
+
+.cust-info-table input::placeholder {
+    color: #a1a1a1; /* 연한 회색으로 플레이스홀더 텍스트 */
+    font-style: italic; /* 기울임체 */
 }
 
 .extra-info {
@@ -105,6 +138,12 @@
     font-size: 14px;
     resize: vertical;
     box-sizing: border-box; /* 추가된 부분 */
+}
+
+.extra-info textarea {
+    border-color: #007aff;
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
+    outline: none;
 }
 
 .edit-button {

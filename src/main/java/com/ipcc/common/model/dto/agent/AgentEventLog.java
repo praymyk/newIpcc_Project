@@ -1,7 +1,6 @@
 package com.ipcc.common.model.dto.agent;
 
 import lombok.*;
-import org.aspectj.weaver.AjAttribute;
 
 @NoArgsConstructor
 @AllArgsConstructor

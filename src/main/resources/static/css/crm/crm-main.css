@@ -14,6 +14,10 @@ body {
     gap: 10px;
 }
 
+[hidden] {
+    display: none !important;
+}
+
 .sidebar {
     min-width: 65px;
     min-height: 100vh;
@@ -138,6 +142,7 @@ body {
     transition: background-color 0.3s ease;
 }
 
+/* 상담원 상태 스타일 */
 .agent-status.Ready {
     background-color: #d1eaff;
     color: #007aff;
@@ -163,14 +168,22 @@ body {
     color: #28a745 ;
 }
 
-
+.agent-status.CallTry {
+    background-color: #d4f3c2   ;
+    color: #1e7d32  ;
+}
+.agent-status.Try{
+    background-color: #c9e6b1  ;
+    color: #1c7430  ;
+}
 
 #status-icon {
     font-size: 16px;
 }
 
 #status-timer {
-    font-size: 12px;
+    margin-left: 10px;
+    font-size: 16px;
     color: #8e8e93;
 }
 
@@ -242,13 +255,21 @@ body {
 }
 
 .call-input-wrap > i {
-    color: #007aff;
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
-.call-input-wrap > i:hover {
+#callBtn{
+    color: #007aff;
+}
+#callBtn:hover{
     color: #005bb5;
+}
+#hangupBtn{
+    color: #ff3b30;
+}
+#hangupBtn:hover{
+    color: #c32f25;
 }
 
 .agent-info {

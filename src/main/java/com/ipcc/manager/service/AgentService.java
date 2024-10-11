@@ -1,7 +1,7 @@
 package com.ipcc.manager.service;
 
 import com.ipcc.manager.model.dto.agent.AgentListStatus;
-import com.ipcc.common.mapper.AgentMapper;
+import com.ipcc.common.mapper.primary.AgentMapper;
 import com.ipcc.common.model.dto.agent.Agent;
 import com.ipcc.manager.model.dto.agent.AgentMon;
 import com.ipcc.manager.model.dto.agent.TodayCallStatus;

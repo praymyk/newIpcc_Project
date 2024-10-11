@@ -13,6 +13,7 @@
 <body>
 
     <div th:fragment="cust-info-search" class="cust-info-search-wrap">
+        <script th:src="@{/js/crm/crm-cust-info.js}" defer></script>
         <div class="cust-info-searchTitle">
             <div class="cust-info-searchTitle-item">
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -20,8 +21,8 @@
             </div>
         </div>
         <div class="cust-info-searchbar">
-            <input type="text" placeholder="고객명을 입력하세요">
-            <div class="cust-info-searchBtn">
+            <input type="text" id="input-guest-search" placeholder="고객명을 입력하세요">
+            <div class="cust-info-searchBtn" id="btn-guest-search">
                 <i class="fa-solid fa-magnifying-glass"></i><span>검색</span>
             </div>
         </div>
@@ -35,7 +36,7 @@
                         <th>최근상담일</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="guest-info-list">
                     <tr>
                         <td>1</td>
                         <td>웅냐냐</td>

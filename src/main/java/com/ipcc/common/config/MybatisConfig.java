@@ -1,4 +1,4 @@
-package com.ipcc.crm.config;
+package com.ipcc.common.config;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -8,7 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import javax.sql.DataSource;
 
-@Configuration
+// @Configuration
+// 단일 데이터베이스 사용 안함 > configuration 제외
 public class MybatisConfig {
 
     @Bean
