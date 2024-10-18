@@ -1,0 +1,90 @@
+.custInfo-counselLog {
+    margin: 20px;
+    padding: 20px;
+    background-color: white;
+    display: inline-block; /* 부모 요소가 자식의 콘텐츠에 맞춰 크기 조정 */
+}
+
+.custInfo-counselLog-filter {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.custInfo-counselLog-filter label {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.custInfo-counselLog-filter input[type="date"],
+.custInfo-counselLog-filter select {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #d1d1d6;
+    border-radius: 8px;
+    background-color: #f9f9f9; /* 배경색을 f9f9f9로 변경 */
+    color: #666; /* 폰트 색상 어울리게 변경 */
+}
+
+.custInfo-counselLog-filter input[type="date"]:focus,
+.custInfo-counselLog-filter select:focus {
+    border-color: #007aff; /* 포커스 시 테두리 색상 변경 */
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2); /* 포커스 시 부드러운 그림자 추가 */
+    outline: none; /* 기본 포커스 아웃라인 제거 */
+}
+
+.custInfo-counselLog-filter button {
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.custInfo-counselLog-filter button:hover {
+    background-color: #0056b3;
+}
+
+.custInfo-counselTable {
+    width: 100%;
+    border-spacing: 0 3px;
+    border-collapse: separate;
+}
+
+.custInfo-counselTable th, .custInfo-counselTable td {
+    padding: 12px 20px;
+    background-color: white;
+    border: none;
+}
+
+.custInfo-counselTable tr {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+}
+
+.custInfo-counselTable th {
+    font-weight: 600;
+    font-size: 14px;
+    color: #6e6e73;
+    text-align: left;
+    background-color: #f9f9f9;
+}
+
+.custInfo-counselTable tr:hover td {
+    background-color: #f1f1f5;
+}
+
+.custInfo-counselTable td {
+    font-size: 14px;
+    color: #333;
+}

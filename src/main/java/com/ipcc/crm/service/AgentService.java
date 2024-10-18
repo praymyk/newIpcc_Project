@@ -6,22 +6,40 @@ import com.ipcc.common.model.dto.agent.Agent;
 import com.ipcc.common.model.dto.agent.AgentEventLog;
 import com.ipcc.manager.model.dto.agent.AgentMon;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@Slf4j
 @Service("crmAgentService")
 public class AgentService {
 
     private final AgentMapper agentMapper;
     private final SecondaryAgentMapper secondaryAgentMapper;
+    private final RestTemplate restTemplate;
 
     @Autowired
-    public AgentService(AgentMapper agentMapper, SecondaryAgentMapper secondaryAgentMapper) {
+    public AgentService(AgentMapper agentMapper,
+                        SecondaryAgentMapper secondaryAgentMapper,
+                        RestTemplate restTemplate) {
         this.agentMapper = agentMapper;
         this.secondaryAgentMapper = secondaryAgentMapper;
+        this.restTemplate = restTemplate;
     }
+
+    // application.properties에서 설정 값 주입
+    @Value("${meta.api.url}")
+    private String metaApiUrl;
 
     // 상담원 로그인 이벤트 등록용 메서드
     @Transactional
@@ -130,6 +148,8 @@ public class AgentService {
     // 운영관리 - 상담원 정보 업데이트 시 내선 번호 등록 (ps_endpoints, ps_aors, ps_auths 테이블에도 내선 번호 등록 필요)
     @Transactional
     public int insertAgentExt(Agent agent) {
+        log.info("API 테스트: : " + createAccount(agent));
+
         try {
             return secondaryAgentMapper.insertEndpoint(agent.getAgtExt())
                     + secondaryAgentMapper.insertAors(agent.getAgtExt())
@@ -146,5 +166,41 @@ public class AgentService {
         }
     }
 
+    /**
+     * API로 계정 생성 요청을 보내는 메소드
+     */
+    public String createAccount(Agent agent) {
+        // 요청 URL
+        String url = metaApiUrl;
+
+        // 요청 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);  // JSON 형식의 데이터 전송
+
+        // 요청 바디에 전송할 파라미터 설정
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("username", agent.getAgtExt());
+        requestBody.put("password", agent.getAgtPw());
+        requestBody.put("role", "role");  // 예: "admin" 또는 "user"
+        requestBody.put("smsEnabled", true);
+        requestBody.put("chatEnabled", true);
+        requestBody.put("messengerEnabled", true);
+        requestBody.put("emailEnabled", true);
+
+        // 요청 생성
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
+
+        // API 호출 및 응답 받기
+        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+
+        // 응답 결과 반환
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return "계정 생성 성공: " + response.getBody();
+        } else {
+            return "계정 생성 실패: " + response.getStatusCode();
+        }
+    }
+
 }
+
 

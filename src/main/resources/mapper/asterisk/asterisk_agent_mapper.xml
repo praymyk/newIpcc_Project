@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ipcc.common.mapper.secondary.SecondaryAgentMapper">
+
+    <!-- ResultMap 정의 -->
+    <resultMap id="AgentAuth" type="AgentAuth">
+        <id property="agentId" column="id"/>
+        <result property="authType" column="auth_type"/>
+        <result property="agentPw" column="password"/>
+        <result property="agentName" column="username"/>
+    </resultMap>
+
+    <!-- 상담원 정보 테이블 -->
+    <resultMap id="Agent" type="Agent">
+        <!-- ID 필드 (PK) -->
+        <id property="agtNo" column="AGT_NO"/>
+        <!-- 상담원 정보 매핑 -->
+        <result property="agtId" column="AGT_ID"/>
+        <result property="custId" column="CUST_ID"/>
+        <result property="agtPw" column="AGT_PW"/>
+        <result property="agtExt" column="AGT_EXT"/>
+        <result property="agtName" column="AGT_NAME"/>
+        <result property="agtGroup" column="AGT_GROUP"/>
+        <result property="agtTeam" column="AGT_TEAM"/>
+        <result property="agtAuth" column="AGT_AUTH"/>
+        <result property="phonePw" column="PHONE_PW"/>
+        <result property="enrollDate" column="ENROLL_DATE"/>
+        <result property="unrollDate" column="UNROLL_DATE"/>
+        <result property="useAfter" column="USE_AFTER"/>
+        <result property="useCallBack" column="USE_CALLBACK"/>
+        <result property="state" column="STATE"/>
+    </resultMap>
+
+    <!-- 상담원 이벤트 로그 -->
+    <resultMap id="AgentEventLog" type="AgentEventLog">
+        <id property="eventId" column="EVENT_ID"/>
+        <result property="custId" column="CUST_ID"/>
+        <result property="agentExt" column="AGENT_EXT"/>
+        <result property="agentName" column="AGENT_NAME"/>
+        <result property="cid" column="CID"/>
+        <result property="did" column="DID"/>
+        <result property="inOut" column="INOUT"/>
+        <result property="eventName" column="EVENT_NAME"/>
+        <result property="timeStart" column="TIME_START"/>
+        <result property="timeUse" column="TIME_USE"/>
+        <result property="timeEnd" column="TIME_END"/>
+        <result property="ipAddress" column="IP_ADDRESS"/>
+    </resultMap>
+
+    <!-- 상담원 모니터링 테이블 -->
+    <resultMap id="AgentMon" type="AgentMon">
+        <id property="custId" column="CUST_ID"/>
+        <result property="agentExt" column="AGT_EXT"/>
+        <result property="did" column="DID"/>
+        <result property="cid" column="CID"/>
+        <result property="agentName" column="AGT_NAME"/>
+        <result property="divInOut" column="DIV_INOUT"/>
+        <result property="divStat" column="DIV_STAT"/>
+        <result property="timeStart" column="TIME_START"/>
+        <result property="divLogin" column="DIV_LOGIN"/>
+        <result property="stackLogin" column="STACK_LOGIN"/>
+        <result property="stackOut" column="STACK_OUT"/>
+        <result property="stackIn" column="STACK_IN"/>
+        <result property="sipUrl" column="SIP_URL"/>
+        <result property="resetTime" column="RESET_TIME"/>
+    </resultMap>
+
+    <!-- Endpoints 내선번호 등록 -->
+    <insert id="insertEndpoint" parameterType="String">
+        INSERT INTO asterisk.ps_endpoints (id, aors, auth, outbound_auth, callerid)
+        SELECT #{agtExt}, #{agtExt}, #{agtExt}, #{agtExt}, #{agtExt}
+        FROM dual
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM asterisk.ps_endpoints
+            WHERE id = #{agtExt}
+        );
+    </insert>
+    <!--ps_aors 내선번호 등록 -->
+    <insert id="insertAors" parameterType="String">
+        INSERT INTO asterisk.ps_aors (id)
+        SELECT #{agtExt}
+        FROM dual
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM asterisk.ps_aors
+            WHERE id = #{agtExt}
+        );
+    </insert>
+    <!--ps_auth 내선번호 등록 -->
+    <insert id="insertAuths" parameterType="String">
+        INSERT INTO asterisk.ps_auths (id, username)
+        SELECT #{agtExt}, #{agtExt}
+        FROM dual
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM asterisk.ps_auths
+            WHERE id = #{agtExt}
+        );
+    </insert>
+
+</mapper>

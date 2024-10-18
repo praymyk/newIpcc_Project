@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 상담 이력 관련 메퍼 -->
+<mapper namespace="com.ipcc.common.mapper.primary.CounselMapper">
+
+    <!-- ResultMap 정의 -->
+    <resultMap id="Category" type="Category">
+        <id property="categoryId" column="CATEGORY_ID" /> <!-- 카테고리 ID -->
+        <result property="custId" column="CUST_ID" /> <!-- 업체 코드 -->
+        <result property="categoryType" column="CATEGORY_TYPE" /> <!-- 카테고리 유형 -->
+        <result property="categoryName" column="CATEGORY_NAME" /> <!-- 카테고리 이름 -->
+        <result property="categoryValue" column="CATEGORY_VALUE" /> <!-- 등록일 -->
+        <result property="state" column="STATE" /> <!-- 상태 -->
+    </resultMap>
+    <resultMap id="CategoryLog" type="CategoryLog">
+        <result property="counselId" column="COUNSEL_ID" /> <!-- 상담이력 ID -->
+        <result property="categoryId" column="CATEGORY_ID" /> <!-- 카테고리 ID -->
+    </resultMap>
+
+
+    <!-- 업체 코드(custId)로 카테고리 리스트 조회 -->
+    <select id="getCategoryList"
+            parameterType="string"
+            resultMap="Category">
+        SELECT
+            CATEGORY_ID,
+            CUST_ID,
+            CATEGORY_TYPE,
+            CATEGORY_NAME,
+            CATEGORY_VALUE
+        FROM
+            crm_category
+        WHERE
+            CUST_ID = #{custId}
+        AND STATE = 'Y'
+    </select>
+
+    <!-- 상담이력 insert/update (counsel_id 값 유무에 따라) -->
+    <insert id="saveCounselLog" parameterType="CounselLog" useGeneratedKeys="true" keyProperty="counselId">
+        <!-- 상담 이력 삽입 또는 업데이트 -->
+        <choose>
+            <!-- counsleId가 없을 경우 INSERT -->
+            <when test="counselId == null or counselId == ''">
+                INSERT INTO crm_counsel (
+                CUST_ID, AGENT_ID, GUEST_ID, CALL_ID, CALL_DATE,
+                TIME_USED, DIV_INOUT, PROCESS_STAT,
+                COUNSEL_MEMO
+                ) VALUES (
+                #{custId}, #{agentId}, #{guestId}, #{callId}, #{counselDate},
+                #{timeUsed}, #{counselInOut}, #{processStat},
+                #{counselMemo}
+                );
+            </when>
+            <!-- counsleId가 있을 경우 UPDATE -->
+            <otherwise>
+                UPDATE crm_history SET
+                CUST_ID = #{custId},
+                AGENT_ID = #{agentId},
+                GUEST_ID = #{guestId},
+                CALL_ID = #{callId},
+                CALL_DATE = #{counselDate},
+                TIME_USED = #{timeUsed},
+                DIV_INOUT = #{counselInOut},
+                PROCESS_STAT = #{processStat},
+                COUNSEL_MEMO = #{counselMemo}
+                WHERE COUNSEL_ID = #{counselId};
+            </otherwise>
+        </choose>
+    </insert>
+
+    <!-- 상담이력_카테고리 Delete -->
+    <delete id="deleteCategoryLog">
+        DELETE FROM crm_category_log
+        WHERE COUNSEL_ID = #{counselId}
+    </delete>
+
+    <!-- 상담이력_카테고리 Insert -->
+    <insert id="insertCategoryLog" parameterType="CategoryLog">
+        INSERT INTO crm_category_log (COUNSEL_ID, CATEGORY_ID)
+        VALUES
+        <foreach collection="categoriesArr" item="categoryId" separator=",">
+            (#{counselId}, #{categoryId})
+        </foreach>
+    </insert>
+</mapper>

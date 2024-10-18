@@ -16,32 +16,35 @@
     
     <div th:fragment="cust-info" class="cust-info-wrap">
 
+        <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+        <script th:src="@{/js/crm/crm-counsel/cust-info.js}" defer></script>
+
         <div class="cust-info-category">
-            <div class="category-item active">
+            <div class="category-item active" data-category="custInfo">
                 <i class="fa-solid fa-user"></i>
                 <span>고객 정보</span>
             </div>
-            <div class="category-item">
+            <div class="category-item" data-category="counselLog">
                 <i class="fa-regular fa-share-from-square"></i>
                 <span>상담이력</span>
             </div>
-            <div class="category-item">
+            <div class="category-item" data-category="custMemo">
                 <i class="fa-solid fa-pen-to-square"></i>
                 <span>메모</span>
             </div>
-            <div class="category-item">
+            <div class="category-item" data-category="custCallBack">
                 <i class="fa-solid fa-square-phone-flip"></i>
                 <span>콜백</span>
             </div>
-            <div class="category-item">
+            <div class="category-item" data-category="custSMS">
                 <i class="fa-solid fa-comment-sms"></i>
                 <span>상담문자</span>
             </div>
         </div>
 
-        <div class="cust-info-content">
+        <div class="cust-info-content" id="cust-info-content" th:replace="crm/crm-counsel/cust-info-custInfo :: custInfo-custInfo">
             <div class="cust-ccode">업체명</div>
-            <form class="cust-info-table" action="/Ipcc/crm/saveGust" method="post" >
+            <form class="cust-info-table" action="" method="post" >
                 <table>
                     <tr>
                         <td class="title-td">이름</td>
@@ -50,19 +53,40 @@
                         </td>
                         <td class="title-td">전화번호</td>
                         <td>
-                            <input type="text" id="cust-phone" placeholder="전화번호">
+                            <input type="text" id="cust-phone" placeholder="전화번호(- 없이 저장 가능)" maxlength="13">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title-td">생년월일</td>
+                        <td>
+                            <input type="date" id="cust-birth" placeholder="YYYY-MM-DD" max="9999-12-31">
+                        </td>
+                        <td class="title-td">성별</td>
+                        <td>
+                            <select name="cust-gender" id="cust-gender">
+                                <option value="M">남성</option>
+                                <option value="F">여성</option>
+                                <option value="O">기타</option>
+                            </select>
                         </td>
                     </tr>
                     <tr>
                         <td class="title-td">이메일</td>
-                        <td>
+                        <td colspan="2">
                             <input type="text" id="cust-email" placeholder="이메일">
                         </td>
                     </tr>
                     <tr>
                         <td class="title-td">주소</td>
-                        <td>
-                            <input type="text" id="cust-adrs" placeholder="주소">
+                        <td colspan="2">
+                            <input type="text" id="cust-road-adrs" placeholder="도로명 주소" readonly>
+                            <button type="button" id="btn-address-search">도로명 검색</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title-td">상세 주소</td>
+                        <td colspan="2">
+                            <input type="text" id="cust-detail-adrs" placeholder="상세 주소를 입력하세요">
                         </td>
                     </tr>
                     <tr>
@@ -74,7 +98,14 @@
                                 <option value="3">VVIP</option>
                             </select>
                         </td>
+                        <td class="title-td">등록일</td>
+                        <td>
+                            <input type="text" id="cust-enroll" placeholder="등록일" disabled>
+                        </td>
                     </tr>
+                    <!-- hidden 값 -->
+                    <input type="hidden" id="cust-balck" value="N">
+                    <input type="hidden" id="gust-id" value="new">
                 </table>
                 <div class="extra-info">
                     <label for="cust-notes">
@@ -82,7 +113,7 @@
                     </label>
                     <textarea id="cust-notes" placeholder="고객 관련 기타 메모를 입력해 주세요"></textarea>
                 </div>
-                <button class="edit-button">저장</button>
+                <button class="edit-button" type="button">저장</button>
             </form>
         </div>
     </div>

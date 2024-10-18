@@ -11,12 +11,20 @@
 }
 
 .counsel-log-category {
-    padding-bottom: 15px;
+    padding: 10px 0px 10px 0px ;
     border-bottom: 1px solid #e2e2e7;
     margin-bottom: 20px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bolder;
     color: #0071e3;
+}
+
+.counsel-log-subtitle {
+    font-size: 16px;
+    font-weight: bold;
+    color: #666666;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .counsel-log-stat {
@@ -26,7 +34,15 @@
     gap: 10px;
 }
 
-.counsel-log-stat > div {
+.counsel-log-inout {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+
+.counsel-log-stat > div, .counsel-log-inout > div {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -34,7 +50,7 @@
     font-weight: bold;
 }
 
-.counsel-log-stat input[type="text"] {
+.counsel-log-stat input[type="text"], .counsel-log-inout select {
     border: none;
     background-color: #f0f0f5;
     padding: 10px 20px;
@@ -43,7 +59,12 @@
     font-weight: bold;
     color: #333;
     box-sizing: border-box;
-    width: 20ch; 
+}
+
+.counsel-log-stat input[type="text"]:focus, .counsel-log-inout select:focus {
+    border-color: #007aff;
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
+    outline: none;
 }
 
 .counsel-log, .callback-schedule {
@@ -70,16 +91,17 @@
     font-size: 14px;
 }
 
-#counsel-timeuse{
+#counsel-timeUsed, #counsel-inout{
     width: 13ch;
 }
 
 .counsel-memo {
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .counsel-memo label {
     display: block;
+    margin-top: 10px;
     margin-bottom: 8px;
     font-size: 14px;
     font-weight: bold;
@@ -88,7 +110,7 @@
 
 .counsel-memo textarea {
     width: 100%;
-    min-height: 100px;
+    min-height: 200px;
     padding: 10px;
     border-radius: 8px;
     border: 1px solid #ccc;
@@ -97,12 +119,19 @@
     box-sizing: border-box;
 }
 
+.counsel-memo textarea:focus {
+    border-color: #007aff;
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
+    outline: none;
+}
+
 .counsel-entry {
     margin-bottom: 20px;
 }
 
 .counsel-entry label {
     display: block;
+    margin-top: 8px;
     margin-bottom: 8px;
     font-size: 14px;
     font-weight: bold;
@@ -128,6 +157,11 @@
     padding-right: 40px; /* 아이콘과 간격을 위해 오른쪽 패딩 추가 */
     cursor: pointer;
 }
+.select-container select:focus {
+    border-color: #007aff;
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
+    outline: none;
+}
 
 .select-container i {
     position: absolute;
@@ -144,12 +178,13 @@
     gap: 10px;
 }
 
-.counsel-group > div {
+.counsel-group > div, .counsel-done > div {
     flex: 1;
     position: relative;
 }
 
-.counsel-group label {
+.counsel-group label, .counsel-done label {
+    margin-top: 8px;
     margin-bottom: 8px;
     font-size: 14px;
     font-weight: bold;
@@ -157,7 +192,7 @@
     display: block;
 }
 
-.counsel-group select {
+.counsel-group select, .counsel-done select {
     width: 100%;
     padding: 10px;
     border-radius: 8px;
@@ -170,6 +205,11 @@
     -moz-appearance: none;
     padding-right: 40px; /* 아이콘과 간격을 위해 오른쪽 패딩 추가 */
     cursor: pointer;
+}
+.counsel-group select:focus, .counsel-done select:focus {
+    border-color: #007aff;
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
+    outline: none;
 }
 
 .submit-btn {
@@ -224,6 +264,13 @@ button:hover {
     box-sizing: border-box;
 }
 
+.callback-schedule-time input[type="date"]:focus,
+.callback-schedule-time input[type="time"]:focus {
+    border-color: #007aff;
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
+    outline: none;
+}
+
 .callback-schedule-memo textarea {
     width: 100%;
     min-height: 120px;
@@ -233,5 +280,11 @@ button:hover {
     font-size: 14px;
     resize: vertical;
     box-sizing: border-box;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
+}
+
+.callback-schedule-memo textarea:focus {
+    border-color: #007aff;
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
+    outline: none;
 }

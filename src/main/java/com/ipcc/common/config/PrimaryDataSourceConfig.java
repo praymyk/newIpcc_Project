@@ -1,6 +1,5 @@
 package com.ipcc.common.config;
 
-import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;

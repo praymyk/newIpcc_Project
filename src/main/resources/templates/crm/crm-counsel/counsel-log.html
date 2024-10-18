@@ -12,70 +12,96 @@
 
 </head>
 <body>
-
     <div th:fragment="counsel-log" class="counsel-log-wrap">
-        <form action="" class="counsel-log">
+
+        <script th:src="@{/js/crm/crm-counsel/counsel-log.js}" defer></script>
+
+        <!--
+        @ counsel-id : 상담 ID ( 상담 이력 수정 시 사용 )
+        @ counsel-agentID : 상담원 ID ( 이력 등록 상담원 / 등록 시만 입력 되도록 )
+        @ counsel-guestId : 고객 ID
+        @ counsel-callId : 전화 ID ( 통화 로그와 연동 )
+        -->
+        <form action="" class="counsel-log" id="counselLogForm">
+            <input type="hidden" id="counsel-id">
+            <input type="hidden" id="counsel-agentId" th:value="${session.loginAgent.agtId}">
+            <input type="hidden" id="counsel-guestId" value="">
+            <input type="hidden" id="counsel-callId" value="00">
+
+
             <div class="counsel-log-category">
                 <span>상담 이력</span>    
             </div>
 
             <div class="counsel-log-stat">
                 <div>
-                    <span>상담 날짜</span>
+                    <span>상담 일시</span>
                     <span>:</span>
-                    <input type="text" disabled placeholder="2024-00-00 00:00:00" id="counsel-date">
+                    <input type="text" disabled placeholder="YY-MM-DD 00:00:00" id="counsel-date">
                 </div>
                 <div>
                     <span>통화 시간</span>
                     <span>:</span>
-                    <input type="text" disabled placeholder="00:00:00" id="counsel-timeuse">
+                    <input type="text" disabled placeholder="00:00:00" id="counsel-timeUsed">
+                </div>
+            </div>
+            <div class="counsel-log-inout">
+                <div>
+                    <span>인입 분기</span>
+                    <span>:</span>
+
+                    <select id="counsel-inout" name="">
+                        <option value="in">IN</option>
+                        <option value="ob">OB</option>
+                    </select>
+
+                </div>
+            </div>
+
+            <span class="counsel-log-subtitle">ARS 분기</span>
+            <div class="counsel-entry">
+                <div>
+                    <label for="ARS-1">인입 경로</label>
+                    <div class="select-container">
+                        <select id="ARS-1">
+                            <option value="ars-1">인입경로</option>
+                        </select>
+                        <i class="fa-solid fa-angle-down"></i>
+                    </div>
+                </div>
+            </div>
+
+            <span class="counsel-log-subtitle">상담이력 분류</span>
+            <div class="counsel-group">
+                <div>
+                    <label for="COUNSEL-1">배송 관련</label>
+                    <div class="select-container">
+                        <select id="COUNSEL-1">
+                            <option value="">환불 처리</option>
+                        </select>
+                        <i class="fa-solid fa-angle-down"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="counsel-done">
+                <div>
+                    <label for="processStat">처리 상태</label>
+                    <div class="select-container">
+                        <select id="processStat">
+                            <option value="ing">처리 중</option>
+                            <option value="done">완료</option>
+                        </select>
+                        <i class="fa-solid fa-angle-down"></i>
+                    </div>
                 </div>
             </div>
 
             <div class="counsel-memo">
-                <label for="memo">상담 메모</label>
-                <textarea id="memo" placeholder="상담 내용을 작성해 주세요."></textarea>
-            </div>
-            
-            <div class="counsel-entry">
-                <label for="ARS-1">인입 경로</label>
-                <div class="select-container">
-                    <select id="ARS-1">
-                        <option value="ars-1">인입경로</option>
-                    </select>
-                    <i class="fa-solid fa-angle-down"></i>
-                </div>
+                <label for="counsel-memo">상담 메모</label>
+                <textarea id="counsel-memo" placeholder="상담 내용을 작성해 주세요."></textarea>
             </div>
 
-            <div class="counsel-group">
-                <div>
-                    <label for="COUNSEL-GROUP-A">상담 유형 - 대분류</label>
-                    <div class="select-container">
-                        <select id="COUNSEL-GROUP-A">
-                            <option value="number-1">대분류</option>
-                        </select>
-                        <i class="fa-solid fa-angle-down"></i>
-                    </div>
-                </div>
-                <div>
-                    <label for="COUNSEL-GROUP-B">상담 유형 - 중분류</label>
-                    <div class="select-container">
-                        <select id="COUNSEL-GROUP-B">
-                            <option value="number-2">중분류</option>
-                        </select>
-                        <i class="fa-solid fa-angle-down"></i>
-                    </div>
-                </div>
-                <div>
-                    <label for="COUNSEL-GROUP-C">상담 유형 - 소분류</label>
-                    <div class="select-container">
-                        <select id="COUNSEL-GROUP-C">
-                            <option value="number-3">소분류</option>
-                        </select>
-                        <i class="fa-solid fa-angle-down"></i>
-                    </div>
-                </div>
-            </div>
             <div class="submit-wrap">
                 <button type="submit" class="submit-btn">상담 내용 등록</button>
             </div>

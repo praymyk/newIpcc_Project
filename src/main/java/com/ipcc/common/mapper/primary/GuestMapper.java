@@ -17,5 +17,17 @@ public interface GuestMapper {
     // 고객 리스트 검색 메서드 (페이징 처리 된 리스트 조회)
     List<Guest> selectGuestList(String custId, String searchKeyword, String orderBy, String orderDirection, int offset, int pageSize);
 
+    // 선택 고객 정보 조회 메서드
+    Guest selectGuestInfo(String guestId);
+
+    // 고객 정보 저장 메서드
+    int saveGuestInfo(Guest guest);
+
+    // 고객 정보 저장 전 전화번호 중복 검사
+    int checkPhoneDuplicate(String guestId, String phone);
+
+    // 선택 고객의 상담이력 수 조회 (페이징 처리 용 )
+    int countCounselLogList(String guestId, String searchKeyword);
+
     // 전화고객 정보 저장/수정
 }

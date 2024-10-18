@@ -262,7 +262,7 @@
             </a>
         </div>
 
-        <a class="content-link" data-content-id="counsel">
+        <a class="content-link active" data-content-id="counsel">
             <i class="fa-solid fa-phone-volume"></i>
             <span>상담</span>
         </a>
@@ -359,9 +359,11 @@
     <!-- crm 페이지 전체에서 사용할 변수 선언 -->
     <script th:inline="javascript">
         // @contextPath 주소 설정을 위한 contextPath 변수 선언
-        // @sessionCustId 세션에서 로그인 상담원의 custId(업체코드)를 가져옴
+        // @sessionCustId 로그인 상담원의 custId(업체코드)
+        // @sessionAgentId 상담원 아이디
         var contextPath = /*[[@{/}]]*/ '';  // 타임리프가 컨텍스트 경로를 서버에서 삽입
         var sessionCustId =  [[${session.loginAgent.custId}]];
+        var sessionAgentId =  [[${session.loginAgent.agtId}]];
     </script>
 
     <script>
@@ -384,8 +386,6 @@
             var path = window.location.pathname;
             var contentId = path.split('/').pop();
 
-            // 모든 요소에서 'active' 클래스를 제거
-            $('.content-link').removeClass('active');
             // contentId와 일치하는 요소에 'active' 클래스 부여
             $('.content-link[data-content-id="' + contentId + '"]').addClass('active');
 
@@ -455,14 +455,14 @@
 
         /*
         * 상담원 상테 이벤트 저장, 조회용 변수
-        * @param agentId : 로그인 상담원 asterisk 아이디 = [내선]
+        * @param agentExt : 로그인 상담원 asterisk 아이디 = [내선]
         * @param agentName : 로그인 상담원 이름
         * @param currentStatus : 현재 상담원 상태
         * @param did : 수신번호
         * @param cid : 발신번호
         * @param inOut : 통화 방향 (in : 인바운드, out : 아웃바운드)
         */
-        var agentId = '[[${session.loginAgent.agtExt}]]';
+        var agentExt = '[[${session.loginAgent.agtExt}]]';
         var agentName = '[[${session.loginAgent.agtName}]]';
         var agentCcode = '[[${session.loginAgent.custId}]]';
         var currentStatus;
@@ -512,6 +512,7 @@
             var sipUri = formatSipUri(sipUriInput);
 
             var socket = new JsSIP.WebSocketInterface('wss://'+domain+':8089/ws');
+            //var socket = new JsSIP.WebSocketInterface('ws://'+domain+':8088/ws');
             var configuration = {
                 sockets: [socket],
                 uri: sipUri,
@@ -547,7 +548,7 @@
                 if (session.direction === 'incoming') { // 수신 전화일 경우
                     cid = session.remote_identity.uri.user;
                     // did = session.local_identity.uri.user; // webRTC 구동 서버의 주소를 기준으로 sip user를 가져오기 때문에 asterisk 별도 구동 시 사용 불가
-                    did = agentId;
+                    did = agentExt;
                     inOut = "in";
 
                     updateAgentEventLog("Try");
@@ -759,7 +760,7 @@
                 method: 'POST',
                 data: {
                     custId: agentCcode,
-                    agentExt: agentId,
+                    agentExt: agentExt,
                     agentName: agentName,
                     eventName: 'Login',
                     currentStatus: currentStatus
@@ -780,7 +781,7 @@
                 method: 'POST',
                 data: {
                     custId: agentCcode,
-                    agentExt: agentId,
+                    agentExt: agentExt,
                     agentName: agentName,
                     eventName: 'Logout'
                 },
@@ -802,7 +803,7 @@
                     data: {
                         // AgentEventLog 필드 값
                         custId: agentCcode,
-                        agentExt: agentId,
+                        agentExt: agentExt,
                         agentName: agentName,
                         eventName: agentStat,
                         // AgentMon 필드 값

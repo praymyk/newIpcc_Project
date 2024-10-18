@@ -6,7 +6,6 @@ import com.ipcc.common.model.dto.page.PageResponse;
 import com.ipcc.manager.model.dto.agent.AgentMon;
 import com.ipcc.crm.service.AgentService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,6 @@ import java.util.List;
 @RequestMapping("/crm")
 public class AgentController {
 
-    @Autowired
     private final AgentService agentService;
 
     public AgentController(AgentService agentService) {
@@ -196,11 +194,8 @@ public class AgentController {
         log.info("agent: {}", agent);
         int result = agentService.toggleAgentState(agent);
 
-        if(result > 0) {
-            return "상담원 상태 업데이트 성공";
-        } else {
-            return "상담원 상태 업데이트 실패";
-        }
+        return (result > 0) ? "상담원 상태 업데이트 성공" : "상담원 상태 업데이트 실패";
+
     }
 
     // 운영관리 - 상담원 관리 - 상담원 리스트에서 부가기능 제어용 메소드
@@ -215,6 +210,6 @@ public class AgentController {
 
         int result = agentService.updateAgentList(agtNos, dbField, value);
 
-        return "상담원 리스트 업데이트 성공";
+        return (result > 0 ) ? "상담원 리스트 업데이트 성공" : "상담원 리스트 업데이트 실패";
     }
 }

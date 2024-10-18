@@ -15,7 +15,6 @@
     border-bottom: 1px solid #e2e2e7;
     gap: 8px;
     border-radius: 10px; /* 더 둥근 모서리 */
-    margin-bottom: 20px;
 }
 
 .category-item {
@@ -58,14 +57,14 @@
 }
 
 .cust-info-content {
-    padding: 20px;
+    padding: 10px 5px;
 }
 
 .cust-ccode {
     font-size: 16px;
     font-weight: bold;
     color: #0071e3;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .cust-info-table {
@@ -117,14 +116,19 @@
     font-style: italic; /* 기울임체 */
 }
 
-.extra-info {
-    margin-bottom: 20px;
+/* 이메일, 주소, 상세주소 input 태그 길이 내용에 맞게 */
+#cust-email, #cust-road-adrs, #cust-detail-adrs{
+    width: 100%;
 }
 
+.extra-info {
+    margin-top : 20px;
+    margin-bottom: 20px;
+}
 .extra-info label {
     display: block;
-    margin-bottom: 8px;
-    font-size: 16px;
+    margin-bottom: 10px;
+    font-size: 14px;
     font-weight: bold;
     color: #333;
 }
@@ -162,3 +166,20 @@
 .edit-button:hover {
     background-color: #005bb5;
 }
+
+/* 주소 검색 스타일 */
+#btn-address-search {
+    padding: 8px 12px;
+    margin-left: 5px;
+    background-color: #007aff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#btn-address-search:hover {
+    background-color: #005bb5;
+}
+

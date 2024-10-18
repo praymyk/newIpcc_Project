@@ -117,6 +117,7 @@ body {
     background-color: #ffffff;
     padding: 15px 20px;
     display: flex;
+    gap: 10px ;
     align-items: center;
     border-bottom: 1px solid #d1d1d6;
     border-radius: 5px;
@@ -131,6 +132,9 @@ body {
 .agent-status {
     position: relative;
     display: flex;
+    box-sizing: border-box;
+    white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
+    flex-shrink: 0; /* 요소가 축소되지 않도록 */
     align-items: center;
     gap: 8px;
     background-color: #e5e5ea;
@@ -183,7 +187,7 @@ body {
 
 #status-timer {
     margin-left: 10px;
-    font-size: 16px;
+    font-size: 14px;
     color: #8e8e93;
 }
 
@@ -327,6 +331,7 @@ body {
 }
 
 .logout-button {
+    min-width: 80px;
     padding: 8px 16px;
     margin-left: 20px;
     background-color: #007aff;

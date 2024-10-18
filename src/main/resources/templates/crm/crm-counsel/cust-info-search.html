@@ -13,11 +13,14 @@
 <body>
 
     <div th:fragment="cust-info-search" class="cust-info-search-wrap">
-        <script th:src="@{/js/crm/crm-cust-info.js}" defer></script>
+        <script th:src="@{/js/crm/crm-counsel/cust-info-search.js}" defer></script>
         <div class="cust-info-searchTitle">
             <div class="cust-info-searchTitle-item">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <span>고객 검색</span>
+            </div>
+            <div id="btn-guest-new">
+                <i class="fa-solid fa-user-plus"></i>
             </div>
         </div>
         <div class="cust-info-searchbar">
@@ -38,13 +41,14 @@
                 </thead>
                 <tbody id="guest-info-list">
                     <tr>
-                        <td>1</td>
-                        <td>웅냐냐</td>
-                        <td>010-4795-0025</td>
-                        <td>2024-08-28</td>
+                        <td colspan="4">
+                            고객명, 연락처, 생년월일, 이메일, 주소 검색 가능
+                        </td>
                     </tr>
                 </tbody>
             </table>
+            <!-- 페이지네이션 영역 -->
+            <div id="pagination-container" class="counsel-pagination"></div>
         </div>
     </div>
 

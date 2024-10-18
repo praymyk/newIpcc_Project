@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 @Mapper
-public interface SecondartyCustomerMapper {
+public interface SecondaryCustomerMapper {
     
     // 고객사 CID 리스트 조회
     List<CustCid> getCustCid(String custCode);

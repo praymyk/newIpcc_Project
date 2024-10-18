@@ -14,24 +14,52 @@
         <result property="gender" column="GENDER"/>
         <result property="grade" column="GUEST_GRADE"/>
         <result property="email" column="EMAIL"/>
-        <result property="address" column="ADDRESS"/>
+        <result property="roadAddress" column="R_ADDRESS"/>
+        <result property="detailAddress" column="D_ADDRESS"/>
         <result property="phone" column="PHONE"/>
         <result property="enrollDate" column="ENROLL_DATE"/>
         <result property="unrollDate" column="UNROLL_DATE"/>
         <result property="guestMemo" column="GUEST_MEMO"/>
         <result property="black" column="BLACK"/>
         <result property="state" column="STATE"/>
+
+        <!-- 조인된 결과 매핑 -->
+        <result property="guestType" column="GUEST_TYPE"/>
+        <result property="guestLastCallDate" column="LAST_CALL_DATE"/>
     </resultMap>
 
-    <select id="searchGuestList" resultMap="Guest">
+    <!-- 상담원 리스트 숫자 조회 (카운팅용) / State Y -->
+    <select id="countGuestList" resultType="int">
+        SELECT COUNT(*)
+        FROM crm_guest
+        WHERE CUST_ID = #{custId}
+          AND STATE = 'Y'
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (GUEST_NAME LIKE CONCAT('%', #{searchKeyword}, '%')
+            OR PHONE LIKE CONCAT('%', #{searchKeyword}, '%')
+            OR BIRTHDAY LIKE CONCAT('%', #{searchKeyword}, '%')
+            OR R_ADDRESS LIKE CONCAT('%', #{searchKeyword}, '%')
+            OR D_ADDRESS LIKE CONCAT('%', #{searchKeyword}, '%')
+            OR EMAIL LIKE CONCAT('%', #{searchKeyword}, '%')
+            )
+        </if>
+    </select>
+    <!-- 상담원 리스트 조회 / State Y -->
+    <select id="selectGuestList" resultMap="Guest">
         SELECT *
         FROM crm_guest
         WHERE CUST_ID = #{custId}
+          AND STATE = 'Y'
 
         <!-- 검색어가 있을 경우 -->
         <if test="searchKeyword != null and searchKeyword != ''">
-            AND (AGT_NAME LIKE CONCAT('%', #{searchKeyword}, '%')
-            OR AGT_EXT LIKE CONCAT('%', #{searchKeyword}, '%'))
+            AND (GUEST_NAME LIKE CONCAT('%', #{searchKeyword}, '%')
+            OR PHONE LIKE CONCAT('%', #{searchKeyword}, '%')
+            OR BIRTHDAY LIKE CONCAT('%', #{searchKeyword}, '%')
+            OR R_ADDRESS LIKE CONCAT('%', #{searchKeyword}, '%')
+            OR D_ADDRESS LIKE CONCAT('%', #{searchKeyword}, '%')
+            OR EMAIL LIKE CONCAT('%', #{searchKeyword}, '%')
+            )
         </if>
 
         <!-- 정렬 기준 적용 -->
@@ -50,7 +78,8 @@
             <when test="orderBy == 'gender'"> GENDER </when>
             <when test="orderBy == 'grade'"> GUEST_GRADE </when>
             <when test="orderBy == 'email'"> EMAIL </when>
-            <when test="orderBy == 'address'"> ADDRESS </when>
+            <when test="orderBy == 'roadAddress'"> R_ADDRESS </when>
+            <when test="orderBy == 'detailAddress'"> D_ADDRESS </when>
             <when test="orderBy == 'phone'"> PHONE </when>
             <when test="orderBy == 'enrollDate'"> ENROLL_DATE </when>
             <when test="orderBy == 'unrollDate'"> UNROLL_DATE </when>
@@ -68,6 +97,66 @@
         </choose>
         LIMIT #{pageSize} OFFSET #{offset}
     </select>
+
+    <!-- 고객 상세 정보 조회 -->
+    <select id="selectGuestInfo" resultMap="Guest">
+        SELECT *
+        FROM crm_guest
+        WHERE GUEST_ID = #{guestId}
+    </select>
+
+    <!-- 고객 정보 저장 전 전화번호 중복 체크 -->
+    <select id="checkPhoneDuplicate" resultType="int">
+        SELECT COUNT(*)
+        FROM crm_guest
+        WHERE PHONE = #{phone}
+          AND GUEST_ID != #{guestId}
+          AND STATE = 'Y'
+    </select>
+
+    <!-- 고객 정보 등록/업데이트 -->
+    <insert id="saveGuestInfo" parameterType="Guest">
+        INSERT INTO crm_guest (
+            <if test="guestId != null">GUEST_ID, ENROLL_DATE,</if>
+            CUST_ID, AGT_ID, GUEST_NAME, BIRTHDAY, GENDER,
+            GUEST_GRADE, EMAIL, R_ADDRESS, D_ADDRESS, PHONE,
+            GUEST_MEMO, BLACK, STATE
+        ) VALUES (
+            <if test="guestId != null">#{guestId}, #{enrollDate},</if>
+            #{custId}, #{agentId}, #{name}, #{birthDay}, #{gender},
+            #{grade}, #{email}, #{roadAddress}, #{detailAddress}, #{phone},
+            #{guestMemo}, #{black}, #{state}
+        )
+        ON DUPLICATE KEY UPDATE
+            CUST_ID = VALUES(CUST_ID),
+            AGT_ID = VALUES(AGT_ID),
+            GUEST_NAME = VALUES(GUEST_NAME),
+            BIRTHDAY = VALUES(BIRTHDAY),
+            GENDER = VALUES(GENDER),
+            GUEST_GRADE = VALUES(GUEST_GRADE),
+            EMAIL = VALUES(EMAIL),
+            R_ADDRESS = VALUES(R_ADDRESS),
+            D_ADDRESS = VALUES(D_ADDRESS),
+            PHONE = VALUES(PHONE),
+            ENROLL_DATE = VALUES(ENROLL_DATE),
+            GUEST_MEMO = VALUES(GUEST_MEMO),
+            BLACK = VALUES(BLACK),
+            STATE = VALUES(STATE);
+    </insert>
+
+    <!-- 선택 고객의 상담이력 수 조회(페이징 처리용) -->
+    <select id="countCounselLogList" resultType="int">
+        SELECT COUNT(*)
+        FROM crm_counsel
+        WHERE GUEST_ID = #{guestId}
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND PROCEESS_STAT = #{searchKeyword},
+        </if>
+        <if test="startDate != null and startDate != ''">
+            AND COUNSEL_DATE BETWEEN #{startDate} AND #{endDate}
+        </if>
+    </select>
+
 
 
 </mapper>

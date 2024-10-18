@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고객 정보 - 상담 이력</title>
+    <!-- Font Awesome JS -->
+    <script src="https://kit.fontawesome.com/22698b3d17.js" crossorigin="anonymous"></script>
+    <!-- Apple 스타일 CSS (애플 스타일로 꾸며주기) -->
+    <!-- css 미리보기용 지정 -->
+    <link rel="stylesheet" href="../../../static/css/crm/crm-counsel/cust-info-counselLog.css">
+
+    </style>
+</head>
+<body>
+    <div th:fragment="custInfo-counselLog" class="cust-info-content" id="cust-info-content">
+
+        <link th:href="@{/css/crm/crm-counsel/cust-info-counselLog.css}" rel="stylesheet" />
+        <script th:src="@{/js/crm/crm-counsel/cust-info-counselLog.js}" defer></script>
+
+        <!-- 상담 이력 검색 폼 -->
+        <form class="custInfo-counselLog-filter" id="counselLog-filter">
+            <div>
+                <label for="counselLog-startDate">접수 일자:</label>
+                <input type="date" id="counselLog-startDate" name="counselLog-startDate">
+            </div>
+            <div>
+                <label for="counselLog-endDate">~</label>
+                <input type="date" id="counselLog-endDate" name="counselLog-endDate">
+            </div>
+            <div>
+                <label for="counselLog-result">상담 결과:</label>
+                <select id="counselLog-result" name="counselLog-result">
+                    <option value="">전체</option>
+                    <option value="done">완료</option>
+                    <option value="ing">진행 중</option>
+                </select>
+            </div>
+            <button type="submit">검색</button>
+        </form>
+
+        <!-- 상담 이력 리스트 -->
+        <table class="custInfo-counselTable">
+            <thead>
+                <tr>
+                    <th>접수 일자</th>
+                    <th>접수자</th>
+                    <th>고객명</th>
+                    <th>인입경로</th>
+                    <th>상담 결과</th>
+                </tr>
+            </thead>
+            <tbody id="custInfo-counselLogList">
+                <!-- 동적으로 리스트 항목이 추가될 부분 -->
+                <tr>
+                    <td>2024-10-15</td>
+                    <td>홍길동</td>
+                    <td>김철수</td>
+                    <td>전화</td>
+                    <td>성공</td>
+                </tr>
+                <tr>
+                    <td>2024-10-10</td>
+                    <td>이영희</td>
+                    <td>박영수</td>
+                    <td>이메일</td>
+                    <td>진행 중</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 페이지네이션 영역 -->
+        <div id="pagination-custInfo-counselLog" class="counsel-pagination"></div>
+    </div>
+</body>
+</html>
