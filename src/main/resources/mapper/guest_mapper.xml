@@ -28,6 +28,28 @@
         <result property="guestLastCallDate" column="LAST_CALL_DATE"/>
     </resultMap>
 
+    <resultMap id="CounselLog" type="CounselLog">
+        <!-- 기본 필드 매핑 -->
+        <id property="counselId" column="COUNSEL_ID"/>
+        <result property="custId" column="CUST_ID"/>
+        <result property="guestId" column="GUEST_ID"/>
+        <result property="agentId" column="AGENT_ID"/>
+        <result property="callId" column="CALL_ID"/>
+        <result property="counselDate" column="CALL_DATE"/>
+        <result property="timeUsed" column="TIME_USED"/>
+        <result property="counselInOut" column="DIV_INOUT"/>
+        <result property="processStat" column="PROCESS_STAT"/>
+        <result property="counselMemo" column="COUNSEL_MEMO"/>
+        <result property="callBackDate" column="CALLBACK_DATE"/>
+        <result property="callBackTime" column="CALLBACK_TIME"/>
+        <result property="callBackMemo" column="CALLBACK_MEMO"/>
+
+        <!-- AGENT_NAME 조인 매핑 -->
+        <result property="agentName" column="AGT_NAME"/> <!-- 조인된 AGENT_NAME 값 -->
+        <result property="guestName" column="GUEST_NAME"/> <!-- 조인된 GUEST_NAME 값 -->
+
+    </resultMap>
+
     <!-- 상담원 리스트 숫자 조회 (카운팅용) / State Y -->
     <select id="countGuestList" resultType="int">
         SELECT COUNT(*)
@@ -149,12 +171,85 @@
         SELECT COUNT(*)
         FROM crm_counsel
         WHERE GUEST_ID = #{guestId}
-        <if test="searchKeyword != null and searchKeyword != ''">
-            AND PROCEESS_STAT = #{searchKeyword},
+        <if test="processStat != null and processStat != ''">
+            AND PROCESS_STAT = #{processStat}
         </if>
         <if test="startDate != null and startDate != ''">
-            AND COUNSEL_DATE BETWEEN #{startDate} AND #{endDate}
+            AND CALL_DATE BETWEEN #{startDate} AND #{endDate}
         </if>
+    </select>
+
+    <!-- 선택 고객의 상담이력 리스트 조회 -->
+    <select id="getCounselLogList" resultMap="CounselLog">
+        SELECT
+        cc.COUNSEL_ID,
+        cc.CUST_ID,
+        MAX(cg.GUEST_NAME) AS GUEST_NAME,  -- GUEST_NAME에 집계 함수 사용
+        MAX(ca.AGT_NAME) AS AGT_NAME,      -- AGT_NAME에 집계 함수 사용
+        cc.CALL_ID,
+        cc.CALL_DATE,
+        cc.TIME_USED,
+        cc.DIV_INOUT,
+        cc.PROCESS_STAT,
+        cc.COUNSEL_MEMO,
+
+        -- 각 카테고리 TYPE별로 나눠서 CATEGORY_VALUE를 표시 -> 이부분 추가 수정 해야봐됨
+        -- 동적 카테고리 처리
+        GROUP_CONCAT(CONCAT(cat.CATEGORY_TYPE, ':', cat.CATEGORY_VALUE) ORDER BY cat.CATEGORY_TYPE SEPARATOR ', ') AS CATEGORIES
+
+        FROM crm_counsel cc
+
+        -- 카테고리 로그와 먼저 조인 (CATEGORY_ID를 가져오기 위해)
+        LEFT JOIN crm_category_log ccl ON cc.COUNSEL_ID = ccl.COUNSEL_ID
+        -- 카테고리 테이블과 조인 (카테고리 값 가져오기)
+        LEFT JOIN crm_category cat ON ccl.CATEGORY_ID = cat.CATEGORY_ID
+        -- 고객 정보와 조인 (고객 이름을 가져오기 위해)
+        LEFT JOIN crm_guest cg ON cc.GUEST_ID = cg.GUEST_ID
+        -- 상담원 정보와 조인 (상담원 이름을 가져오기 위해)
+        LEFT JOIN crm_agent ca ON cc.AGENT_ID = ca.AGT_ID
+
+        -- 상담 ID 기준으로 그룹화
+        WHERE cc.GUEST_ID= #{filter.guestId}
+        <!-- 검색어가 있을 경우 -->
+        <if test="filter.searchKeyword != null and filter.searchKeyword != ''">
+            AND (GUEST_NAME LIKE CONCAT('%', #{filter.searchKeyword}, '%')
+            OR CALL_DATE LIKE CONCAT('%', #{filter.searchKeyword}, '%'))
+        </if>
+        <!-- 접수 일자 조건이 있을 경우 -->
+        <if test="filter.startDate != null and filter.startDate != ''">
+            AND cc.CALL_DATE BETWEEN #{filter.startDate} AND #{filter.endDate}
+        </if>
+        <!-- 상담 결과 조건이 있을 경우 -->
+        <if test="filter.processStat != null and filter.processStat != ''">
+            AND cc.PROCESS_STAT = #{filter.processStat}
+        </if>
+        GROUP BY COUNSEL_ID
+        <!-- 정렬 기준 적용 -->
+        ORDER BY
+        <choose>
+        <!-- orderBy 값이 없을 때 기본 정렬 -->
+        <when test="orderBy == null or orderBy == ''">
+            cc.COUNSEL_ID DESC
+        </when>
+
+        <!-- orderBy 값이 있을 때 -->
+        <when test="orderBy != null and orderBy != ''">
+            <choose>
+                <!-- 각 필드에 대해 테이블 별칭을 명확하게 지정 -->
+                <when test="orderBy == 'guestName'">GUEST_NAME ${orderDirection}</when>
+                <when test="orderBy == 'agentName'">AGT_NAME ${orderDirection}</when>
+                <when test="orderBy == 'counselDate'">CALL_DATE ${orderDirection}</when>
+                <when test="orderBy == 'inPath'">CATEGORIES ${orderDirection}</when>
+                <when test="orderBy == 'processStat'">PROCESS_STAT ${orderDirection}</when>
+                <!-- 기본 정렬 필드가 없으면 상담 ID로 -->
+                <otherwise>COUNSEL_ID DESC</otherwise>
+            </choose>
+        </when>
+            <!-- 기본 정렬을 상담 ID로 설정 -->
+            <otherwise>COUNSEL_ID DESC</otherwise>
+        </choose>
+
+        LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
 

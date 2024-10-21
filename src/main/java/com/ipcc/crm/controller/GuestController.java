@@ -2,6 +2,7 @@ package com.ipcc.crm.controller;
 
 import com.ipcc.common.model.dto.page.PageResponse;
 import com.ipcc.crm.model.dto.counsel.CounselLog;
+import com.ipcc.crm.model.dto.counsel.CounselLogFilter;
 import com.ipcc.crm.model.dto.guest.Guest;
 import com.ipcc.crm.service.GuestService;
 import lombok.extern.slf4j.Slf4j;
@@ -103,23 +104,32 @@ public class GuestController {
     // 선택 고객의 상담이력 리스트 조회
     @RequestMapping("guest/getCounselLogList")
     @ResponseBody
-    public List<CounselLog> getCounselLogList(@RequestParam("guestId") String guestId,
-                                              @RequestParam("processStat") String processStat,
-                                              @RequestParam(required = false, defaultValue = "counselDate") String orderBy,
-                                              @RequestParam(required = false, defaultValue = "ASC") String orderDirection,
+    public PageResponse<CounselLog> getCounselLogList(CounselLogFilter filter,
+                                              @RequestParam(required = false, defaultValue = "CALL_DATE") String orderBy,
+                                              @RequestParam(required = false, defaultValue = "DESC") String orderDirection,
                                               @RequestParam(required = false, defaultValue = "1") int pageNumber,
                                               @RequestParam(required = false, defaultValue = "5") int pageSize) {
 
-        log.info("guestId: {}, processStat: {}", guestId, processStat);
+        log.info("filter: {}", filter);
+        log.info("orderBy: {}", orderBy);
+        log.info("orderDirection: {}", orderDirection);
         // 페이지네이션을 위한 offset 계산
         int offset = (pageNumber - 1) * pageSize;
         // 전체 데이터 개수 조회
-        int totalItems = guestService.countCounselLogList(guestId, processStat);
+        int totalItems = guestService.countCounselLogList(filter);
+        // 총 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
 
-        // 선택 고객의 상담 이력을 조회
-        guestService.getCounselLogList(guestId);
+        // 페이징 처리된 선택 고객의 상담 리스트 조회
+        List<CounselLog> counselLogList = guestService.getCounselLogList(
+                filter,
+                orderBy,
+                orderDirection,
+                offset,
+                pageSize);
 
-        return null;
+        // 페이지 응답 객체 생성
+        return new PageResponse<>(counselLogList, totalItems, totalPages, pageNumber, pageSize);
     }
 
 }

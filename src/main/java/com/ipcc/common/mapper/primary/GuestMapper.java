@@ -1,5 +1,7 @@
 package com.ipcc.common.mapper.primary;
 
+import com.ipcc.crm.model.dto.counsel.CounselLog;
+import com.ipcc.crm.model.dto.counsel.CounselLogFilter;
 import com.ipcc.crm.model.dto.guest.Guest;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -27,7 +29,8 @@ public interface GuestMapper {
     int checkPhoneDuplicate(String guestId, String phone);
 
     // 선택 고객의 상담이력 수 조회 (페이징 처리 용 )
-    int countCounselLogList(String guestId, String searchKeyword);
+    int countCounselLogList(CounselLogFilter Filter);
+    // 선택 고객의 상담이력 리스트 조회
+    List<CounselLog> getCounselLogList(CounselLogFilter filter, String orderBy, String orderDirection, int offset, int pageSize);
 
-    // 전화고객 정보 저장/수정
 }

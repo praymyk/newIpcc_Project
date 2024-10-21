@@ -88,3 +88,22 @@
     font-size: 14px;
     color: #333;
 }
+
+/* 기본 정렬 아이콘 상태 제거 */
+.custInfo-counselTable th.sort-asc::after,
+.custInfo-counselTable th.sort-desc::after {
+    content: ''; /* 기본 상태에서는 아이콘 없음 */
+    margin-left: 8px;
+}
+
+/* 오름차순 아이콘 표시 */
+.custInfo-counselTable th.sort-asc::after {
+    content: '▲';
+    color: #007bff;
+}
+
+/* 내림차순 아이콘 표시 */
+.custInfo-counselTable th.sort-desc::after {
+    content: '▼';
+    color: #007bff;
+}

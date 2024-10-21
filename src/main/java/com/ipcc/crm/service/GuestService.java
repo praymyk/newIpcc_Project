@@ -2,6 +2,7 @@ package com.ipcc.crm.service;
 
 import com.ipcc.common.mapper.primary.GuestMapper;
 import com.ipcc.crm.model.dto.counsel.CounselLog;
+import com.ipcc.crm.model.dto.counsel.CounselLogFilter;
 import com.ipcc.crm.model.dto.guest.Guest;
 import org.springframework.stereotype.Service;
 
@@ -41,13 +42,18 @@ public class GuestService {
     }
 
     // 선택 고객의 상담이력 수 조회 (페이징 처리 용 )
-    public int countCounselLogList(String guestId, String searchKeyword) {
-        return guestMapper.countCounselLogList(guestId, searchKeyword);
+    public int countCounselLogList(CounselLogFilter filter) {
+        return guestMapper.countCounselLogList(filter);
     }
 
-    // 선택 고객의 상담이력 조회
-    public List<CounselLog> getCounselLogList(String guestId) {
-        return null;
+    // 선택 고객의 상담이력 리스트 조회
+    public List<CounselLog> getCounselLogList(CounselLogFilter filter,
+                                              String orderBy,
+                                              String orderDirection,
+                                              int offset,
+                                              int pageSize) {
+
+        return guestMapper.getCounselLogList(filter,orderBy,orderDirection, offset, pageSize);
     }
 
 
