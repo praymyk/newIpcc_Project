@@ -19,6 +19,30 @@
         <result property="categoryId" column="CATEGORY_ID" /> <!-- 카테고리 ID -->
     </resultMap>
 
+    <resultMap id="CounselLog" type="CounselLog">
+        <!-- 기본 필드 매핑 -->
+        <id property="counselId" column="COUNSEL_ID"/>
+        <result property="custId" column="CUST_ID"/>
+        <result property="guestId" column="GUEST_ID"/>
+        <result property="agentId" column="AGENT_ID"/>
+        <result property="callId" column="CALL_ID"/>
+        <result property="counselDate" column="CALL_DATE"/>
+        <result property="timeUsed" column="TIME_USED"/>
+        <result property="counselInOut" column="DIV_INOUT"/>
+        <result property="categories" column="CATEGORY_VALUES"/>
+        <result property="processStat" column="PROCESS_STAT"/>
+        <result property="counselMemo" column="COUNSEL_MEMO"/>
+        <result property="callBackDate" column="CALLBACK_DATE"/>
+        <result property="callBackTime" column="CALLBACK_TIME"/>
+        <result property="callBackMemo" column="CALLBACK_MEMO"/>
+
+        <!-- AGENT_NAME 조인 매핑 -->
+        <result property="agentName" column="AGT_NAME"/> <!-- 조인된 AGENT_NAME 값 -->
+        <result property="guestName" column="GUEST_NAME"/> <!-- 조인된 GUEST_NAME 값 -->
+
+    </resultMap>
+
+
 
     <!-- 업체 코드(custId)로 카테고리 리스트 조회 -->
     <select id="getCategoryList"
@@ -34,7 +58,20 @@
             crm_category
         WHERE
             CUST_ID = #{custId}
+        AND CATEGORY_TYPE = 'ARS-1' || CATEGORY_TYPE = 'COUNSLE-1'
         AND STATE = 'Y'
+    </select>
+
+    <!-- 상담이력 카테고리 선택 후 하위 카테고리 조회 -->
+    <select id="getNextCategory" resultMap="Category">
+        SELECT *
+        FROM crm_category
+        WHERE CATEGORY_TYPE = #{categoryType}
+          AND CATEGORY_NAME = (
+            SELECT CATEGORY_VALUE
+            FROM crm_category
+            WHERE CATEGORY_ID = #{selectedId})
+          AND STATE = 'Y';
     </select>
 
     <!-- 상담이력 insert/update (counsel_id 값 유무에 따라) -->
@@ -84,4 +121,28 @@
             (#{counselId}, #{categoryId})
         </foreach>
     </insert>
+
+    <!-- 상담 이력 조회 Select-->
+    <select id="getCounselLog" parameterType="string" resultMap="CounselLog">
+        SELECT
+            cc.COUNSEL_ID,
+            cc.CUST_ID,
+            cc.AGENT_ID,
+            cc.GUEST_ID,
+            cc.CALL_ID,
+            cc.CALL_DATE,
+            cc.TIME_USED,
+            cc.DIV_INOUT,
+            cc.PROCESS_STAT,
+            cc.COUNSEL_MEMO,
+            cc.CALLBACK_DATE,
+            cc.CALLBACK_TIME,
+            cc.CALLBACK_MEMO,
+            GROUP_CONCAT(CONCAT(cat.CATEGORY_TYPE, ': ', cat.CATEGORY_VALUE) ORDER BY cat.CATEGORY_ID ASC SEPARATOR ', ') AS CATEGORY_VALUES <!-- 카테고리 타입 : 카테고리 값 -->
+        FROM crm_counsel cc
+                 LEFT JOIN crm_category_log ccl ON cc.COUNSEL_ID = ccl.COUNSEL_ID
+                 LEFT JOIN crm_category cat ON ccl.CATEGORY_ID = cat.CATEGORY_ID
+        WHERE cc.COUNSEL_ID = #{counselId}
+        GROUP BY cc.COUNSEL_ID;
+    </select>
 </mapper>

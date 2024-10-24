@@ -151,10 +151,12 @@ public class AgentService {
         log.info("API 테스트: : " + createAccount(agent));
 
         try {
-            return secondaryAgentMapper.insertEndpoint(agent.getAgtExt())
-                    + secondaryAgentMapper.insertAors(agent.getAgtExt())
-                    + secondaryAgentMapper.insertAuths(agent.getAgtExt())
-                    + agentMapper.updateAgent(agent);
+//            return secondaryAgentMapper.insertEndpoint(agent.getAgtExt())
+//                    + secondaryAgentMapper.insertAors(agent.getAgtExt())
+//                    + secondaryAgentMapper.insertAuths(agent.getAgtExt())
+//                    + agentMapper.updateAgent(agent);
+
+            return  agentMapper.updateAgent(agent);
 
         } catch (Exception e) {
             // 예외가 발생했을 때 로그를 남기고 트랜잭션을 롤백합니다.

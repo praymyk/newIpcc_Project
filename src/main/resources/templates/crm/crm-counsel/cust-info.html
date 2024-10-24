@@ -43,78 +43,7 @@
         </div>
 
         <div class="cust-info-content" id="cust-info-content" th:replace="crm/crm-counsel/cust-info-custInfo :: custInfo-custInfo">
-            <div class="cust-ccode">업체명</div>
-            <form class="cust-info-table" action="" method="post" >
-                <table>
-                    <tr>
-                        <td class="title-td">이름</td>
-                        <td>
-                            <input type="text" id="cust-name" placeholder="고객 이름">
-                        </td>
-                        <td class="title-td">전화번호</td>
-                        <td>
-                            <input type="text" id="cust-phone" placeholder="전화번호(- 없이 저장 가능)" maxlength="13">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="title-td">생년월일</td>
-                        <td>
-                            <input type="date" id="cust-birth" placeholder="YYYY-MM-DD" max="9999-12-31">
-                        </td>
-                        <td class="title-td">성별</td>
-                        <td>
-                            <select name="cust-gender" id="cust-gender">
-                                <option value="M">남성</option>
-                                <option value="F">여성</option>
-                                <option value="O">기타</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="title-td">이메일</td>
-                        <td colspan="2">
-                            <input type="text" id="cust-email" placeholder="이메일">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="title-td">주소</td>
-                        <td colspan="2">
-                            <input type="text" id="cust-road-adrs" placeholder="도로명 주소" readonly>
-                            <button type="button" id="btn-address-search">도로명 검색</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="title-td">상세 주소</td>
-                        <td colspan="2">
-                            <input type="text" id="cust-detail-adrs" placeholder="상세 주소를 입력하세요">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="title-td">고객 분류</td>
-                        <td>
-                            <select name="cust-type" id="cust-type">
-                                <option value="1">일반</option>
-                                <option value="2">VIP</option>
-                                <option value="3">VVIP</option>
-                            </select>
-                        </td>
-                        <td class="title-td">등록일</td>
-                        <td>
-                            <input type="text" id="cust-enroll" placeholder="등록일" disabled>
-                        </td>
-                    </tr>
-                    <!-- hidden 값 -->
-                    <input type="hidden" id="cust-balck" value="N">
-                    <input type="hidden" id="gust-id" value="new">
-                </table>
-                <div class="extra-info">
-                    <label for="cust-notes">
-                        기타 정보
-                    </label>
-                    <textarea id="cust-notes" placeholder="고객 관련 기타 메모를 입력해 주세요"></textarea>
-                </div>
-                <button class="edit-button" type="button">저장</button>
-            </form>
+
         </div>
     </div>
 

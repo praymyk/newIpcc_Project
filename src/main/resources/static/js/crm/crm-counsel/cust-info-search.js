@@ -89,7 +89,7 @@ function fetchGuestList(searchKeyword, pageNumber=1) {
 
 // 페이징 버튼 렌더링 함수
 function renderPagination(searchKeyword, totalPages, currentPage) {
-    var paginationContainer = $('#pagination-container');
+    var paginationContainer = $('#pagination-custInfo-guestList');
     paginationContainer.empty(); // 기존 페이지네이션 초기화
 
     // 이전 페이지 버튼
@@ -124,6 +124,9 @@ $('#guest-info-list').on('click', 'tr', function() {
     $(this).siblings().removeClass('selected');
     // 클릭한 tr 태그에 selected 클래스 추가
     $(this).addClass('selected');
+
+    // 특정 category-item을 클릭한 것처럼 동작하게 하기 => 고객 정보 조회
+    $('.category-item[data-category="custInfo"]').trigger('click');
 });
 
 // 전화번호 형식 변환 함수
@@ -151,9 +154,7 @@ function selectGuestInfo(guestId) {
         success: function (data) {
             // 1. 고객 정보를 화면에 표시
             resetOrFillGuestForm(data);
-            // 2. 선택 고객의 상담이력 조회
-
-            // 3. 선택 고객의 상담이력 작성 폼 초기화
+            // 2. 선택 고객의 상담이력 작성 폼 초기화
             fillCounselLogForm(data);
         },
         error: function () {

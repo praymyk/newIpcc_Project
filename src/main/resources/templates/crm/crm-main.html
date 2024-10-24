@@ -389,7 +389,8 @@
             // contentId와 일치하는 요소에 'active' 클래스 부여
             $('.content-link[data-content-id="' + contentId + '"]').addClass('active');
 
-            getCustCid(); // 페이지 로드 시 상담원의 업체 정보 로드( 대표번호 )
+            //getCustCid(); // 페이지 로드 시 상담원의 업체 정보 로드( 대표번호 )
+            // <-- 이부분 api로 받아와야 함
 
             /*
             *  sip 로그인 이벤트 (화면 로드시 첫)
@@ -398,7 +399,7 @@
 
         });
 
-        <!-- 페이지 로드 시 상담원의 업체 정보 로드( 대표번호 ) -->
+        <!-- 페이지 로드 시 상담원의 업체 정보 로드( 대표번호 ) / CallController-->
         function getCustCid(){
              $.ajax({
                 url: '/Ipcc/crm/call/getCustCid',
@@ -511,8 +512,10 @@
 
             var sipUri = formatSipUri(sipUriInput);
 
-            var socket = new JsSIP.WebSocketInterface('wss://'+domain+':8089/ws');
-            //var socket = new JsSIP.WebSocketInterface('ws://'+domain+':8088/ws');
+            console.log("sipUri : " + sipUri);
+
+            //var socket = new JsSIP.WebSocketInterface('wss://'+domain+':8089/ws');
+            var socket = new JsSIP.WebSocketInterface('ws://'+domain+':8088/ws');
             var configuration = {
                 sockets: [socket],
                 uri: sipUri,

@@ -80,6 +80,13 @@ var categoryItems = document.querySelectorAll('.category-item');
 // 각 category-item에 클릭 이벤트 리스너를 추가
 categoryItems.forEach(item => {
     item.addEventListener('click', function() {
+        console.log("선택 고객 : " + guestId);
+        // 선택된 고객이 없을 경우 고객 검색 안내
+        if(guestId === '' || guestId === undefined) {
+            alert('고객을 선택해주세요.');
+            return;
+        }
+
         // 모든 항목에서 active 클래스 제거
         categoryItems.forEach(el => el.classList.remove('active'));
 

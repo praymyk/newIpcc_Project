@@ -1,5 +1,4 @@
 .cust-info-search-wrap {
-    flex: 1;
     min-width: 410px;
     margin: 0px 0px 10px 0px;
     padding: 10px;
@@ -151,6 +150,7 @@
     justify-content: center;
     align-items: center;
     margin-top: 15px;
+    margin-bottom: 5px;
     gap: 10px; /* 버튼 간 간격 */
 }
 

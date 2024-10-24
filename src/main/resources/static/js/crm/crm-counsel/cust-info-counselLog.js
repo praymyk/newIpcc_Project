@@ -3,6 +3,9 @@
 /*
 * 선택 고객 상담이력 검색 함수
 */
+// 전체 이력 리스트 검색
+fetchGuestCounselLogList();
+
 document.getElementById('counselLog-filter').addEventListener('submit', function(e) {
     e.preventDefault(); // 기본 동작 방지 (페이지 리로드 방지)
 
@@ -13,10 +16,6 @@ document.getElementById('counselLog-filter').addEventListener('submit', function
 
     // AJAX로 비동기 요청 보내기
     fetchGuestCounselLogList(startDate, endDate, result);
-    console.log("startDate:", startDate);
-    console.log("endDate:", endDate);
-    console.log("result:", result);
-
 });
 
 /*
@@ -37,8 +36,6 @@ var processStat; // 상담 결과
 orderByTh.forEach(function (th) {
     th.addEventListener('click', function () {
         var orderBy = this.getAttribute('id'); // 클릭한 <th>의 ID를 가져옴
-
-        console.log("orderBy:", orderBy);
 
         startDate = document.getElementById('counselLog-startDate').value; // 검색 시작일
         endDate = document.getElementById('counselLog-endDate').value; // 검색 종료일
@@ -109,8 +106,6 @@ function fetchGuestCounselLogList(startDate,endDate,result,
             // 고객 리스트를 #custInfo-counselLogList에 tr 추가
             $('#custInfo-counselLogList').empty();
 
-            console.log("상담이력 리스트 조회", data);
-
             // 검색결과가 없을 경우
             if(data.dataList.length === 0) {
                 var row = $('<tr></tr>');
@@ -131,6 +126,11 @@ function fetchGuestCounselLogList(startDate,endDate,result,
                     // #guest-info-list에 추가
                     $('#custInfo-counselLogList').append(row);
 
+                    // 상담 이력 리스트 클릭 시 상세 정보 조회
+                    row.on('click', function() {
+                        fetchCounselLog(counselLog.counselId);
+                    });
+
                 });
             }
             // 페이지 네이션
@@ -145,21 +145,29 @@ function fetchGuestCounselLogList(startDate,endDate,result,
 
 // 페이징 버튼 렌더링 함수
 function renderPagination(searchKeyword, totalPages, currentPage) {
-    var paginationContainer = $('#pagination-container');
+    var paginationContainer = $('#pagination-custInfo-counselLog');
     paginationContainer.empty(); // 기존 페이지네이션 초기화
 
     // 이전 페이지 버튼
     var prevButton = $('<button class="counsel-page-btn counsel-prev-btn"><i class="fa fa-chevron-left"></i></button>');
     prevButton.prop('disabled', currentPage === 1);
     prevButton.on('click', function () {
-        fetchGuestList(searchKeyword, currentPage - 1);
+        fetchGuestCounselLogList(startDate,endDate,processStat,
+            currentPage - 1,
+            currentOrder.column,    // 정렬 기준
+            currentOrder.direction  // 정렬 방향
+        );
     });
 
     // 다음 페이지 버튼
     var nextButton = $('<button class="counsel-page-btn counsel-next-btn"><i class="fa fa-chevron-right"></i></button>');
     nextButton.prop('disabled', currentPage === totalPages);
     nextButton.on('click', function () {
-        fetchGuestList(searchKeyword, currentPage + 1);
+        fetchGuestCounselLogList(startDate,endDate,processStat,
+            currentPage + 1,
+            currentOrder.column,    // 정렬 기준
+            currentOrder.direction  // 정렬 방향
+        );
     });
 
     // 페이지 정보
@@ -167,4 +175,32 @@ function renderPagination(searchKeyword, totalPages, currentPage) {
 
     // 버튼 추가
     paginationContainer.append(prevButton, pageInfo, nextButton);
+}
+
+// 선택 상담 이력 조회 함수
+function fetchCounselLog(counselId) {
+    $.ajax({
+        url: '/Ipcc/crm/counsel/getCounselLog',
+        type: 'post',
+        dataType: 'json',
+        data: {
+            counselId: counselId
+        },
+        success: function(data) {
+            // 상담 이력 조회 모달에 상담 이력 정보 채우기
+            $('#counselLog-counselDate').text(data.counselDate);
+            $('#counselLog-agentName').text(data.agentName);
+            $('#counselLog-guestName').text(data.guestName);
+            $('#counselLog-processStat').text(data.processStat);
+            $('#counselLog-counselContent').text(data.counselContent);
+            $('#counselLog-categories').empty();
+            // 상담 이력 카테고리 추가
+            for (var key in data.categories) {
+                $('#counselLog-categories').append(`<li>${key}: ${data.categories[key]}</li>`);
+            }
+        },
+        error: function() {
+            console.log("상담 이력 조회 실패");
+        }
+    });
 }

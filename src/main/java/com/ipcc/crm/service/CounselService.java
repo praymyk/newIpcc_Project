@@ -25,6 +25,12 @@ public class CounselService {
         return counselMapper.getCategoryList(custId);
     }
 
+    // 사담이력 작성 폼 내 다음 단계 카테고리 조회
+    public List<Category> getNextCategory(String categoryType, String selectedId) {
+
+        return counselMapper.getNextCategory(categoryType, selectedId);
+    }
+
     //  상담이력 insert/update
     @Transactional
     public String saveCounselLog(CounselLog counselLog) {
@@ -41,5 +47,10 @@ public class CounselService {
             counselMapper.insertCategoryLog(counselLog);
             return "상담이력 저장 완료";
         }
+    }
+
+    // 상담이력 조회 (상세)
+    public CounselLog getCounselLog(String counselId) {
+        return counselMapper.getCounselLog(counselId);
     }
 }
